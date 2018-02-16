@@ -77,129 +77,140 @@ grammar DDLGrammar {
     <EQ> || <GE> || <GT> || <LE> || <LT> || <NE>
   }
 
-  token ACTION      { 'ACTION' }
-  token ADD         { 'ADD' }
-  token ALGORITHM   { 'ALGORITHM' }
-  token ALL         { 'ALL' }
-  token ALWAYS      { 'ALWAYS' }
-  token AND         { 'AND' }
-  token ANY         { 'ANY' }
-  token AS          { 'AS' }
-  token ASC         { 'ASC' }
-  token BETWEEN     { 'BETWEEN' }
-  token BTREE       { 'BTREE' }
-  token BY          { 'BY' }
-  token CASCADE     { 'CASCADE' }
-  token CHAR        { 'CHAR' }
-  token CHARSET     { 'CHARSET' }
-  token CHECK       { 'CHECK' }
-  token CHECKSUM    { 'CHECKSUM' }
-  token CIPHER      { 'CIPHER' }
-  token COLLATE     { 'COLLATE' }
-  token COLUMNS     { 'COLUMNS' }
-  token COMMENT     { 'COMMENT' }
-  token COMPACT     { 'COMPACT' }
-  token COMPRESSED  { 'COMPRESSED' }
-  token COMPRESSION { 'COMPRESSION' }
-  token CONNECTION  { 'CONNECTION' }
-  token CONSTRAINT  { 'CONSTRAINT' }
-  token CREATE      { 'CREATE' }
-  token DATA        { 'DATA' }
-  token DATABASE    { 'DATABASE' }
-  token DEFAULT     { 'DEFAULT' }
-  token DELETE      { 'DELETE' }
-  token DESC        { 'DESC' }
-  token DIRECTORY   { 'DIRECTORY' }
-  token DISK        { 'DISK' }
-  token DIV         { 'DIV' }
-  token DYNAMIC     { 'DYNAMIC' }
-  token ENCRYPTION  { 'ENCRYPTION' }
-  token ENGINE      { 'ENGINE' }
-  token ESCAPE      { 'ESCAPE' }
-  token EXISTS      { 'EXISTS' }
-  token FALSE       { 'FALSE' }
-  token FIRST       { 'FIRST' }
-  token FIXED       { 'FIXED' }
-  token FOREIGN     { 'FOREIGN' }
-  token FULL        { 'FULL' }
-  token FULLTEXT    { 'FULLTEXT' }
-  token HASH        { 'HASH' }
-  token HOST        { 'HOST' }
-  token GENERATED   { 'GENERATED' }
-  token GRANT       { 'GRANT' }
-  token GROUP       { 'GROUP' }
-  token IF          { 'IF' }
-  token IN          { 'IN' }
-  token INTERNAL    { 'INTERNAL' }
-  token INDEX       { 'INDEX' }
-  token IS          { 'IS' }
-  token ISSUER      { 'ISSUER' }
-  token KEY         { 'KEY' }
-  token LAST        { 'LAST' }
-  token LESS        { 'LESS' }
-  token LIKE        { 'LIKE' }
-  token LINEAR      { 'LINEAR' }
-  token LIST        { 'LIST' }
-  token LOGFILE     { 'LOGFILE' }
-  token MATCH       { 'MATCH' }
-  token MOD         { 'MOD' }
-  token MEMORY      { 'MEMORY' }
-  token NO          { 'NO' }
-  token NODEGROUP   { 'NODEGROUP' }
-  token NONE        { 'NONE' }
-  token NOT         { 'NOT' }
-  token NOW         { 'NOW' }
-  token NULL        { 'NULL' }
-  token ON          { 'ON' }
-  token OPTION      { 'OPTION' }
-  token OR          { 'OR' }
-  token OWNER       { 'OWNER' }
-  token PARSER      { 'PARSER' }
-  token PARTIAL     { 'PARTIAL' }
-  token PARTITION   { 'PARTITION' }
-  token PARTITIONS  { 'PARTITIONS' }
-  token PASSWORD    { 'PASSWORD' }
-  token PORT        { 'PORT' }
-  token PRIMARY     { 'PRIMARY' }
-  token RANGE       { 'RANGE' }
-  token REDOFILE    { 'REDOFILE' }
-  token REDUNDANT   { 'REDUNDANT' }
-  token REGEXP      { 'REGEXP' }
-  token REFERENCES  { 'REFERENCES' }
-  token REQUIRE     { 'REQUIRE' }
-  token RESTRICT    { 'RESTRICT' }
-  token RTREE       { 'RTREE' }
-  token SERVER      { 'SERVER' }
-  token SERIAL      { 'SERIAL' }
-  token SET         { 'SET' }
-  token SIMPLE      { 'SIMPLE' }
-  token SOCKET      { 'SOCKET' }
-  token SOUNDS      { 'SOUNDS' }
-  token SPACIAL     { 'SPACIAL' }
-  token SSL         { 'SSL' }
-  token STORAGE     { 'STORAGE' }
-  token STORED      { 'STORED' }
-  token SUBJECT     { 'SUBJECT' }
-  token TABLE       { 'TABLE' }
-  token TABLESPACE  { 'TABLESPACE' }
-  token TEMPORARY   { 'TEMPORARY' }
-  token THAN        { 'THAN' }
-  token TRUE        { 'TRUE' }
-  token TYPE        { 'TYPE' }
-  token UPDATE      { 'UPDATE' }
-  token UNION       { 'UNION' }
-  token UNIQUE      { 'UNIQUE' }
-  token UNKNOWN     { 'UNKNOWN' }
-  token USER        { 'USER' }
-  token VALUE       { 'VALUE' }
-  token VALUES      { 'VALUES' }
-  token VIRTUAL     { 'VIRTUAL' }
-  token UNDOFILE    { 'UNDOFILE' }
-  token USING       { 'USING' }
-  token WAIT        { 'WAIT' }
-  token WITH        { 'WITH' }
-  token X509        { 'X509' }
-  token XOR         { 'XOR' }
+  token ACCOUNT       { 'ACCOUNT' }
+  token ACTION        { 'ACTION' }
+  token ADD           { 'ADD' }
+  token ALGORITHM     { 'ALGORITHM' }
+  token ALL           { 'ALL' }
+  token ALWAYS        { 'ALWAYS' }
+  token AND           { 'AND' }
+  token ANY           { 'ANY' }
+  token AS            { 'AS' }
+  token ASC           { 'ASC' }
+  token BETWEEN       { 'BETWEEN' }
+  token BTREE         { 'BTREE' }
+  token BY            { 'BY' }
+  token CASCADE       { 'CASCADE' }
+  token CHAR          { 'CHAR' }
+  token CHARSET       { 'CHARSET' }
+  token CHECK         { 'CHECK' }
+  token CHECKSUM      { 'CHECKSUM' }
+  token CIPHER        { 'CIPHER' }
+  token COLLATE       { 'COLLATE' }
+  token COLUMNS       { 'COLUMNS' }
+  token COMMENT       { 'COMMENT' }
+  token COMPACT       { 'COMPACT' }
+  token COMPRESSED    { 'COMPRESSED'   }
+  token COMPRESSION   { 'COMPRESSION'   }
+  token CONNECTION    { 'CONNECTION'   }
+  token CONSTRAINT    { 'CONSTRAINT'   }
+  token CREATE        { 'CREATE' }
+  token DATA          { 'DATA' }
+  token DATE          { 'DATE' }
+  token DATABASE      { 'DATABASE' }
+  token DEFAULT       { 'DEFAULT' }
+  token DELETE        { 'DELETE' }
+  token DESC          { 'DESC' }
+  token DIRECTORY     { 'DIRECTORY' }
+  token DISK          { 'DISK' }
+  token DIV           { 'DIV' }
+  token DYNAMIC       { 'DYNAMIC' }
+  token ENCRYPTION    { 'ENCRYPTION'   }
+  token ENGINE        { 'ENGINE' }
+  token ESCAPE        { 'ESCAPE' }
+  token EXISTS        { 'EXISTS' }
+  token EXPIRE        { 'EXPIRE' }
+  token FALSE         { 'FALSE' }
+  token FIRST         { 'FIRST' }
+  token FIXED         { 'FIXED' }
+  token FOREIGN       { 'FOREIGN' }
+  token FULL          { 'FULL' }
+  token FULLTEXT      { 'FULLTEXT' }
+  token HASH          { 'HASH' }
+  token HOST          { 'HOST' }
+  token GENERATED     { 'GENERATED' }
+  token GRANT         { 'GRANT' }
+  token GROUP         { 'GROUP' }
+  token IF            { 'IF' }
+  token IN            { 'IN' }
+  token INTERNAL      { 'INTERNAL' }
+  token INTERVAL      { 'INTERVAL' }
+  token INDEX         { 'INDEX' }
+  token IS            { 'IS' }
+  token ISSUER        { 'ISSUER' }
+  token KEY           { 'KEY' }
+  token LAST          { 'LAST' }
+  token LESS          { 'LESS' }
+  token LIKE          { 'LIKE' }
+  token LINEAR        { 'LINEAR' }
+  token LIST          { 'LIST' }
+  token LOCK          { 'LOCK' }
+  token LOGFILE       { 'LOGFILE' }
+  token MATCH         { 'MATCH' }
+  token MOD           { 'MOD' }
+  token MEMORY        { 'MEMORY' }
+  token NO            { 'NO' }
+  token NODEGROUP     { 'NODEGROUP' }
+  token NEVER         { 'NEVER' }
+  token NONE          { 'NONE' }
+  token NOT           { 'NOT' }
+  token NOW           { 'NOW' }
+  token NULL          { 'NULL' }
+  token ON            { 'ON' }
+  token OPTION        { 'OPTION' }
+  token OR            { 'OR' }
+  token OWNER         { 'OWNER' }
+  token PARSER        { 'PARSER' }
+  token PARTIAL       { 'PARTIAL' }
+  token PARTITION     { 'PARTITION' }
+  token PARTITIONS    { 'PARTITIONS'   }
+  token PASSWORD      { 'PASSWORD' }
+  token PORT          { 'PORT' }
+  token PRIMARY       { 'PRIMARY' }
+  token RANGE         { 'RANGE' }
+  token REDOFILE      { 'REDOFILE' }
+  token REDUNDANT     { 'REDUNDANT' }
+  token REGEXP        { 'REGEXP' }
+  token REFERENCES    { 'REFERENCES'   }
+  token REQUIRE       { 'REQUIRE' }
+  token RESTRICT      { 'RESTRICT' }
+  token RTREE         { 'RTREE' }
+  token SERVER        { 'SERVER' }
+  token SERIAL        { 'SERIAL' }
+  token SET           { 'SET' }
+  token SIMPLE        { 'SIMPLE' }
+  token SOCKET        { 'SOCKET' }
+  token SOUNDS        { 'SOUNDS' }
+  token SPACIAL       { 'SPACIAL' }
+  token SSL           { 'SSL' }
+  token STORAGE       { 'STORAGE' }
+  token STORED        { 'STORED' }
+  token SUBJECT       { 'SUBJECT' }
+  token SUBPARTITION  { 'SUBPARTITION' }
+  token SUBPARTITIONS { 'SUBPARTITIONS' }
+  token TABLE         { 'TABLE' }
+  token TABLESPACE    { 'TABLESPACE ' }
+  token TEMPORARY     { 'TEMPORARY'  }
+  token THAN          { 'THAN' }
+  token TIME          { 'TIME' }
+  token TIMESTAMP     { 'TIMESTAMP' }
+  token TRUE          { 'TRUE' }
+  token TYPE          { 'TYPE' }
+  token UPDATE        { 'UPDATE' }
+  token UNION         { 'UNION' }
+  token UNIQUE        { 'UNIQUE' }
+  token UNKNOWN       { 'UNKNOWN' }
+  token USER          { 'USER' }
+  token VALUE         { 'VALUE' }
+  token VALUES        { 'VALUES' }
+  token VIRTUAL       { 'VIRTUAL' }
+  token UNDOFILE      { 'UNDOFILE'  }
+  token UNLOCK        { 'UNLOCK' }
+  token USING         { 'USING' }
+  token WAIT          { 'WAIT' }
+  token WITH          { 'WITH' }
+  token X509          { 'X509' }
+  token XOR           { 'XOR' }
 
   token AUTO_INC                 { 'AUTO_INCREMENT' }
   token AVG_ROW_LENGTH           { 'AVG_ROW_LENGTH' }
@@ -229,7 +240,21 @@ grammar DDLGrammar {
 
 
   token real_ulong_num {
-    # ... Takes number or HEX
+    <number> | <hex_num>
+  }
+
+  token bin_num {
+    [
+      'B'  [ <[01]>+ || "'" <[01]>+ "'" ]
+      |
+      '0b' [ <[01]>+ || "'" <[01]>+ "'" ]
+    ]
+  }
+
+  token hex_num {
+    '0'? 'X' [
+      <[0123456789ABCDEF]>+ || "'" <[0123456789ABCDEF]>+ "'"
+    ]
   }
 
   token number {
@@ -263,6 +288,17 @@ grammar DDLGrammar {
     [ "'" ( <-["]>+ ) "'" | "'" ( <-[']>+ ) "'"  ]
   }
 
+  token underscore_charset {
+    '_' <ident>
+  }
+
+  rule alter_algo_option {
+    <ALGORITHM> <EQ>? [ <DEFAULT> | <ident> ]
+  }
+
+  rule alter_lock_option {
+    <LOCK> <EQ>? [ <DEFAULT> | <ident> ]
+  }
 
   rule attribute {
     [
@@ -296,7 +332,40 @@ grammar DDLGrammar {
 
   rule generated_always { <GENERATED> <ALWAYS> }
 
+  rule index_lock_algo {
+    [
+      <alter_lock_option> <alter_algo_option>?
+      |
+      <alter_algo_option> <alter_lock_option>?
+    ]
+  }
+
   rule if_not_exists    { <IF> <NOT> <EXISTS> }
+
+  rule literal {
+    <underscore_charset>? <text>
+    |
+    'N'<text>
+    |
+    <num>
+    |
+    [ <DATE> || <TIME> || <TIMESTAMP> ] <text>
+    |
+    [ <NULL> || <FALSE> || <TRUE> ]
+    |
+    <underscore_charset>? [ <hex_num> || <bin_num> ]
+  }
+
+  rule lock_expire_opts {
+    [
+      <ACCOUNT> [ <UNLOCK> || <LOCK> ]
+      |
+      <PASSWORD> <EXPIRE> [
+        <INTERVAL> <num> <DAY>
+        |
+        [ <NEVER> || <DEFAULT> ]
+      ]
+  }
 
   rule row_types {
     [ <DEFAULT> | <FIXED> | <DYNAMIC> | <COMPRESSED> | <REDUNDANT> | <COMPACT> ]
@@ -372,7 +441,7 @@ grammar DDLGrammar {
       |
       <collate_explicit>?
       <generated_always>?
-      <AS> '(' <generated_column_func> ')'
+      <AS> '(' <expr> ')'
       [ <VIRTUAL> || <STORED> ]?
       [ <gcol_attr>+ ]?
     ]
@@ -454,10 +523,22 @@ grammar DDLGrammar {
     <WITH> <_limits>
   }
 
+  rule create_database_opts {
+    <default_collation> | <default_charset>
+  }
+
   rule create_partitioning {
     <PARTITION> <BY> <part_type_def>
     [<PARTITIONS> <number>]?  <sub_part>?
     [ '(' <part_definition> [ [ ',' <part_definition> ]* ]? ')' ]?
+  }
+
+  rule default_charset {
+    <DEFAULT>? <charset> <EQ>? [ <ident> || <text> ]
+  }
+
+  rule default_collation {
+    <DEFAULT>? <COLLATE> <EQ> [ <ident> || <text> ]
   }
 
   rule delete_option {
@@ -540,9 +621,6 @@ grammar DDLGrammar {
       <COMMENT> <EQ>? <comment_txt=.text>
     ]
   }
-
-
-
 
   rule match_clause {
     <MATCH> [ <FULL> | <PARTIAL> | <SIMPLE> ]
@@ -629,7 +707,6 @@ grammar DDLGrammar {
     ]
   }
 
-
   rule server_opts {
     <server_option> [ ',' <server_option> ]*
   }
@@ -638,6 +715,14 @@ grammar DDLGrammar {
     <all_key_opt>?
   }
 
+  rule sub_part {
+    <SUBPARTITION> <BY> <LINEAR>?
+    [
+      <HASH> '(' <bit_expr> ')'
+      |
+      <KEY> <key_alg>? '(' <ident> [ ',' <ident> ]* ')'
+    ] [ <SUBPARTITIONS> <number> ]?
+  }
 
   rule CREATE_ST {
     <CREATE> [
