@@ -510,6 +510,60 @@ grammar DDLGrammar {
     ]
   }
 
+  rule type {
+    [
+      [
+        <INT> || <TINYINT> || <SMALLINT> || <MEDIUMINT> || <BIGINT> || <YEAR>
+      ]
+      [ '(' <num> ')' ]?
+      |
+      [ <REAL> | <DOUBLE> <PRECISION>? ]
+      |
+      [ <FLOAT> || <DECIMAL> || <NUMERIC> || <FIXED> ]
+      [
+        '(' [
+          [ <number> ]
+          |
+          [ <m=.number> ',' <d=.number>
+        ')' ]
+      ]? <options=[ <SIGNED> || <UNSIGNED> || <ZEROFILL> ]*>
+      |
+      [
+        |
+        [ <BIT> || <BINARY ] '(' <num> ')'
+        |
+        [ <BOOL> || <BOOLEAN> ]
+        |
+        [
+          [ <CHAR> || <VARCHAR> ] '(' <num> ')'
+          |
+          <TINYTEXT>
+          |
+          <TEXT> [ '(' <num> ')' ]?
+          |
+          <MEDIUMTEXT>
+          |
+          <LONGTEXT>
+          |
+          [ <ENUM> || <SET> ] '(' <text> [ ',' <text> ]* ')'
+        ]
+        [
+          <ascii>
+          |
+          <unicode>
+          |
+          <BYTE>
+          |
+          <charset> [ <ident> || <text> ] <BINARY>?
+          |
+          <BINARY>? <charset> [ <ident> || <text> ]
+        ]
+      ]
+      |
+      #... nchar
+    ]
+  }
+
 
   rule all_key_opt {
     [ <KEY_BLOCK_SIZE> <EQ>? <num> | <COMMENT> <text> ]
