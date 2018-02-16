@@ -87,6 +87,7 @@ grammar DDLGrammar {
   token ANY                { 'ANY' }
   token AS                 { 'AS' }
   token ASC                { 'ASC' }
+  token ASCII              { 'ASCII' }
   token BETWEEN            { 'BETWEEN' }
   token BIGINT		         { 'BIGINT' }
   token BINARY		         { 'BINARY' }
@@ -188,6 +189,7 @@ grammar DDLGrammar {
   token NVARCHAR		       { 'NVARCHAR' }
   token ON                 { 'ON' }
   token OPTION             { 'OPTION' }
+  token OPTIONS            { 'OPTIONS' }
   token OR                 { 'OR' }
   token OWNER              { 'OWNER' }
   token PARSER             { 'PARSER' }
@@ -237,6 +239,7 @@ grammar DDLGrammar {
   token TRUE               { 'TRUE' }
   token TYPE               { 'TYPE' }
   token UNDOFILE           { 'UNDOFILE'  }
+  token UNICODE            { 'UNICODE' }
   token UNION              { 'UNION' }
   token UNIQUE             { 'UNIQUE' }
   token UNKNOWN            { 'UNKNOWN' }
@@ -253,6 +256,7 @@ grammar DDLGrammar {
   token VIRTUAL            { 'VIRTUAL' }
   token WAIT               { 'WAIT' }
   token WITH               { 'WITH' }
+  token WRAPPER            { 'WRAPPER' }
   token X509               { 'X509' }
   token XOR                { 'XOR' }
   token ZEROFILL		       { 'ZEROFILL' }
@@ -338,11 +342,11 @@ grammar DDLGrammar {
   }
 
   rule alter_algo_option {
-    <ALGORITHM> <EQ>? [ <DEFAULT> | <ident> ]
+    <ALGORITHM> <EQ>? [ <DEFAULT> || <ident> ]
   }
 
   rule alter_lock_option {
-    <LOCK> <EQ>? [ <DEFAULT> | <ident> ]
+    <LOCK> <EQ>? [ <DEFAULT> || <ident> ]
   }
 
   rule attribute {
@@ -410,10 +414,11 @@ grammar DDLGrammar {
         |
         [ <NEVER> || <DEFAULT> ]
       ]
+    ]
   }
 
   rule row_types {
-    [ <DEFAULT> | <FIXED> | <DYNAMIC> | <COMPRESSED> | <REDUNDANT> | <COMPACT> ]
+    [ <DEFAULT> || <FIXED> || <DYNAMIC> || <COMPRESSED> || <REDUNDANT> || <COMPACT> ]
   }
 
   rule table_list {
@@ -429,34 +434,33 @@ grammar DDLGrammar {
       <ENGINE> <EQ>? [ <engine_id=.itent> | <engine_txt=.text> ]
       |
       [
-        <MAX_ROWS> | <MIN_ROWS>       | <AUTO_INC>        | <AVG_ROW_LENGTH> |
-        <CHECKSUM> | <TABLE_CHECKSUM> | <DELAY_KEY_WRITE> | <KEY_BLOCK_SIZE>
+        <MAX_ROWS> || <MIN_ROWS>       || <AUTO_INC>        || <AVG_ROW_LENGTH> ||
+        <CHECKSUM> || <TABLE_CHECKSUM> || <DELAY_KEY_WRITE> || <KEY_BLOCK_SIZE>
       ] <EQ>? <num>
       |
       [
-        <PASSWORD> | <COMMENT> | <COMPRESSION> | <ENCRYPTION> |
-        [ <DATA> | <INDEX> ] <DIRECTORY> |
-        <CONNECTION>
+        <PASSWORD> || <COMMENT> || <COMPRESSION> || <ENCRYPTION> ||
+        [ <DATA> | <INDEX> ] <DIRECTORY> || <CONNECTION>
       ] <EQ>? <text>
       |
       [
-        <PACK_KEYS> | <STATS_AUTO_RECALC> | <STATS_PERSISTENT> |
+        <PACK_KEYS> || <STATS_AUTO_RECALC> || <STATS_PERSISTENT> |
         <STATS_SAMPLE_PAGES>
-      ] <EQ>? [ <number> | <DEFAULT> ]
+      ] <EQ>? [ <number> || <DEFAULT> ]
       |
       <ROW_FORMAT> <EQ>? <row_types>
       |
       <UNION> <EQ>? '(' <table_list>? ')'
       |
-      <DEFAULT>? <charset> <EQ>? [ <char_id=.ident> | <char_txt=.text> ]
+      <DEFAULT>? <charset> <EQ>? [ <char_id=.ident> || <char_txt=.text> ]
       |
-      <DEFAULT>? <COLLATE> <EQ>? [ <collate_id=.ident> | <collate_txt=.text> ]
+      <DEFAULT>? <COLLATE> <EQ>? [ <collate_id=.ident> || <collate_txt=.text> ]
       |
-      <INSERT_METHOD> <EQ>? [ <NO> | <FIRST> | <LAST> ]
+      <INSERT_METHOD> <EQ>? [ <NO> || <FIRST> || <LAST> ]
       |
       <TABLESPACE> <EQ>? <ts_ident=.ident>
       |
-      <STORAGE> [ <DISK> | <MEMORY> ]
+      <STORAGE> [ <DISK> || <MEMORY> ]
     ]
   }
 
@@ -465,7 +469,7 @@ grammar DDLGrammar {
   }
 
   rule collate_explicit {
-    <COLLATE> [ <collate_id=.ident> || <collate_txt=.text>
+    <COLLATE> [ <collate_id=.ident> || <collate_txt=.text> ]
   }
 
   rule constraint {
@@ -569,11 +573,11 @@ grammar DDLGrammar {
           |
           [ <m=.number> ',' <d=.number> ]
         ')' ]
-      ]? <options=[ <SIGNED> || <UNSIGNED> || <ZEROFILL> ]*>
+      ]? $<options>=[ <SIGNED> || <UNSIGNED> || <ZEROFILL> ]*
       |
       [
         |
-        [ <BIT> || <BINARY ] '(' <num> ')'
+        [ <BIT> || <BINARY> ] '(' <num> ')'
         |
         [ <BOOL> || <BOOLEAN> ]
         |
@@ -591,9 +595,9 @@ grammar DDLGrammar {
           [ <ENUM> || <SET> ] '(' <text> [ ',' <text> ]* ')'
         ]
         [
-          <ascii>
+          [ <ASCII> <BINARY> ] | [<BINARY> <ASCII> ]
           |
-          <unicode>
+          [ <UNICODE> <BINARY> ] | [ <BINARY> <UNICODE> ]
           |
           <BYTE>
           |
@@ -685,7 +689,7 @@ grammar DDLGrammar {
       |
       <CASCADE>
       |
-      <SET> [ <NULL> | <DEFAULT> ]
+      <SET> [ <NULL> || <DEFAULT> ]
       |
       <NO> <ACTION>
     ]
@@ -700,11 +704,11 @@ grammar DDLGrammar {
   }
 
   rule ident_sys {
-    [ <ident> | '"' <ident> '"' | "'" <ident> "'" ]
+    [ <ident> || '"' <ident> '"' || "'" <ident> "'" ]
   }
 
   rule key_alg {
-    [ <USING> | <TYPE> ] [ <BTREE> | <RTREE> | <HASH> ]
+    [ <USING> || <TYPE> ] [ <BTREE> || <RTREE> || <HASH> ]
   }
 
   rule key_list {
@@ -716,7 +720,7 @@ grammar DDLGrammar {
   }
 
   rule key_or_index {
-    [ <KEY> | <INDEX> ]
+    [ <KEY> || <INDEX> ]
   }
 
   rule _limits {
@@ -740,32 +744,32 @@ grammar DDLGrammar {
 
   rule logfile_group_option {
     [
-      <INITIAL_SIZE> <EQ>? [ <num> | <ident_sys> ]
+      <INITIAL_SIZE> <EQ>? [ <num> || <ident_sys> ]
       |
-      <MAX_SIZE> <EQ>? [ <num> | <ident_sys> ]
+      <MAX_SIZE> <EQ>? [ <num> || <ident_sys> ]
       |
-      <EXTENT_SIZE> <EQ>? [ <num> | <ident_sys> ]
+      <EXTENT_SIZE> <EQ>? [ <num> || <ident_sys> ]
       |
-      <UNDO_BUFFER_SIZE> <EQ>? [ <num> | <ident_sys> ]
+      <UNDO_BUFFER_SIZE> <EQ>? [ <num> || <ident_sys> ]
       |
-      <REDO_BUFFER_SIZE> <EQ>? [ <num> | <ident_sys> ]
+      <REDO_BUFFER_SIZE> <EQ>? [ <num> || <ident_sys> ]
       |
       <NODEGROUP> <EQ>? <num>
       |
       <STORAGE>? <ENGINE> <EQ>? [ <storage_id=.ident> || <storage_txt=.text> ]
       |
-      [ <WAIT> | <NO_WAIT> ]
+      [ <WAIT> || <NO_WAIT> ]
       |
       <COMMENT> <EQ>? <comment_txt=.text>
     ]
   }
 
   rule match_clause {
-    <MATCH> [ <FULL> | <PARTIAL> | <SIMPLE> ]
+    <MATCH> [ <FULL> || <PARTIAL> || <SIMPLE> ]
   }
 
   rule normal_key_options {
-    [ <all_key_opt> | <key_alg> ]?
+    [ <all_key_opt> || <key_alg> ]?
   }
 
   rule on_update_delete {
@@ -788,11 +792,11 @@ grammar DDLGrammar {
   }
 
   rule part_func_max {
-    <MAX_VALUE> | <part_value_item>
+    <MAX_VALUE> || <part_value_item>
   }
 
   rule part_value_expr_item {
-    <MAX_VALUE> | <bit_expr>
+    <MAX_VALUE> || <bit_expr>
   }
 
   rule part_value_item {
@@ -827,19 +831,8 @@ grammar DDLGrammar {
 
   rule server_option {
     [
-      [
-        <USER>
-        ||
-        <HOST>
-        ||
-        <DATABASE>
-        ||
-        <OWNER>
-        ||
-        <PASSWORD>
-        ||
-        <SOCKET>
-      ] <text>
+      [ <USER> || <HOST> || <DATABASE> || <OWNER> || <PASSWORD> || <SOCKET> ]
+      <text>
       |
       <PORT> <num>
     ]
@@ -898,10 +891,10 @@ grammar DDLGrammar {
         <LOGFILE> <GROUP> <logfile_group_info>
         |
         <SERVER>
-          [ <server_ident=.ident> | <server_text=.text> ]
-          <FOREIGN> <DATA> 'WRAPPER'
-          [ <fdw_ident=.ident> | <fdw_text=.text> ]
-          'OPTIONS'
+          [ <server_ident=.ident> || <server_text=.text> ]
+          <FOREIGN> <DATA> <WRAPPER>
+          [ <fdw_ident=.ident> || <fdw_text=.text> ]
+          <OPTIONS>
           '(' <server_opts> ')'
     ]
   }
