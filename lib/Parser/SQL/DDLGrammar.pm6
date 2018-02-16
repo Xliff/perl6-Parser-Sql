@@ -77,140 +77,185 @@ grammar DDLGrammar {
     <EQ> || <GE> || <GT> || <LE> || <LT> || <NE>
   }
 
-  token ACCOUNT       { 'ACCOUNT' }
-  token ACTION        { 'ACTION' }
-  token ADD           { 'ADD' }
-  token ALGORITHM     { 'ALGORITHM' }
-  token ALL           { 'ALL' }
-  token ALWAYS        { 'ALWAYS' }
-  token AND           { 'AND' }
-  token ANY           { 'ANY' }
-  token AS            { 'AS' }
-  token ASC           { 'ASC' }
-  token BETWEEN       { 'BETWEEN' }
-  token BTREE         { 'BTREE' }
-  token BY            { 'BY' }
-  token CASCADE       { 'CASCADE' }
-  token CHAR          { 'CHAR' }
-  token CHARSET       { 'CHARSET' }
-  token CHECK         { 'CHECK' }
-  token CHECKSUM      { 'CHECKSUM' }
-  token CIPHER        { 'CIPHER' }
-  token COLLATE       { 'COLLATE' }
-  token COLUMNS       { 'COLUMNS' }
-  token COMMENT       { 'COMMENT' }
-  token COMPACT       { 'COMPACT' }
-  token COMPRESSED    { 'COMPRESSED'   }
-  token COMPRESSION   { 'COMPRESSION'   }
-  token CONNECTION    { 'CONNECTION'   }
-  token CONSTRAINT    { 'CONSTRAINT'   }
-  token CREATE        { 'CREATE' }
-  token DATA          { 'DATA' }
-  token DATE          { 'DATE' }
-  token DATABASE      { 'DATABASE' }
-  token DEFAULT       { 'DEFAULT' }
-  token DELETE        { 'DELETE' }
-  token DESC          { 'DESC' }
-  token DIRECTORY     { 'DIRECTORY' }
-  token DISK          { 'DISK' }
-  token DIV           { 'DIV' }
-  token DYNAMIC       { 'DYNAMIC' }
-  token ENCRYPTION    { 'ENCRYPTION'   }
-  token ENGINE        { 'ENGINE' }
-  token ESCAPE        { 'ESCAPE' }
-  token EXISTS        { 'EXISTS' }
-  token EXPIRE        { 'EXPIRE' }
-  token FALSE         { 'FALSE' }
-  token FIRST         { 'FIRST' }
-  token FIXED         { 'FIXED' }
-  token FOREIGN       { 'FOREIGN' }
-  token FULL          { 'FULL' }
-  token FULLTEXT      { 'FULLTEXT' }
-  token HASH          { 'HASH' }
-  token HOST          { 'HOST' }
-  token GENERATED     { 'GENERATED' }
-  token GRANT         { 'GRANT' }
-  token GROUP         { 'GROUP' }
-  token IF            { 'IF' }
-  token IN            { 'IN' }
-  token INTERNAL      { 'INTERNAL' }
-  token INTERVAL      { 'INTERVAL' }
-  token INDEX         { 'INDEX' }
-  token IS            { 'IS' }
-  token ISSUER        { 'ISSUER' }
-  token KEY           { 'KEY' }
-  token LAST          { 'LAST' }
-  token LESS          { 'LESS' }
-  token LIKE          { 'LIKE' }
-  token LINEAR        { 'LINEAR' }
-  token LIST          { 'LIST' }
-  token LOCK          { 'LOCK' }
-  token LOGFILE       { 'LOGFILE' }
-  token MATCH         { 'MATCH' }
-  token MOD           { 'MOD' }
-  token MEMORY        { 'MEMORY' }
-  token NO            { 'NO' }
-  token NODEGROUP     { 'NODEGROUP' }
-  token NEVER         { 'NEVER' }
-  token NONE          { 'NONE' }
-  token NOT           { 'NOT' }
-  token NOW           { 'NOW' }
-  token NULL          { 'NULL' }
-  token ON            { 'ON' }
-  token OPTION        { 'OPTION' }
-  token OR            { 'OR' }
-  token OWNER         { 'OWNER' }
-  token PARSER        { 'PARSER' }
-  token PARTIAL       { 'PARTIAL' }
-  token PARTITION     { 'PARTITION' }
-  token PARTITIONS    { 'PARTITIONS'   }
-  token PASSWORD      { 'PASSWORD' }
-  token PORT          { 'PORT' }
-  token PRIMARY       { 'PRIMARY' }
-  token RANGE         { 'RANGE' }
-  token REDOFILE      { 'REDOFILE' }
-  token REDUNDANT     { 'REDUNDANT' }
-  token REGEXP        { 'REGEXP' }
-  token REFERENCES    { 'REFERENCES'   }
-  token REQUIRE       { 'REQUIRE' }
-  token RESTRICT      { 'RESTRICT' }
-  token RTREE         { 'RTREE' }
-  token SERVER        { 'SERVER' }
-  token SERIAL        { 'SERIAL' }
-  token SET           { 'SET' }
-  token SIMPLE        { 'SIMPLE' }
-  token SOCKET        { 'SOCKET' }
-  token SOUNDS        { 'SOUNDS' }
-  token SPACIAL       { 'SPACIAL' }
-  token SSL           { 'SSL' }
-  token STORAGE       { 'STORAGE' }
-  token STORED        { 'STORED' }
-  token SUBJECT       { 'SUBJECT' }
-  token SUBPARTITION  { 'SUBPARTITION' }
-  token SUBPARTITIONS { 'SUBPARTITIONS' }
-  token TABLE         { 'TABLE' }
-  token TABLESPACE    { 'TABLESPACE ' }
-  token TEMPORARY     { 'TEMPORARY'  }
-  token THAN          { 'THAN' }
-  token TIME          { 'TIME' }
-  token TIMESTAMP     { 'TIMESTAMP' }
-  token TRUE          { 'TRUE' }
-  token TYPE          { 'TYPE' }
-  token UPDATE        { 'UPDATE' }
-  token UNION         { 'UNION' }
-  token UNIQUE        { 'UNIQUE' }
-  token UNKNOWN       { 'UNKNOWN' }
-  token USER          { 'USER' }
-  token VALUE         { 'VALUE' }
-  token VALUES        { 'VALUES' }
-  token VIRTUAL       { 'VIRTUAL' }
-  token UNDOFILE      { 'UNDOFILE'  }
-  token UNLOCK        { 'UNLOCK' }
-  token USING         { 'USING' }
-  token WAIT          { 'WAIT' }
-  token WITH          { 'WITH' }
-  token X509          { 'X509' }
-  token XOR           { 'XOR' }
+  token ACCOUNT            { 'ACCOUNT' }
+  token ACTION             { 'ACTION' }
+  token ADD                { 'ADD' }
+  token ALGORITHM          { 'ALGORITHM' }
+  token ALL                { 'ALL' }
+  token ALWAYS             { 'ALWAYS' }
+  token AND                { 'AND' }
+  token ANY                { 'ANY' }
+  token AS                 { 'AS' }
+  token ASC                { 'ASC' }
+  token BETWEEN            { 'BETWEEN' }
+  token BIGINT		         { 'BIGINT' }
+  token BINARY		         { 'BINARY' }
+  token BIT		             { 'BIT' }
+  token BLOB		           { 'BLOB' }
+  token BOOL		           { 'BOOL' }
+  token BOOLEAN		         { 'BOOLEAN' }
+  token BTREE              { 'BTREE' }
+  token BY                 { 'BY' }
+  token BYTE		           { 'BYTE' }
+  token CASCADE            { 'CASCADE' }
+  token CHAR               { 'CHAR' }
+  token CHARSET            { 'CHARSET' }
+  token CHECK              { 'CHECK' }
+  token CHECKSUM           { 'CHECKSUM' }
+  token CIPHER             { 'CIPHER' }
+  token COLLATE            { 'COLLATE' }
+  token COLUMNS            { 'COLUMNS' }
+  token COMMENT            { 'COMMENT' }
+  token COMPACT            { 'COMPACT' }
+  token COMPRESSED         { 'COMPRESSED' }
+  token COMPRESSION        { 'COMPRESSION' }
+  token CONNECTION         { 'CONNECTION' }
+  token CONSTRAINT         { 'CONSTRAINT' }
+  token CREATE             { 'CREATE' }
+  token DATA               { 'DATA' }
+  token DATABASE           { 'DATABASE' }
+  token DATE               { 'DATE' }
+  token DATETIME		       { 'DATETIME' }
+  token DECIMAL		         { 'DECIMAL' }
+  token DEFAULT            { 'DEFAULT' }
+  token DELETE             { 'DELETE' }
+  token DESC               { 'DESC' }
+  token DIRECTORY          { 'DIRECTORY' }
+  token DISK               { 'DISK' }
+  token DIV                { 'DIV' }
+  token DOUBLE		         { 'DOUBLE' }
+  token DYNAMIC            { 'DYNAMIC' }
+  token ENCRYPTION         { 'ENCRYPTION'   }
+  token ENGINE             { 'ENGINE' }
+  token ENUM		           { 'ENUM' }
+  token ESCAPE             { 'ESCAPE' }
+  token EXISTS             { 'EXISTS' }
+  token EXPIRE             { 'EXPIRE' }
+  token FALSE              { 'FALSE' }
+  token FIRST              { 'FIRST' }
+  token FIXED              { 'FIXED' }
+  token FLOAT		           { 'FLOAT' }
+  token FOREIGN            { 'FOREIGN' }
+  token FULL               { 'FULL' }
+  token FULLTEXT           { 'FULLTEXT' }
+  token GENERATED          { 'GENERATED' }
+  token GEOMETRY		       { 'GEOMETRY' }
+  token GEOMETRYCOLLECTION { 'GEOMETRYCOLLECTION' }
+  token GRANT              { 'GRANT' }
+  token GROUP              { 'GROUP' }
+  token HASH               { 'HASH' }
+  token HOST               { 'HOST' }
+  token IF                 { 'IF' }
+  token IN                 { 'IN' }
+  token INDEX              { 'INDEX' }
+  token INT		             { 'INT' }
+  token INTERNAL           { 'INTERNAL' }
+  token INTERVAL           { 'INTERVAL' }
+  token IS                 { 'IS' }
+  token ISSUER             { 'ISSUER' }
+  token JSON		           { 'JSON' }
+  token KEY                { 'KEY' }
+  token LAST               { 'LAST' }
+  token LESS               { 'LESS' }
+  token LIKE               { 'LIKE' }
+  token LINEAR             { 'LINEAR' }
+  token LINESTRING		     { 'LINESTRING' }
+  token LIST               { 'LIST' }
+  token LOCK               { 'LOCK' }
+  token LOGFILE            { 'LOGFILE' }
+  token LONG		           { 'LONG' }
+  token LONGBLOB		       { 'LONGBLOB' }
+  token LONGTEXT		       { 'LONGTEXT' }
+  token MATCH              { 'MATCH' }
+  token MEDIUMBLOB		     { 'MEDIUMBLOB' }
+  token MEDIUMINT		       { 'MEDIUMINT' }
+  token MEDIUMTEXT		     { 'MEDIUMTEXT' }
+  token MEMORY             { 'MEMORY' }
+  token MOD                { 'MOD' }
+  token MULTILINESTRING		 { 'MULTILINESTRING' }
+  token MULTIPOINT		     { 'MULTIPOINT' }
+  token MULTIPOLYGON		   { 'MULTIPOLYGON' }
+  token NATIONAL		       { 'NATIONAL' }
+  token NCHAR		           { 'NCHAR' }
+  token NEVER              { 'NEVER' }
+  token NO                 { 'NO' }
+  token NODEGROUP          { 'NODEGROUP' }
+  token NONE               { 'NONE' }
+  token NOT                { 'NOT' }
+  token NOW                { 'NOW' }
+  token NULL               { 'NULL' }
+  token NUMERIC		         { 'NUMERIC' }
+  token NVARCHAR		       { 'NVARCHAR' }
+  token ON                 { 'ON' }
+  token OPTION             { 'OPTION' }
+  token OR                 { 'OR' }
+  token OWNER              { 'OWNER' }
+  token PARSER             { 'PARSER' }
+  token PARTIAL            { 'PARTIAL' }
+  token PARTITION          { 'PARTITION' }
+  token PARTITIONS         { 'PARTITIONS'   }
+  token PASSWORD           { 'PASSWORD' }
+  token POINT		           { 'POINT' }
+  token POLYGON		         { 'POLYGON' }
+  token PORT               { 'PORT' }
+  token PRECISION		       { 'PRECISION' }
+  token PRIMARY            { 'PRIMARY' }
+  token RANGE              { 'RANGE' }
+  token REAL		           { 'REAL' }
+  token REDOFILE           { 'REDOFILE' }
+  token REDUNDANT          { 'REDUNDANT' }
+  token REFERENCES         { 'REFERENCES'   }
+  token REGEXP             { 'REGEXP' }
+  token REQUIRE            { 'REQUIRE' }
+  token RESTRICT           { 'RESTRICT' }
+  token RTREE              { 'RTREE' }
+  token SERIAL             { 'SERIAL' }
+  token SERVER             { 'SERVER' }
+  token SET                { 'SET' }
+  token SIGNED		         { 'SIGNED' }
+  token SIMPLE             { 'SIMPLE' }
+  token SMALLINT		       { 'SMALLINT' }
+  token SOCKET             { 'SOCKET' }
+  token SOUNDS             { 'SOUNDS' }
+  token SPACIAL            { 'SPACIAL' }
+  token SSL                { 'SSL' }
+  token STORAGE            { 'STORAGE' }
+  token STORED             { 'STORED' }
+  token SUBJECT            { 'SUBJECT' }
+  token SUBPARTITION       { 'SUBPARTITION' }
+  token SUBPARTITIONS      { 'SUBPARTITIONS' }
+  token TABLE              { 'TABLE' }
+  token TABLESPACE         { 'TABLESPACE ' }
+  token TEMPORARY          { 'TEMPORARY'  }
+  token TEXT		           { 'TEXT' }
+  token THAN               { 'THAN' }
+  token TIME               { 'TIME' }
+  token TIMESTAMP          { 'TIMESTAMP' }
+  token TINYBLOB		       { 'TINYBLOB' }
+  token TINYINT		         { 'TINYINT' }
+  token TINYTEXT		       { 'TINYTEXT' }
+  token TRUE               { 'TRUE' }
+  token TYPE               { 'TYPE' }
+  token UNDOFILE           { 'UNDOFILE'  }
+  token UNION              { 'UNION' }
+  token UNIQUE             { 'UNIQUE' }
+  token UNKNOWN            { 'UNKNOWN' }
+  token UNLOCK             { 'UNLOCK' }
+  token UNSIGNED		       { 'UNSIGNED' }
+  token UPDATE             { 'UPDATE' }
+  token USER               { 'USER' }
+  token USING              { 'USING' }
+  token VALUE              { 'VALUE' }
+  token VALUES             { 'VALUES' }
+  token VARBINARY		       { 'VARBINARY' }
+  token VARCHAR		         { 'VARCHAR' }
+  token VARYING		         { 'VARYING' }
+  token VIRTUAL            { 'VIRTUAL' }
+  token WAIT               { 'WAIT' }
+  token WITH               { 'WITH' }
+  token X509               { 'X509' }
+  token XOR                { 'XOR' }
+  token ZEROFILL		       { 'ZEROFILL' }
 
   token AUTO_INC                 { 'AUTO_INCREMENT' }
   token AVG_ROW_LENGTH           { 'AVG_ROW_LENGTH' }
@@ -512,9 +557,7 @@ grammar DDLGrammar {
 
   rule type {
     [
-      [
-        <INT> || <TINYINT> || <SMALLINT> || <MEDIUMINT> || <BIGINT> || <YEAR>
-      ]
+      [ <INT> || <TINYINT> || <SMALLINT> || <MEDIUMINT> || <BIGINT> || <YEAR> ]
       [ '(' <num> ')' ]?
       |
       [ <REAL> | <DOUBLE> <PRECISION>? ]
@@ -524,7 +567,7 @@ grammar DDLGrammar {
         '(' [
           [ <number> ]
           |
-          [ <m=.number> ',' <d=.number>
+          [ <m=.number> ',' <d=.number> ]
         ')' ]
       ]? <options=[ <SIGNED> || <UNSIGNED> || <ZEROFILL> ]*>
       |
@@ -560,7 +603,48 @@ grammar DDLGrammar {
         ]
       ]
       |
-      #... nchar
+      [
+        [ <NCHAR> | <NATIONAL> <CHAR> ] [ '(' <num> ')' ]?
+        |
+        [
+          <NATIONAL>  [ <VARCHAR> ] | [ <CHAR> <VARYING> ]
+          |
+          <NVARCHAR>
+          |
+          <NCHAR> [ <VARCHAR> || <VARYING> ]
+        ]
+      ] <BINARY>?
+      |
+      <DATE>
+      |
+      [ <TIME> || <TIMESTAMP> || <DATETIME> ] [ '(' <num> ')' ]?
+      |
+      <TINYBLOB>
+      |
+      <BLOB> [ '(' <num> ')' ]?
+      |
+      [
+        <GEOMETRY>           ||
+        <GEOMETRYCOLLECTION> ||
+        <POINT>              ||
+        <MULTIPOINT>         ||
+        <LINESTRING>         ||
+        <MULTILINESTRING>    ||
+        <POLYGON>            ||
+        <MULTIPOLYGON>
+      ]
+      |
+      [ <MEDIUMBLOB> || <LONGBLOB> ]
+      |
+      <LONG> [
+        <VARBINARY>
+        |
+        [ <CHAR> <VARYING> | <VARCHAR> ]? <BINARY>?
+      ]
+      |
+      <SERIAL>
+      |
+      <JSON>
     ]
   }
 
