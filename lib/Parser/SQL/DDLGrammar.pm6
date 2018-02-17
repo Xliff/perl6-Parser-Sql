@@ -318,7 +318,9 @@ grammar DDLGrammar {
 
   token ident {
     # Can Identifier consist of a sole _, @ or #?
-    <:Letter + [ _ @ # ]> <[ \w _ @ # $ ]>*
+    :my token valid_id { <:Letter + [ _ @ # ]> <[ \w _ @ # $ ]>* }
+    <valid_id>
+    # What should <IDENT_QUOTED> be?
   }
 
   token field_ident {
@@ -336,8 +338,13 @@ grammar DDLGrammar {
     [ <ns_ident=.ident> '.' || '.' ]? <tbl_ident=.ident>
   }
 
+  token simple_ident {
+    <ident> || <keyword>
+  }
+
   token text {
-    [ "'" ( <-["]>+ ) "'" | "'" ( <-[']>+ ) "'"  ]
+      # Are double quotes allowed as text strings?
+      "'" ( <-[']>+ ) "'" | '"' ( <-["]>+ ) '"'
   }
 
   token underscore_charset {
@@ -496,10 +503,50 @@ grammar DDLGrammar {
     [ <DEFAULT> || <FIXED> || <DYNAMIC> || <COMPRESSED> || <REDUNDANT> || <COMPACT> ]
   }
 
-  rule simple_expr {
-    # WHEEEEE!
+  rule _key_function_call {
+    [
+      <CHAR> '(' <expr_list> [ USING <charset_name=.ident> ]? ')'
+      |
+      [
+        [ <DATE> || <DAY> || <HOUR> || <MINUTE> || <MONTH> || <SECOND> ||
+          <TIME> || <YEAR>
+        ]
+        |
+        [
+          <INSERT> '(' <expr> ',' <expr> ','
+          |
+          [ <LEFT> || <RIGHT> ] '('
+        ] <expr> ','
+        |
+        <TIMESTAMP> '(' [ <expr> ',' ]?
+        |
+        <TRIM> '(' [
+          <expr>
+          |
+          [ <LEADING> || <TRAILING> || <BOTH> ] <expr>?
+        ] <FROM>
+      ] <expr>
+      |
+      <USER> '('
+      |
+      <INTERVAL> '(' <expr> ',' <expr> [ ',' <expr_list> ]?
+    ] ')'
+    |
+    <CURRENT_USER> [ '(' ')' ]?
+  }
+
+  rule _nonkey_function_call {
     #...
-    .
+  }
+
+  rule simple_expr {
+    <simple_ident> [ <JSON_SEPARATOR> || <JSON_UNQ_SEPEARATOR> ] <text> ]
+    |
+    <_key_function_call>
+    |
+    <_nonkey_function_call>
+    |
+    #...
   }
 
   rule table_list {
