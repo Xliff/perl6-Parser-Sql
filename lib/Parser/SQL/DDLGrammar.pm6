@@ -147,6 +147,7 @@ grammar DDLGrammar {
   token HASH               { 'HASH' }
   token HOST               { 'HOST' }
   token IF                 { 'IF' }
+  token IGNORE		         { 'IGNORE' }
   token IN                 { 'IN' }
   token INDEX              { 'INDEX' }
   token INT		             { 'INT' }
@@ -208,9 +209,11 @@ grammar DDLGrammar {
   token REDUNDANT          { 'REDUNDANT' }
   token REFERENCES         { 'REFERENCES'   }
   token REGEXP             { 'REGEXP' }
+  token REPLACE		         { 'REPLACE' }
   token REQUIRE            { 'REQUIRE' }
   token RESTRICT           { 'RESTRICT' }
   token RTREE              { 'RTREE' }
+  token SELECT		         { 'SELECT' }
   token SERIAL             { 'SERIAL' }
   token SERVER             { 'SERVER' }
   token SET                { 'SET' }
@@ -375,8 +378,56 @@ grammar DDLGrammar {
     ]
   }
 
+  rule bit_expr {
+    [
+      <bit_expr> [
+        <bit_ops> <bit_expr>
+        |
+        <plus_minus> [
+          <bit_expr>
+          |
+          <INTERNAL> <expr> <interval>
+        ]
+      ]
+      |
+      <simple_expr>
+    ]
+  }
+
+  rule bool_pri {
+    <predicate> [
+      <IS> <not>? <NULL>
+      |
+      <comp_ops> [
+        <predicate>
+        |
+        <all_or_any> '(' <subselect> ')'
+      ]
+    ]?
+  }
+
   rule charset {
     [ <CHAR> <SET> | <CHARSET> ]
+  }
+
+  rule escape {
+    <ESCAPE> <simple_expr>
+  }
+
+  rule expr {
+    [
+      [
+        <expr> [ <or> | <XOR> | <and> ]
+        |
+        <NOT>
+      ] <expr>
+      |
+      <bool_pri> [ <IS> <not>? [ <TRUE> | <FALSE> | <UNKNOWN> ] ]?
+    ]
+  }
+
+  rule expr_list {
+    <expr> [ ',' <expr> ]*
   }
 
   rule generated_always { <GENERATED> <ALWAYS> }
@@ -417,13 +468,44 @@ grammar DDLGrammar {
     ]
   }
 
+  rule predicate {
+    :my rule _in_expr { <IN> '(' [ <subselect> | <expr_list> ] ')' }
+    [
+      <AND> <bit_expr> <BETWEEN> <not>?
+      |
+      <bit_expr>
+    ]
+    [
+      <_in_expr>
+      |
+      <not> [
+        <_in_expr>
+        |
+        <LIKE> <simple_expr> <escape>?
+        |
+        <REGEXP> <bit_expr>
+      ]
+      |
+      [ <SOUNDS> <LIKE> | <REGEXP> ] <bit_expr>
+      |
+      <LIKE> <simple_expr> <escape>?
+    ]?
+  }
+
   rule row_types {
     [ <DEFAULT> || <FIXED> || <DYNAMIC> || <COMPRESSED> || <REDUNDANT> || <COMPACT> ]
+  }
+
+  rule simple_expr {
+    # WHEEEEE!
+    #...
+    .
   }
 
   rule table_list {
     <table_ident> [ ',' <table_ident> ]*
   }
+
 
   rule create_table_opts {
     <create_table_opt> [ ',' <create_table_opt> ]*
@@ -855,16 +937,26 @@ grammar DDLGrammar {
     ] [ <SUBPARTITIONS> <number> ]?
   }
 
+  rule create3 {
+    [ <REPLACE> || <IGNORE> ]? <AS>? [
+      <create_select> <union_clause>?
+      |
+      '(' <create_select> ')' <union_opt>
+    ]
+  }
+
   rule CREATE_ST {
     <CREATE> [
         <TEMPORARY>? <TABLE> <if_not_exists>? <table_ident> [
           '(' [
-            <create_field_list> ')' <create_table_opts>? <create_partitioning>? <create3>
+            <create_field_list> ')' <create_table_opts>? <create_partitioning>? <create3>?
+            |
+            <create_partitioning>? <create_select> ')' <union_opt>
             |
             <LIKE> <table_ident> ')'
           ]
           |
-          <create_table_opts>? <create_partitioning>? <create3>
+          <create_table_opts>? <create_partitioning>? <create3>?
           |
           <LIKE> <table_ident>
         ]
@@ -899,94 +991,24 @@ grammar DDLGrammar {
     ]
   }
 
-  rule expr {
-    [
-      [
-        <expr> [ <or> | <XOR> | <and> ]
-        |
-        <NOT>
-      ] <expr>
-      |
-      <bool_pri> [ <IS> <not>? [ <TRUE> | <FALSE> | <UNKNOWN> ] ]?
-    ]
+
+
+  rule create_select {
+    { die "{ &?ROUTINE.name } NYI }" }
   }
 
-  rule bit_expr {
-    [
-      <bit_expr> [
-        <bit_ops> <bit_expr>
-        |
-        <plus_minus> [
-          <bit_expr>
-          |
-          <INTERNAL> <expr> <interval>
-        ]
-      ]
-      |
-      <simple_expr>
-    ]
+  rule union_clause {
+    . { die "{ &?ROUTINE.name } NYI }" }
   }
 
-  rule bool_pri {
-    <predicate> [
-      <IS> <not>? <NULL>
-      |
-      <comp_ops> [
-        <predicate>
-        |
-        <all_or_any> '(' <subselect> ')'
-      ]
-    ]?
-  }
-
-  rule escape {
-    <ESCAPE> <simple_expr>
-  }
-
-  rule expr_list {
-    <expr> [ ',' <expr> ]*
-  }
-
-  rule _in_expr {
-    <IN> '(' [
-      <subselect>
-      |
-      <expr_list>
-    ] ')'
-  }
-
-  rule predicate {
-    [
-      <AND> <bit_expr> <BETWEEN> <not>?
-      |
-      <bit_expr>
-    ]
-    [
-      <_in_expr>
-      |
-      <not> [
-        <_in_expr>
-        |
-        <LIKE> <simple_expr> <escape>?
-        |
-        <REGEXP> <bit_expr>
-      ]
-      |
-      [ <SOUNDS> <LIKE> | <REGEXP> ] <bit_expr>
-      |
-      <LIKE> <simple_expr> <escape>?
-    ]?
+  rule union_opt {
+    . { die "{ &?ROUTINE.name } NYI }" }
   }
 
   rule subselect {
     . { die "{ &?ROUTINE.name } NYI }" }
-    #...
   }
 
-  rule simple_expr {
-    # WHEEEEE!
-    #...
-    .
-  }
+
 
 };
