@@ -10,7 +10,11 @@ grammar DDLGrammar {
   token LT          { 'LT' || '<' }
   token NE          { 'NE' || '<>' }
 
+  token AND2        { '&&' }
+  token BIT_NOT     { '~' }
   token MINUS       { '-' }
+  token NOT_OP      { '!' }
+  token OR2         { '||' }
   token PLUS        { '+' }
   token SHIFT_L     { '<<' }
   token SHIFT_R     { '>>' }
@@ -77,9 +81,11 @@ grammar DDLGrammar {
     <EQ> || <GE> || <GT> || <LE> || <LT> || <NE>
   }
 
+
   token ACCOUNT            { 'ACCOUNT' }
   token ACTION             { 'ACTION' }
   token ADD                { 'ADD' }
+  token ADDDATE	           { 'ADDDATE' }
   token ALGORITHM          { 'ALGORITHM' }
   token ALL                { 'ALL' }
   token ALWAYS             { 'ALWAYS' }
@@ -95,6 +101,7 @@ grammar DDLGrammar {
   token BLOB		           { 'BLOB' }
   token BOOL		           { 'BOOL' }
   token BOOLEAN		         { 'BOOLEAN' }
+  token BOTH               { 'BOTH' }
   token BTREE              { 'BTREE' }
   token BY                 { 'BY' }
   token BYTE		           { 'BYTE' }
@@ -113,8 +120,12 @@ grammar DDLGrammar {
   token CONNECTION         { 'CONNECTION' }
   token CONSTRAINT         { 'CONSTRAINT' }
   token CREATE             { 'CREATE' }
+  token CURDATE	           { 'CURDATE' }
+  token CURRENT	           { 'CURRENT' }
+  token CURTIME            { 'CURTIME' }
   token DATA               { 'DATA' }
   token DATABASE           { 'DATABASE' }
+  token DATE	             { 'DATE' }
   token DATE               { 'DATE' }
   token DATETIME		       { 'DATETIME' }
   token DECIMAL		         { 'DECIMAL' }
@@ -132,32 +143,41 @@ grammar DDLGrammar {
   token ESCAPE             { 'ESCAPE' }
   token EXISTS             { 'EXISTS' }
   token EXPIRE             { 'EXPIRE' }
+  token EXTRACT            { 'EXTRACT' }
   token FALSE              { 'FALSE' }
   token FIRST              { 'FIRST' }
   token FIXED              { 'FIXED' }
   token FLOAT		           { 'FLOAT' }
+  token FOR		             { 'FOR' }
   token FOREIGN            { 'FOREIGN' }
+  token FROM	             { 'FROM' }
   token FULL               { 'FULL' }
   token FULLTEXT           { 'FULLTEXT' }
   token GENERATED          { 'GENERATED' }
   token GEOMETRY		       { 'GEOMETRY' }
   token GEOMETRYCOLLECTION { 'GEOMETRYCOLLECTION' }
+  token GET		             { 'GET' }
   token GRANT              { 'GRANT' }
   token GROUP              { 'GROUP' }
   token HASH               { 'HASH' }
   token HOST               { 'HOST' }
+  token IDENT		           { 'IDENT' }
   token IF                 { 'IF' }
   token IGNORE		         { 'IGNORE' }
   token IN                 { 'IN' }
   token INDEX              { 'INDEX' }
+  token INSERT		         { 'INSERT' }
   token INT		             { 'INT' }
   token INTERNAL           { 'INTERNAL' }
   token INTERVAL           { 'INTERVAL' }
   token IS                 { 'IS' }
   token ISSUER             { 'ISSUER' }
   token JSON		           { 'JSON' }
+  token JSON		           { 'JSON' }
   token KEY                { 'KEY' }
   token LAST               { 'LAST' }
+  token LEADING		         { 'LEADING' }
+  token LEFT		           { 'LEFT' }
   token LESS               { 'LESS' }
   token LIKE               { 'LIKE' }
   token LINEAR             { 'LINEAR' }
@@ -201,6 +221,7 @@ grammar DDLGrammar {
   token POINT		           { 'POINT' }
   token POLYGON		         { 'POLYGON' }
   token PORT               { 'PORT' }
+  token POSITION		       { 'POSITION' }
   token PRECISION		       { 'PRECISION' }
   token PRIMARY            { 'PRIMARY' }
   token RANGE              { 'RANGE' }
@@ -212,6 +233,7 @@ grammar DDLGrammar {
   token REPLACE		         { 'REPLACE' }
   token REQUIRE            { 'REQUIRE' }
   token RESTRICT           { 'RESTRICT' }
+  token RIGHT	             { 'RIGHT' }
   token RTREE              { 'RTREE' }
   token SELECT		         { 'SELECT' }
   token SERIAL             { 'SERIAL' }
@@ -226,19 +248,26 @@ grammar DDLGrammar {
   token SSL                { 'SSL' }
   token STORAGE            { 'STORAGE' }
   token STORED             { 'STORED' }
+  token SUBDATE		         { 'SUBDATE' }
   token SUBJECT            { 'SUBJECT' }
   token SUBPARTITION       { 'SUBPARTITION' }
   token SUBPARTITIONS      { 'SUBPARTITIONS' }
+  token SUBSTRING		       { 'SUBSTRING' }
+  token SYSDATE		         { 'SYSDATE' }
   token TABLE              { 'TABLE' }
   token TABLESPACE         { 'TABLESPACE ' }
   token TEMPORARY          { 'TEMPORARY'  }
   token TEXT		           { 'TEXT' }
   token THAN               { 'THAN' }
   token TIME               { 'TIME' }
+  token TIMESTAMP		       { 'TIMESTAMP' }
+  token TIMESTAMP		       { 'TIMESTAMP' }
   token TIMESTAMP          { 'TIMESTAMP' }
   token TINYBLOB		       { 'TINYBLOB' }
   token TINYINT		         { 'TINYINT' }
   token TINYTEXT		       { 'TINYTEXT' }
+  token TRAILING		       { 'TRAILING' }
+  token TRIM		           { 'TRIM' }
   token TRUE               { 'TRUE' }
   token TYPE               { 'TYPE' }
   token UNDOFILE           { 'UNDOFILE'  }
@@ -251,6 +280,9 @@ grammar DDLGrammar {
   token UPDATE             { 'UPDATE' }
   token USER               { 'USER' }
   token USING              { 'USING' }
+  token UTC		             { 'UTC' }
+  token UTC		             { 'UTC' }
+  token UTC		             { 'UTC' }
   token VALUE              { 'VALUE' }
   token VALUES             { 'VALUES' }
   token VARBINARY		       { 'VARBINARY' }
@@ -267,17 +299,24 @@ grammar DDLGrammar {
   token AUTO_INC                 { 'AUTO_INCREMENT' }
   token AVG_ROW_LENGTH           { 'AVG_ROW_LENGTH' }
   token COLUMN_FORMAT            { 'COLUMN_FORMAT' }
+  token CURRENT_USER		         { 'CURRENT_USER' }
+  token DATE_ADD		             { 'DATE_ADD' }
+  token DATE_SUB		             { 'DATE_SUB' }
   token DELAY_KEY_WRITE          { 'DELAY_KEY_WRITE' }
   token EXTENT_SIZE              { 'EXTENT_SIZE' }
+  token GET_FORMAT		           { 'GET_FORMAT' }
+  token IDENT_QUOTED		         { 'IDENT_QUOTED' }
   token INITIAL_SIZE             { 'INITIAL_SIZE' }
   token INSERT_METHOD            { 'INSERT_METHOD' }
+  token JSON_SEPARATOR		       { 'JSON_SEPARATOR' }
+  token JSON_UNQ_SEPEARATOR		   { 'JSON_UNQ_SEPEARATOR' }
   token KEY_BLOCK_SIZE           { 'KEY_BLOCK_SIZE' }
   token MAX_CONNECTIONS_PER_HOUR { 'MAX_CONNECTIONS_PER_HOUR' }
-  token MAX_SIZE                 { 'MAX_SIZE' }
   token MAX_QUERIES_PER_HOUR     { 'MAX_QUERIES_PER_HOUR' }
+  token MAX_ROWS                 { 'MAX_ROWS' }
+  token MAX_SIZE                 { 'MAX_SIZE' }
   token MAX_UPDATES_PER_HOUR     { 'MAX_UPDATES_PER_HOUR' }
   token MAX_USER_CONNECTIONS     { 'MAX_USER_CONNECTIONS' }
-  token MAX_ROWS                 { 'MAX_ROWS' }
   token MAX_VALUE                { 'MAX_VALUE' }
   token MIN_ROWS                 { 'MIN_ROWS' }
   token NO_WAIT                  { 'NO_WAIT' }
@@ -288,10 +327,14 @@ grammar DDLGrammar {
   token STATS_PERSISTENT         { 'STATS_PERSISTENT' }
   token STATS_SAMPLE_PAGES       { 'STATS_SAMPLE_PAGES' }
   token TABLE_CHECKSUM           { 'TABLE_CHECKSUM' }
+  token TIMESTAMP_ADD	           { 'TIMESTAMP_ADD' }
+  token TIMESTAMP_DIFF	         { 'TIMESTAMP_DIFF' }
   token UNDO_BUFFER_SIZE         { 'UNDO_BUFFER_SIZE' }
+  token UTC_DATE		             { 'UTC_DATE' }
+  token UTC_TIME		             { 'UTC_TIME' }
+  token UTC_TIMESTAMP		         { 'UTC_TIMESTAMP' }
 
-
-  token real_ulong_num {
+  token ulong_num {
     <number> | <hex_num>
   }
 
@@ -330,16 +373,11 @@ grammar DDLGrammar {
   token order_dir  { <ASC> || <DESC> }
 
   token simple_ident {
-    [ <schema_id=.ident> '.' || '.' ]? <obj_id=.ident> '.' <ident> ||
-    <ident>
+    <ident> || <keyword>
   }
 
   token table_ident {
     [ <ns_ident=.ident> '.' || '.' ]? <tbl_ident=.ident>
-  }
-
-  token simple_ident {
-    <ident> || <keyword>
   }
 
   token text {
@@ -536,16 +574,69 @@ grammar DDLGrammar {
   }
 
   rule _nonkey_function_call {
-    #...
+    :my token _precision { '(' <num> ')'  };
+    [
+      [ <ADDDATE> || <SUBDATE> ] '(' <expr> ',' [
+        <expr> | <INTERVAL> <expr> <interval>
+      ]
+      |
+      [ <DATE_ADD> | <DATE_SUB> ] '(' <expr> ',' <INTERVAL> <expr> <interval>
+      |
+      [
+        <EXTRACT> '(' <interval> <FROM>
+        |
+        [
+          <GET_FORMAT> [ <DATE> || <TIME> || <TIMESTAMP> || <DATETIME> ]
+          |
+          [ <TIMESTAMP_ADD> || <TIMESTAMP_DIFF> ] '(' <interval_time_stamp> ','
+          <expr>
+        ] ','
+        |
+        <POSITION> '(' <bit_expr> <IN>
+        |
+        <SUBSTRING> '(' <expr> [
+          ',' [ <expr> ',' ]?
+          |
+          <FROM> [ <expr> <FOR> ]?
+        ]
+      ] <expr>
+    ] ')'
+    |
+    [ <CURDATE> || <UTC_DATE> ] [ '(' ')' ]?
+    |
+    [ <CURTIME> || <SYSDATE> || <UTC_TIME> || <UTC_TIMESTAMP> ] <_precision>?
+    |
+    <NOW> <_precision>?
   }
 
   rule simple_expr {
-    <simple_ident> [ <JSON_SEPARATOR> || <JSON_UNQ_SEPEARATOR> ] <text> ]
+    <simple_ident> [ <JSON_SEPARATOR> || <JSON_UNQ_SEPEARATOR> ] <text>
     |
     <_key_function_call>
     |
     <_nonkey_function_call>
     |
+    <_gen_function_call>
+    |
+    <_con_function_call>
+    |
+    <simple_expr> [
+      <COLLATE> <ident> || <text>
+      |
+      <OR2> <simple_expr>
+    ]
+    |
+    <literal>
+    |
+    <parm_marker>
+    |
+    <variable>
+    |
+    <sum_expr>
+    |
+    [ <PLUS> || <MINUS> || <BIT_NOT> || <NOT> || <NOT_OP> || <BINARY> ]
+    <simple_expr>
+    #|
     #...
   }
 
