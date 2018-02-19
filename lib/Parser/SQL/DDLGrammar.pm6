@@ -359,21 +359,27 @@ grammar DDLGrammar {
   token num           { <[+-]>? <whole=.number> [ '.' <dec=.number> ]? }
   token signed_number { <[+-]>? <number> }
 
-  token ident {
-    # Can Identifier consist of a sole _, @ or #?
-    :my token valid_id { <:Letter + [ _ @ # ]> <[ \w _ @ # $ ]>* }
-    <valid_id>
-    # What should <IDENT_QUOTED> be?
-  }
-
-  token field_ident {
-    [ <table_ident>? '.' ]? <field_id=.ident>
-  }
+  token field_ident { [ <table_ident>? '.' ]? <field_id=.ident> }
 
   token order_dir  { <ASC> || <DESC> }
 
+  token ident      { <ident_sys> || <keyword> }
+
+  token ident_sys {
+    # Can Identifier consist of a sole _, @ or #?
+    :my token valid_id { <:Letter + [ _ @ # ]> <[ \w _ @ # $ ]>* }
+    <valid_id>
+    # YYY: Verify that this is IDENT_QUOTED
+    ||
+    '"' <ident> '"' || "'" <ident> "'" ]
+  }
+
   token simple_ident {
-    <ident> || <keyword>
+    <ident> || <simple_ident_q>
+  }
+
+  token simple_ident_q {
+    [ <ident>? '.' ]? <ident> '.' <ident>
   }
 
   token table_ident {
@@ -537,7 +543,19 @@ grammar DDLGrammar {
     ]?
   }
 
-  rule row_types {
+  token select_alias {
+    <AS> || [ <ident> || <text> ]
+  }
+
+  rule select_item {
+      <table_wild> | <expr> <select_alias>
+  }
+
+  rule table_wild {
+    <ident> '.' [ <ident> '.' ]? '*'
+  }
+
+  token row_types {
     [ <DEFAULT> || <FIXED> || <DYNAMIC> || <COMPRESSED> || <REDUNDANT> || <COMPACT> ]
   }
 
@@ -572,6 +590,16 @@ grammar DDLGrammar {
     |
     <CURRENT_USER> [ '(' ')' ]?
   }
+
+  rule _gen_function_call {
+    [
+      <ident_sys> '(' <udf_expr> [ ',' <udf_expr> ]* ]?
+      |
+      <ident> '.' <ident> '(' <expr_list>
+    ] ')'
+  }
+
+
 
   rule _nonkey_function_call {
     :my token _precision { '(' <num> ')'  };
@@ -644,6 +672,9 @@ grammar DDLGrammar {
     <table_ident> [ ',' <table_ident> ]*
   }
 
+  rule udf_expr {
+    <expr> <select_alias>
+  }
 
   rule create_table_opts {
     <create_table_opt> [ ',' <create_table_opt> ]*
@@ -923,11 +954,7 @@ grammar DDLGrammar {
     <GRANT> <OPTION> | <_limits>?
   }
 
-  rule ident_sys {
-    [ <ident> || '"' <ident> '"' || "'" <ident> "'" ]
-  }
-
-  rule key_alg {
+  token key_alg {
     [ <USING> || <TYPE> ] [ <BTREE> || <RTREE> || <HASH> ]
   }
 
@@ -939,8 +966,8 @@ grammar DDLGrammar {
     <key_list> [ ',' <key_list> ]*
   }
 
-  rule key_or_index {
-    [ <KEY> || <INDEX> ]
+  token key_or_index {
+     <KEY> || <INDEX>
   }
 
   rule _limits {
