@@ -81,7 +81,6 @@ grammar DDLGrammar {
     <EQ> || <GE> || <GT> || <LE> || <LT> || <NE>
   }
 
-
   token ACCOUNT            { 'ACCOUNT' }
   token ACTION             { 'ACTION' }
   token ADD                { 'ADD' }
@@ -111,7 +110,9 @@ grammar DDLGrammar {
   token CHECK              { 'CHECK' }
   token CHECKSUM           { 'CHECKSUM' }
   token CIPHER             { 'CIPHER' }
+  token COALESCE		       { 'COALESCE' }
   token COLLATE            { 'COLLATE' }
+  token COLLATION		       { 'COLLATION' }
   token COLUMNS            { 'COLUMNS' }
   token COMMENT            { 'COMMENT' }
   token COMPACT            { 'COMPACT' }
@@ -119,6 +120,7 @@ grammar DDLGrammar {
   token COMPRESSION        { 'COMPRESSION' }
   token CONNECTION         { 'CONNECTION' }
   token CONSTRAINT         { 'CONSTRAINT' }
+  token CONTAINS		       { 'CONTAINS' }
   token CREATE             { 'CREATE' }
   token CURDATE	           { 'CURDATE' }
   token CURRENT	           { 'CURRENT' }
@@ -150,6 +152,7 @@ grammar DDLGrammar {
   token FLOAT		           { 'FLOAT' }
   token FOR		             { 'FOR' }
   token FOREIGN            { 'FOREIGN' }
+  token FORMAT	           { 'FORMAT' }
   token FROM	             { 'FROM' }
   token FULL               { 'FULL' }
   token FULLTEXT           { 'FULLTEXT' }
@@ -157,6 +160,7 @@ grammar DDLGrammar {
   token GEOMETRY		       { 'GEOMETRY' }
   token GEOMETRYCOLLECTION { 'GEOMETRYCOLLECTION' }
   token GET		             { 'GET' }
+  token GLOBAL	           { 'GLOBAL' }
   token GRANT              { 'GRANT' }
   token GROUP              { 'GROUP' }
   token HASH               { 'HASH' }
@@ -179,10 +183,12 @@ grammar DDLGrammar {
   token LEADING		         { 'LEADING' }
   token LEFT		           { 'LEFT' }
   token LESS               { 'LESS' }
+  token LEVEL		           { 'LEVEL' }
   token LIKE               { 'LIKE' }
   token LINEAR             { 'LINEAR' }
   token LINESTRING		     { 'LINESTRING' }
   token LIST               { 'LIST' }
+  token LOCAL		           { 'LOCAL' }
   token LOCK               { 'LOCK' }
   token LOGFILE            { 'LOGFILE' }
   token LONG		           { 'LONG' }
@@ -230,14 +236,18 @@ grammar DDLGrammar {
   token REDUNDANT          { 'REDUNDANT' }
   token REFERENCES         { 'REFERENCES'   }
   token REGEXP             { 'REGEXP' }
+  token REPEAT		         { 'REPEAT' }
   token REPLACE		         { 'REPLACE' }
   token REQUIRE            { 'REQUIRE' }
   token RESTRICT           { 'RESTRICT' }
+  token REVERSE		         { 'REVERSE' }
   token RIGHT	             { 'RIGHT' }
+  token ROW_COUNT		       { 'ROW_COUNT' }
   token RTREE              { 'RTREE' }
   token SELECT		         { 'SELECT' }
   token SERIAL             { 'SERIAL' }
   token SERVER             { 'SERVER' }
+  token SESSION	           { 'SESSION' }
   token SET                { 'SET' }
   token SIGNED		         { 'SIGNED' }
   token SIMPLE             { 'SIMPLE' }
@@ -269,6 +279,7 @@ grammar DDLGrammar {
   token TRAILING		       { 'TRAILING' }
   token TRIM		           { 'TRIM' }
   token TRUE               { 'TRUE' }
+  token TRUNCATE		       { 'TRUNCATE' }
   token TYPE               { 'TYPE' }
   token UNDOFILE           { 'UNDOFILE'  }
   token UNICODE            { 'UNICODE' }
@@ -290,6 +301,7 @@ grammar DDLGrammar {
   token VARYING		         { 'VARYING' }
   token VIRTUAL            { 'VIRTUAL' }
   token WAIT               { 'WAIT' }
+  token WEIGHT_STRING		   { 'WEIGHT_STRING' }
   token WITH               { 'WITH' }
   token WRAPPER            { 'WRAPPER' }
   token X509               { 'X509' }
@@ -559,6 +571,60 @@ grammar DDLGrammar {
     [ <DEFAULT> || <FIXED> || <DYNAMIC> || <COMPRESSED> || <REDUNDANT> || <COMPACT> ]
   }
 
+  rule __ws_list_item { <number> <order_dir>? <REVERSE>? };
+  rule __ws_nweights  { '(' <number> ')' };
+
+  rule __ws_levels {
+    <LEVEL> ? $<ws_list> = [
+      <__ws_list_item> [ ',' <__ws_list_item> ]*
+      |
+      <number> '-' <number>
+    ]
+  }
+
+  rule _con_function_call {
+      [
+        [ <ASCII>   || <CHARSET> || <COLLATION> || <MICROSECOND> || <PASSWORD> ||
+          <QUARTER> || <REVERSE> ] '('
+        |
+        [
+          [ <IF> || <REPLACE> ] '('  <expr> ','
+          |
+          [ <MOD> || <REPEAT> || <TRUNCATE> ] '('
+        ] <expr> ','
+        |
+        [ <FORMAT>  '(' <exor ','
+          |
+          <WEEK> '('
+        ] <expr> ','?
+      ] <expr>
+      |
+      <COALESCE> '(' <expr_list>
+      |
+      [ <DATABASE> || <ROW_COUNT> ] '('
+      |
+      <WEIGHT_STRING> '(' <expr> [
+        <__ws_levels>?
+        |
+        ',' <number> ',' <number> ',' <number>
+        |
+        <AS> [
+          <CHAR> <__ws_nweights> <__ws_levels>?
+          |
+          <BINARY> <__ws_nweights>
+        ]
+      ]
+      |
+      [ <CONTAINS> || <POINT> ] '(' <expr> ',' <expr>
+      |
+      <GEOMETRYCOLLECTION> '(' <expr_list>?
+      |
+      [ <LINESTRING> || <MULTILINESTRING> || <MULTIPOINT> || <MULTIPOLYGON> ||
+        <POLYGON> ]
+      '(' <expr_list>
+    ] ')'
+  }
+
   rule _key_function_call {
     [
       <CHAR> '(' <expr_list> [ USING <charset_name=.ident> ]? ')'
@@ -598,8 +664,6 @@ grammar DDLGrammar {
       <ident> '.' <ident> '(' <expr_list>
     ] ')'
   }
-
-
 
   rule _nonkey_function_call {
     :my token _precision { '(' <num> ')'  };
@@ -656,7 +720,7 @@ grammar DDLGrammar {
     |
     <literal>
     |
-    <parm_marker>
+    <param_marker>
     |
     <variable>
     |
@@ -674,6 +738,15 @@ grammar DDLGrammar {
 
   rule udf_expr {
     <expr> <select_alias>
+  }
+
+  rule variable {
+    '@' [
+      [ <ident> | <text> ] [ <SET> <expr> ]?
+      |
+      '@' [ <GLOBAL> || <LOCAL> || <SESSION> ] '.'
+      [ <ident> | <text> ] [ '.' <ident> ]?
+    ]
   }
 
   rule create_table_opts {
