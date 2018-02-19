@@ -22,6 +22,8 @@ grammar DDLGrammar {
   token SHIFT_L     { '<<' }
   token SHIFT_R     { '>>' }
 
+  token PARAM_MARK  { '?' }
+
   # Interval symbols
   token DAY		      { 'DAY' }
   token WEEK		    { 'WEEK' }
@@ -88,6 +90,7 @@ grammar DDLGrammar {
   token ACTION             { 'ACTION' }
   token ADD                { 'ADD' }
   token ADDDATE	           { 'ADDDATE' }
+  token AGAINST		         { 'AGAINST' }
   token ALGORITHM          { 'ALGORITHM' }
   token ALL                { 'ALL' }
   token ALWAYS             { 'ALWAYS' }
@@ -109,6 +112,8 @@ grammar DDLGrammar {
   token BY                 { 'BY' }
   token BYTE		           { 'BYTE' }
   token CASCADE            { 'CASCADE' }
+  token CASE		           { 'CASE' }
+  token CAST		           { 'CAST' }
   token CHAR               { 'CHAR' }
   token CHARSET            { 'CHARSET' }
   token CHECK              { 'CHECK' }
@@ -125,6 +130,7 @@ grammar DDLGrammar {
   token CONNECTION         { 'CONNECTION' }
   token CONSTRAINT         { 'CONSTRAINT' }
   token CONTAINS		       { 'CONTAINS' }
+  token CONVERT		         { 'CONVERT' }
   token COUNT		           { 'COUNT' }
   token CREATE             { 'CREATE' }
   token CURDATE	           { 'CURDATE' }
@@ -145,12 +151,16 @@ grammar DDLGrammar {
   token DIV                { 'DIV' }
   token DOUBLE		         { 'DOUBLE' }
   token DYNAMIC            { 'DYNAMIC' }
+  token ELSE		           { 'ELSE' }
   token ENCRYPTION         { 'ENCRYPTION'   }
+  token END		             { 'END' }
   token ENGINE             { 'ENGINE' }
   token ENUM		           { 'ENUM' }
   token ESCAPE             { 'ESCAPE' }
   token EXISTS             { 'EXISTS' }
+  token EXPANSION		       { 'EXPANSION' }
   token EXPIRE             { 'EXPIRE' }
+  token EXPR		           { 'EXPR' }
   token EXTRACT            { 'EXTRACT' }
   token FALSE              { 'FALSE' }
   token FIRST              { 'FIRST' }
@@ -186,6 +196,7 @@ grammar DDLGrammar {
   token JSON		           { 'JSON' }
   token JSON		           { 'JSON' }
   token KEY                { 'KEY' }
+  token LANGUAGE		       { 'LANGUAGE' }
   token LAST               { 'LAST' }
   token LEADING		         { 'LEADING' }
   token LEFT		           { 'LEFT' }
@@ -209,10 +220,12 @@ grammar DDLGrammar {
   token MEMORY             { 'MEMORY' }
   token MIN		             { 'MIN' }
   token MOD                { 'MOD' }
+  token MODE		           { 'MODE' }
   token MULTILINESTRING		 { 'MULTILINESTRING' }
   token MULTIPOINT		     { 'MULTIPOINT' }
   token MULTIPOLYGON		   { 'MULTIPOLYGON' }
   token NATIONAL		       { 'NATIONAL' }
+  token NATURAL	           { 'NATURAL' }
   token NCHAR		           { 'NCHAR' }
   token NEVER              { 'NEVER' }
   token NO                 { 'NO' }
@@ -227,6 +240,7 @@ grammar DDLGrammar {
   token OPTION             { 'OPTION' }
   token OPTIONS            { 'OPTIONS' }
   token OR                 { 'OR' }
+  token ORDER              { 'ORDER' }
   token OWNER              { 'OWNER' }
   token PARSER             { 'PARSER' }
   token PARTIAL            { 'PARTIAL' }
@@ -239,6 +253,7 @@ grammar DDLGrammar {
   token POSITION		       { 'POSITION' }
   token PRECISION		       { 'PRECISION' }
   token PRIMARY            { 'PRIMARY' }
+  token QUERY		           { 'QUERY' }
   token RANGE              { 'RANGE' }
   token REAL		           { 'REAL' }
   token REDOFILE           { 'REDOFILE' }
@@ -251,6 +266,7 @@ grammar DDLGrammar {
   token RESTRICT           { 'RESTRICT' }
   token REVERSE		         { 'REVERSE' }
   token RIGHT	             { 'RIGHT' }
+  token ROW		             { 'ROW' }
   token ROW_COUNT		       { 'ROW_COUNT' }
   token RTREE              { 'RTREE' }
   token SELECT		         { 'SELECT' }
@@ -282,6 +298,7 @@ grammar DDLGrammar {
   token TEMPORARY          { 'TEMPORARY'  }
   token TEXT		           { 'TEXT' }
   token THAN               { 'THAN' }
+  token THEN		           { 'THEN' }
   token TIME               { 'TIME' }
   token TIMESTAMP		       { 'TIMESTAMP' }
   token TIMESTAMP		       { 'TIMESTAMP' }
@@ -317,6 +334,7 @@ grammar DDLGrammar {
   token VIRTUAL            { 'VIRTUAL' }
   token WAIT               { 'WAIT' }
   token WEIGHT_STRING		   { 'WEIGHT_STRING' }
+  token WHEN		           { 'WHEN' }
   token WITH               { 'WITH' }
   token WRAPPER            { 'WRAPPER' }
   token X509               { 'X509' }
@@ -571,11 +589,15 @@ grammar DDLGrammar {
   }
 
   token select_alias {
-    <AS> || [ <ident> || <text> ]
+    <AS>? [ <ident> || <text> ]
   }
 
   rule select_item {
       <table_wild> | <expr> <select_alias>
+  }
+
+  rule simple_ident_nospvar {
+    <ident> | <simple_ident_q>
   }
 
   rule table_wild {
@@ -584,6 +606,22 @@ grammar DDLGrammar {
 
   token row_types {
     [ <DEFAULT> || <FIXED> || <DYNAMIC> || <COMPRESSED> || <REDUNDANT> || <COMPACT> ]
+  }
+
+  rule _cast_type {
+    [ <BINARY> || <NCHAR> ] [ '(' <number> ')' ]?
+    |
+    <CHAR> [ '(' <number> ')' ]? <BINARY>?
+    |
+    [ <SIGNED> || <UNSIGNED> ] <INT>?
+    |
+    <DATE>
+    |
+    [ <TIME> || <DATETIME> ] [ '(' <number> ')' ]?
+    |
+    <DECIMAL> [ '(' <number> ')' || [ <m=.number> ',' <d=.number> ] ]?
+    |
+    <JSON>
   }
 
   rule __ws_list_item { <number> <order_dir>? <REVERSE>? };
@@ -716,7 +754,12 @@ grammar DDLGrammar {
     <NOW> <_precision>?
   }
 
+  rule _when_clause {
+    <WHEN> <when_expr=.expr> <THEN> <then_expr=.expr>
+  }
+
   rule simple_expr {
+    :my rule _ident_list { <simple_ident> [ ',' <simple_ident> ]* };
     <simple_ident> [ <JSON_SEPARATOR> || <JSON_UNQ_SEPEARATOR> ] <text>
     |
     <_key_function_call>
@@ -735,7 +778,7 @@ grammar DDLGrammar {
     |
     <literal>
     |
-    <param_marker>
+    <PARAM_MARK>
     |
     <variable>
     |
@@ -743,12 +786,51 @@ grammar DDLGrammar {
     |
     [ <PLUS> || <MINUS> || <BIT_NOT> || <NOT> || <NOT_OP> || <BINARY> ]
     <simple_expr>
-    #|
-    #...
+    |
+    [
+      '(' [ <subselect> | [ <expr> [ ',' <expr_list> ]? ]?
+      |
+      <ROW> '(' <expr> ',' <expr_list>
+      |
+      <EXISTS> '(' <subselect>
+      |
+      <MATCH> [  <_ident_list> | '(' <_ident_list> ')' ] <AGAINST> '('
+      <bit_expr> [
+        [ <IN> <NATURAL> <LANGUAGE> <MODE> ]?
+        [ <WITH> <QUERY> <EXPANSION> ]?
+        |
+        <IN> <BOOLEAN> <MODE>
+      ]
+      <CAST> '(' <expr> <AS> <_cast_type> ')'
+      |
+      <DEFAULT> '(' <simple_ident>
+      |
+      <VALUES> '(' <simple_ident_nospvar>
+      |
+      <CONVERT> '(' <EXPR> [
+        ',' <_cast_type>
+        |
+        <USING> <charset_name=.ident>
+      ]
+    ] ')'
+    |
+    '(' <ident> <expr> ')'
+    |
+    <CASE> <expr>?
+    <_when_clause> [ <_when_clause>]*
+    [ <ELSE> <else_expr=.expr> ]? <END>
+    |
+    <INTERVAL> <expr> <interval> '+' <expr>
   }
 
+  my rule _gorder_clause {
+    <ORDER> <BY> <_order_expr>> [ ',' <_order_expr> ]*
+  }
+
+  my rule _order_expr    { <expr> <order_dir> }
+
   rule sum_expr {
-    :my rule _in_sum_expr { <ALL>? <expr> }
+    :my rule _in_sum_expr   { <ALL>? <expr> }
     [
       [
         [ <AVG> || <MIN> || <MAX> || <SUM> ] '(' <DISTINCT>?
@@ -758,10 +840,10 @@ grammar DDLGrammar {
       '('
      ] <_in_sum_expr>
      |
-     <GROUP_CONCAT> '(' <DISTINCT>? <expr_list> <gorder_clause>?
+     <GROUP_CONCAT> '(' <DISTINCT>? <expr_list> <_gorder_clause>?
      [ <SEPARATOR> <text> ]?
      |
-     <COUNT> '(' [ <ALL>? | <in_sum_expr> | <DISTINCT> <expr_list> ]
+     <COUNT> '(' [ <ALL>? | <_in_sum_expr> | <DISTINCT> <expr_list> ]
    ] ')'
  }
 
