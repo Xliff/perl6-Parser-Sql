@@ -100,6 +100,8 @@ grammar DDLGrammar {
   token ASC                { 'ASC' }
   token ASCII              { 'ASCII' }
   token AVG		             { 'AVG' }
+  token BACKUP             { 'BACKUP' }
+  token BEGIN              { 'BEGIN' }
   token BETWEEN            { 'BETWEEN' }
   token BIGINT		         { 'BIGINT' }
   token BINARY		         { 'BINARY' }
@@ -111,6 +113,7 @@ grammar DDLGrammar {
   token BTREE              { 'BTREE' }
   token BY                 { 'BY' }
   token BYTE		           { 'BYTE' }
+  token CACHE              { 'CACHE' }
   token CASCADE            { 'CASCADE' }
   token CASE		           { 'CASE' }
   token CAST		           { 'CAST' }
@@ -119,11 +122,13 @@ grammar DDLGrammar {
   token CHECK              { 'CHECK' }
   token CHECKSUM           { 'CHECKSUM' }
   token CIPHER             { 'CIPHER' }
+  token CLOSE              { 'CLOSE' }
   token COALESCE		       { 'COALESCE' }
   token COLLATE            { 'COLLATE' }
   token COLLATION		       { 'COLLATION' }
   token COLUMNS            { 'COLUMNS' }
   token COMMENT            { 'COMMENT' }
+  token COMMIT             { 'COMMIT' }
   token COMPACT            { 'COMPACT' }
   token COMPRESSED         { 'COMPRESSED' }
   token COMPRESSION        { 'COMPRESSION' }
@@ -141,6 +146,7 @@ grammar DDLGrammar {
   token DATE	             { 'DATE' }
   token DATE               { 'DATE' }
   token DATETIME		       { 'DATETIME' }
+  token DEALLOCATE         { 'DEALLOCATE' }
   token DECIMAL		         { 'DECIMAL' }
   token DEFAULT            { 'DEFAULT' }
   token DELETE             { 'DELETE' }
@@ -149,6 +155,7 @@ grammar DDLGrammar {
   token DISK               { 'DISK' }
   token DISTINCT		       { 'DISTINCT' }
   token DIV                { 'DIV' }
+  token DO                 { 'DO' }
   token DOUBLE		         { 'DOUBLE' }
   token DYNAMIC            { 'DYNAMIC' }
   token ELSE		           { 'ELSE' }
@@ -157,6 +164,7 @@ grammar DDLGrammar {
   token ENGINE             { 'ENGINE' }
   token ENUM		           { 'ENUM' }
   token ESCAPE             { 'ESCAPE' }
+  token EXECUTE            { 'EXECUTE' }
   token EXISTS             { 'EXISTS' }
   token EXPANSION		       { 'EXPANSION' }
   token EXPIRE             { 'EXPIRE' }
@@ -166,6 +174,8 @@ grammar DDLGrammar {
   token FIRST              { 'FIRST' }
   token FIXED              { 'FIXED' }
   token FLOAT		           { 'FLOAT' }
+  token FLUSH              { 'FLUSH' }
+  token FOLLOWS            { 'FOLLOWS' }
   token FOR		             { 'FOR' }
   token FOREIGN            { 'FOREIGN' }
   token FORMAT	           { 'FORMAT' }
@@ -179,8 +189,9 @@ grammar DDLGrammar {
   token GLOBAL	           { 'GLOBAL' }
   token GRANT              { 'GRANT' }
   token GROUP              { 'GROUP' }
-  token GROUP_CONCAT		   { 'GROUP_CONCAT' }
+  token HANDLER            { 'HANDLER' }
   token HASH               { 'HASH' }
+  token HELP               { 'HELP' }
   token HOST               { 'HOST' }
   token IDENT		           { 'IDENT' }
   token IF                 { 'IF' }
@@ -188,6 +199,7 @@ grammar DDLGrammar {
   token IN                 { 'IN' }
   token INDEX              { 'INDEX' }
   token INSERT		         { 'INSERT' }
+  token INSTALL            { 'INSTALL' }
   token INT		             { 'INT' }
   token INTERNAL           { 'INTERNAL' }
   token INTERVAL           { 'INTERVAL' }
@@ -237,6 +249,7 @@ grammar DDLGrammar {
   token NUMERIC		         { 'NUMERIC' }
   token NVARCHAR		       { 'NVARCHAR' }
   token ON                 { 'ON' }
+  token OPEN               { 'OPEN' }
   token OPTION             { 'OPTION' }
   token OPTIONS            { 'OPTIONS' }
   token OR                 { 'OR' }
@@ -251,7 +264,9 @@ grammar DDLGrammar {
   token POLYGON		         { 'POLYGON' }
   token PORT               { 'PORT' }
   token POSITION		       { 'POSITION' }
+  token PRECEDES           { 'PRECEDES' }
   token PRECISION		       { 'PRECISION' }
+  token PREPARE            { 'PREPARE' }
   token PRIMARY            { 'PRIMARY' }
   token QUERY		           { 'QUERY' }
   token RANGE              { 'RANGE' }
@@ -260,30 +275,40 @@ grammar DDLGrammar {
   token REDUNDANT          { 'REDUNDANT' }
   token REFERENCES         { 'REFERENCES'   }
   token REGEXP             { 'REGEXP' }
+  token REMOVE             { 'REMOVE' }
+  token REPAIR             { 'REPAIR' }
   token REPEAT		         { 'REPEAT' }
   token REPLACE		         { 'REPLACE' }
   token REQUIRE            { 'REQUIRE' }
+  token RESET              { 'RESET' }
+  token RESTORE            { 'RESTORE' }
   token RESTRICT           { 'RESTRICT' }
   token REVERSE		         { 'REVERSE' }
   token RIGHT	             { 'RIGHT' }
+  token ROLLBACK           { 'ROLLBACK' }
   token ROW		             { 'ROW' }
-  token ROW_COUNT		       { 'ROW_COUNT' }
   token RTREE              { 'RTREE' }
+  token SAVEPOINT          { 'SAVEPOINT' }
+  token SECURITY           { 'SECURITY' }
   token SELECT		         { 'SELECT' }
   token SEPARATOR		       { 'SEPARATOR' }
   token SERIAL             { 'SERIAL' }
   token SERVER             { 'SERVER' }
   token SESSION	           { 'SESSION' }
   token SET                { 'SET' }
+  token SHUTDOWN           { 'SHUTDOWN' }
   token SIGNED		         { 'SIGNED' }
   token SIMPLE             { 'SIMPLE' }
+  token SLAVE              { 'SLAVE' }
   token SMALLINT		       { 'SMALLINT' }
   token SOCKET             { 'SOCKET' }
+  token SONAME             { 'SONAME' }
   token SOUNDS             { 'SOUNDS' }
   token SPACIAL            { 'SPACIAL' }
   token SSL                { 'SSL' }
+  token START              { 'START' }
   token STD		             { 'STD' }
-  token STDDEV_SAMP		     { 'STDDEV_SAMP' }
+  token STOP               { 'STOP' }
   token STORAGE            { 'STORAGE' }
   token STORED             { 'STORED' }
   token SUBDATE		         { 'SUBDATE' }
@@ -301,8 +326,6 @@ grammar DDLGrammar {
   token THEN		           { 'THEN' }
   token TIME               { 'TIME' }
   token TIMESTAMP		       { 'TIMESTAMP' }
-  token TIMESTAMP		       { 'TIMESTAMP' }
-  token TIMESTAMP          { 'TIMESTAMP' }
   token TINYBLOB		       { 'TINYBLOB' }
   token TINYINT		         { 'TINYINT' }
   token TINYTEXT		       { 'TINYTEXT' }
@@ -313,31 +336,30 @@ grammar DDLGrammar {
   token TYPE               { 'TYPE' }
   token UNDOFILE           { 'UNDOFILE'  }
   token UNICODE            { 'UNICODE' }
+  token UNINSTALL          { 'UNINSTALL' }
   token UNION              { 'UNION' }
   token UNIQUE             { 'UNIQUE' }
   token UNKNOWN            { 'UNKNOWN' }
   token UNLOCK             { 'UNLOCK' }
   token UNSIGNED		       { 'UNSIGNED' }
   token UPDATE             { 'UPDATE' }
+  token UPGRADE            { 'UPGRADE' }
   token USER               { 'USER' }
   token USING              { 'USING' }
   token UTC		             { 'UTC' }
-  token UTC		             { 'UTC' }
-  token UTC		             { 'UTC' }
   token VALUE              { 'VALUE' }
   token VALUES             { 'VALUES' }
-  token VAR_SAMP		       { 'VAR_SAMP' }
   token VARBINARY		       { 'VARBINARY' }
   token VARCHAR		         { 'VARCHAR' }
   token VARIANCE		       { 'VARIANCE' }
   token VARYING		         { 'VARYING' }
   token VIRTUAL            { 'VIRTUAL' }
   token WAIT               { 'WAIT' }
-  token WEIGHT_STRING		   { 'WEIGHT_STRING' }
   token WHEN		           { 'WHEN' }
   token WITH               { 'WITH' }
   token WRAPPER            { 'WRAPPER' }
   token X509               { 'X509' }
+  token XA                 { 'XA' }
   token XOR                { 'XOR' }
   token ZEROFILL		       { 'ZEROFILL' }
 
@@ -350,6 +372,9 @@ grammar DDLGrammar {
   token DELAY_KEY_WRITE          { 'DELAY_KEY_WRITE' }
   token EXTENT_SIZE              { 'EXTENT_SIZE' }
   token GET_FORMAT		           { 'GET_FORMAT' }
+  token GROUP_CONCAT		         { 'GROUP_CONCAT' }
+  token GROUP_REPLICATION        { 'GROUP_REPLICATION' }
+  token GROUP_REPLICATION        { 'GROUP_REPLICATION' }
   token IDENT_QUOTED		         { 'IDENT_QUOTED' }
   token INITIAL_SIZE             { 'INITIAL_SIZE' }
   token INSERT_METHOD            { 'INSERT_METHOD' }
@@ -366,11 +391,14 @@ grammar DDLGrammar {
   token MIN_ROWS                 { 'MIN_ROWS' }
   token NO_WAIT                  { 'NO_WAIT' }
   token PACK_KEYS                { 'PACK_KEYS' }
+  token PARSE_GCOL_EXPR          { 'PARSE_GCOL_EXPR' }
   token REDO_BUFFER_SIZE         { 'REDO_BUFFER_SIZE' }
+  token ROW_COUNT		             { 'ROW_COUNT' }
   token ROW_FORMAT               { 'ROW_FORMAT' }
   token STATS_AUTO_RECALC        { 'STATS_AUTO_RECALC' }
   token STATS_PERSISTENT         { 'STATS_PERSISTENT' }
   token STATS_SAMPLE_PAGES       { 'STATS_SAMPLE_PAGES' }
+  token STDDEV_SAMP		           { 'STDDEV_SAMP' }
   token TABLE_CHECKSUM           { 'TABLE_CHECKSUM' }
   token TIMESTAMP_ADD	           { 'TIMESTAMP_ADD' }
   token TIMESTAMP_DIFF	         { 'TIMESTAMP_DIFF' }
@@ -378,6 +406,8 @@ grammar DDLGrammar {
   token UTC_DATE		             { 'UTC_DATE' }
   token UTC_TIME		             { 'UTC_TIME' }
   token UTC_TIMESTAMP		         { 'UTC_TIMESTAMP' }
+  token VAR_SAMP		             { 'VAR_SAMP' }
+  token WEIGHT_STRING		         { 'WEIGHT_STRING' }
 
   token ulong_num {
     <number> | <hex_num>
