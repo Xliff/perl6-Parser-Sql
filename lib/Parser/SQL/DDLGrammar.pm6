@@ -11,7 +11,10 @@ grammar DDLGrammar {
   token NE          { 'NE' || '<>' }
 
   token AND2        { '&&' }
+  token BIT_AND		  { '&' }
   token BIT_NOT     { '~' }
+  token BIT_OR		  { '|' }
+  token BIT_XOR		  { 'XOR' }
   token MINUS       { '-' }
   token NOT_OP      { '!' }
   token OR2         { '||' }
@@ -93,6 +96,7 @@ grammar DDLGrammar {
   token AS                 { 'AS' }
   token ASC                { 'ASC' }
   token ASCII              { 'ASCII' }
+  token AVG		             { 'AVG' }
   token BETWEEN            { 'BETWEEN' }
   token BIGINT		         { 'BIGINT' }
   token BINARY		         { 'BINARY' }
@@ -121,6 +125,7 @@ grammar DDLGrammar {
   token CONNECTION         { 'CONNECTION' }
   token CONSTRAINT         { 'CONSTRAINT' }
   token CONTAINS		       { 'CONTAINS' }
+  token COUNT		           { 'COUNT' }
   token CREATE             { 'CREATE' }
   token CURDATE	           { 'CURDATE' }
   token CURRENT	           { 'CURRENT' }
@@ -136,6 +141,7 @@ grammar DDLGrammar {
   token DESC               { 'DESC' }
   token DIRECTORY          { 'DIRECTORY' }
   token DISK               { 'DISK' }
+  token DISTINCT		       { 'DISTINCT' }
   token DIV                { 'DIV' }
   token DOUBLE		         { 'DOUBLE' }
   token DYNAMIC            { 'DYNAMIC' }
@@ -163,6 +169,7 @@ grammar DDLGrammar {
   token GLOBAL	           { 'GLOBAL' }
   token GRANT              { 'GRANT' }
   token GROUP              { 'GROUP' }
+  token GROUP_CONCAT		   { 'GROUP_CONCAT' }
   token HASH               { 'HASH' }
   token HOST               { 'HOST' }
   token IDENT		           { 'IDENT' }
@@ -195,10 +202,12 @@ grammar DDLGrammar {
   token LONGBLOB		       { 'LONGBLOB' }
   token LONGTEXT		       { 'LONGTEXT' }
   token MATCH              { 'MATCH' }
+  token MAX		             { 'MAX' }
   token MEDIUMBLOB		     { 'MEDIUMBLOB' }
   token MEDIUMINT		       { 'MEDIUMINT' }
   token MEDIUMTEXT		     { 'MEDIUMTEXT' }
   token MEMORY             { 'MEMORY' }
+  token MIN		             { 'MIN' }
   token MOD                { 'MOD' }
   token MULTILINESTRING		 { 'MULTILINESTRING' }
   token MULTIPOINT		     { 'MULTIPOINT' }
@@ -245,6 +254,7 @@ grammar DDLGrammar {
   token ROW_COUNT		       { 'ROW_COUNT' }
   token RTREE              { 'RTREE' }
   token SELECT		         { 'SELECT' }
+  token SEPARATOR		       { 'SEPARATOR' }
   token SERIAL             { 'SERIAL' }
   token SERVER             { 'SERVER' }
   token SESSION	           { 'SESSION' }
@@ -256,6 +266,8 @@ grammar DDLGrammar {
   token SOUNDS             { 'SOUNDS' }
   token SPACIAL            { 'SPACIAL' }
   token SSL                { 'SSL' }
+  token STD		             { 'STD' }
+  token STDDEV_SAMP		     { 'STDDEV_SAMP' }
   token STORAGE            { 'STORAGE' }
   token STORED             { 'STORED' }
   token SUBDATE		         { 'SUBDATE' }
@@ -263,6 +275,7 @@ grammar DDLGrammar {
   token SUBPARTITION       { 'SUBPARTITION' }
   token SUBPARTITIONS      { 'SUBPARTITIONS' }
   token SUBSTRING		       { 'SUBSTRING' }
+  token SUM		             { 'SUM' }
   token SYSDATE		         { 'SYSDATE' }
   token TABLE              { 'TABLE' }
   token TABLESPACE         { 'TABLESPACE ' }
@@ -296,8 +309,10 @@ grammar DDLGrammar {
   token UTC		             { 'UTC' }
   token VALUE              { 'VALUE' }
   token VALUES             { 'VALUES' }
+  token VAR_SAMP		       { 'VAR_SAMP' }
   token VARBINARY		       { 'VARBINARY' }
   token VARCHAR		         { 'VARCHAR' }
+  token VARIANCE		       { 'VARIANCE' }
   token VARYING		         { 'VARYING' }
   token VIRTUAL            { 'VIRTUAL' }
   token WAIT               { 'WAIT' }
@@ -731,6 +746,24 @@ grammar DDLGrammar {
     #|
     #...
   }
+
+  rule sum_expr {
+    :my rule _in_sum_expr { <ALL>? <expr> }
+    [
+      [
+        [ <AVG> || <MIN> || <MAX> || <SUM> ] '(' <DISTINCT>?
+        |
+        [ <BIT_AND>     || <BIT_OR>   || <BIT_XOR> || <STD> || <VARIANCE> ||
+          <STDDEV_SAMP> || <VAR_SAMP> ]
+      '('
+     ] <_in_sum_expr>
+     |
+     <GROUP_CONCAT> '(' <DISTINCT>? <expr_list> <gorder_clause>?
+     [ <SEPARATOR> <text> ]?
+     |
+     <COUNT> '(' [ <ALL>? | <in_sum_expr> | <DISTINCT> <expr_list> ]
+   ] ')'
+ }
 
   rule table_list {
     <table_ident> [ ',' <table_ident> ]*
