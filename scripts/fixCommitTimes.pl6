@@ -31,6 +31,6 @@ for @commits -> $c {
   #  .day, .hour, .minute, .second, .year, .offset-in-hours * 100
   #);
   say "Commit time {$c.key} is '{ $new_time }'";
-  run 'git',  'filter-branch', '--env-filter',
+  run 'git', 'filter-branch', '-f', '--env-filter',
       'if [ \$GIT_COMMIT = {$c.key} ]; then export GIT_AUTHOR_DATE=\"{ $new_time }\" \; export GIT_COMMITTER_DATE=\"{ $new_time }\"; fi';
 }
