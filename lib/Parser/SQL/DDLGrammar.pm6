@@ -659,12 +659,10 @@ grammar DDLGrammar {
     <CHANGED>     || <CHANNEL>   || <CIPHER>  ||
     <CLASS_ORIGIN>               || <CLIENT>  || <COALESCE>  || <CODE>       ||
     <COLLATION>   || <COLUMN_FORMAT>          || <COLUMN_NAME>               ||
-    <COLUMNS>     || <COMMITTED> || <COMPACT> ||<COMPLETION> || <COMPRESSED> ||
-    <COMPRESSION> || <CONCURRENT>             || <CONNECTION>                ||
-    <CONSISTENT>  || <CONSTRAINT_CATALOG>     || <CONSTRAINT_NAME>           ||
-    <CONSTRAINT_SCHEMA>                       || <CONTEXT>   || <CPU>        ||
-    <CUBE>        || <CURRENT>   || <CURSOR_NAME>            || <DATA>       ||
-    <DATAFILE>    || <DATE>      || <DATETIME>               || <DAY>        ||
+    <COLUMNS>     || <COMMITTED> || <COMPACT> || <COMPLETION>                ||
+    <COMPRESSED>  || <COMPRESSION>            || <CONCURRENT>                || <CONNECTION>  || <CONSISTENT>             || <CONSTRAINT_CATALOG>        || <CONSTRAINT_NAME>            || <CONSTRAINT_SCHEMA>      || <CONTEXT>    ||
+    <CPU>         || <CUBE>      || <CURRENT> || <CURSOR_NAME>               ||
+    <DATA>        || <DATAFILE>  || <DATE>    || <DATETIME>  || <DAY>        ||
     <DEFAULT_AUTH>               || <DEFINER> || <DELAY_KEY_WRITE>           ||
     <DES_KEY_FILE>               || <DIAGNOSTICS>            || <DIRECTORY>  ||
     <DISABLE>     || <DISCARD>   || <DISK>    || <DUMPFILE>  || <DUPLICATE>  ||
@@ -710,116 +708,38 @@ grammar DDLGrammar {
     <PLUGINS>     || <POINT>     || <POLYGON> || <PRESERVE> || <PREV>        ||
     <PRIVILEGES>  || <PROCESS>   || <PROCESSLIST>           || <PROFILE>     ||
     <PROFILES>    || <PROXY>     || <QUARTER> || <QUERY>    || <QUICK>       ||
-    <READ_ONLY> ||
-    <REBUILD> ||
-    <RECOVER> ||
-    <REDO_BUFFER_SIZE> ||
-    <REDOFILE> ||
-    <REDUNDANT> ||
-    <RELAY_LOG_FILE> ||
-    <RELAY_LOG_POS> ||
-    <RELAY_THREAD> ||
-    <RELAY> ||
-    <RELAYLOG> ||
-    <RELOAD> ||
-    <REORGANIZE> ||
-    <REPEATABLE> ||
-    <REPLICATE_DO_DB> ||
-    <REPLICATE_DO_TABLE> ||
-    <REPLICATE_IGNORE_DB> ||
-    <REPLICATE_IGNORE_TABLE> ||
-    <REPLICATE_REWRITE_DB> ||
-    <REPLICATE_WILD_DO_TABLE> ||
-    <REPLICATE_WILD_IGNORE_TABLE> ||
-    <REPLICATION> ||
-    <RESOURCES> ||
-    <RESUME> ||
-    <RETURNED_SQLSTATE> ||
-    <RETURNS> ||
-    <REVERSE> ||
-    <ROLLUP> ||
-    <ROTATE> ||
-    <ROUTINE> ||
-    <ROW_COUNT> ||
-    <ROW_FORMAT> ||
-    <ROW> ||
-    <ROWS> ||
-    <RTREE> ||
-    <SCHEDULE> ||
-    <SCHEMA_NAME> ||
-    <SECOND> ||
-    <SERIAL> ||
-    <SERIALIZABLE> ||
-    <SESSION> ||
-    <SHARE> ||
-    <SIMPLE> ||
-    <SLOW> ||
-    <SNAPSHOT> ||
-    <SOUNDS> ||
-    <SOURCE> ||
-    <SQL_AFTER_GTIDS> ||
-    <SQL_AFTER_MTS_GAPS> ||
-    <SQL_BEFORE_GTIDS> ||
-    <SQL_BUFFER_RESULT> ||
-    <SQL_CACHE> ||
-    <SQL_NO_CACHE> ||
-    <SQL_THREAD> ||
-    <STACKED> ||
-    <STARTS> ||
-    <STATS_AUTO_RECALC> ||
-    <STATS_PERSISTENT> ||
-    <STATS_SAMPLE_PAGES> ||
-    <STATUS> ||
-    <STORAGE> ||
-    <STRING> ||
-    <SUBCLASS_ORIGIN> ||
-    <SUBDATE> ||
-    <SUBJECT> ||
-    <SUBPARTITION> ||
-    <SUBPARTITIONS> ||
-    <SUPER> ||
-    <SUSPEND> ||
-    <SWAPS> ||
-    <SWITCHES> ||
-    <TABLE_CHECKSUM> ||
-    <TABLE_NAME> ||
-    <TABLES> ||
-    <TABLESPACE> ||
-    <TEMPORARY> ||
-    <TEMPTABLE> ||
-    <TEXT> ||
-    <THAN> ||
-    <TIME> ||
-    <TIMESTAMP_ADD> ||
-    <TIMESTAMP_DIFF> ||
-    <TIMESTAMP> ||
-    <TRANSACTION> ||
-    <TRIGGERS> ||
-    <TYPE> ||
-    <TYPES> ||
-    <UDF_RETURNS> ||
-    <UNCOMMITTED> ||
-    <UNDEFINED> ||
-    <UNDO_BUFFER_SIZE> ||
-    <UNDOFILE> ||
-    <UNKNOWN> ||
-    <UNTIL> ||
-    <USE_FRM> ||
-    <USER> ||
-    <VALIDATION> ||
-    <VALUE> ||
-    <VARIABLES> ||
-    <VIEW> ||
-    <WAIT> ||
-    <WARNINGS> ||
-    <WEEK> ||
-    <WEIGHT_STRING> ||
-    <WITHOUT> ||
-    <WORK> ||
-    <X509> ||
-    <XID> ||
-    <XML> ||
-    <YEAR_SYMACTION> ||
+    <READ_ONLY>   || <REBUILD>   || <RECOVER> || <REDO_BUFFER_SIZE>          ||
+    <REDOFILE>    || <REDUNDANT> || <RELAY_LOG_FILE>        ||
+    <RELAY_LOG_POS>              || <RELAY_THREAD>          || <RELAY>       ||
+    <RELAYLOG>    || <RELOAD>    || <REORGANIZE>            ||
+    <REPEATABLE>  || <REPLICATE_DO_DB>        || <REPLICATE_DO_TABLE>        ||
+    <REPLICATE_IGNORE_DB>        ||
+    <REPLICATE_IGNORE_TABLE>     || <REPLICATE_REWRITE_DB>                   ||
+    <REPLICATE_WILD_DO_TABLE>    || <REPLICATE_WILD_IGNORE_TABLE>            ||
+    <REPLICATION> || <RESOURCES> || <RESUME> || <RETURNED_SQLSTATE>          ||
+    <RETURNS>     || <REVERSE>   || <ROLLUP> || <ROTATE>    || <ROUTINE>     ||
+    <ROW_COUNT>   || <ROW_FORMAT>            || <ROW>       || <ROWS>        || <RTREE>       || <SCHEDULE>  || <SCHEMA_NAME>           || <SECOND>      ||
+    <SERIAL>      || <SERIALIZABLE>          || <SESSION>   || <SHARE>       ||
+    <SIMPLE>      || <SLOW>      || <SNAPSHOT>              || <SOUNDS>      ||
+    <SOURCE>      || <SQL_AFTER_GTIDS>       || <SQL_AFTER_MTS_GAPS>         ||
+    <SQL_BEFORE_GTIDS>           || <SQL_BUFFER_RESULT>     || <SQL_CACHE>   ||
+    <SQL_NO_CACHE>               || <SQL_THREAD>            || <STACKED>     ||
+    <STARTS>      || <STATS_AUTO_RECALC>     || <STATS_PERSISTENT>           ||
+    <STATS_SAMPLE_PAGES>         || <STATUS> || <STORAGE>   || <STRING>      ||
+    <SUBCLASS_ORIGIN>            || <SUBDATE>               || <SUBJECT>     ||
+    <SUBPARTITION>               || <SUBPARTITIONS>         || <SUPER>       ||
+    <SUSPEND>     || <SWAPS>     || <SWITCHES>              ||
+    <TABLE_CHECKSUM>             || <TABLE_NAME>            || <TABLES>      ||
+    <TABLESPACE>  || <TEMPORARY> || <TEMPTABLE>             || <TEXT>        ||
+    <THAN>        || <TIME>      || <TIMESTAMP_ADD>         ||
+    <TIMESTAMP_DIFF>             || <TIMESTAMP>             || <TRANSACTION> ||
+    <TRIGGERS>    ||  <TYPE>     || <TYPES>                 || <UDF_RETURNS> ||
+    <UNCOMMITTED>                || <UNDEFINED>             ||
+    <UNDO_BUFFER_SIZE>           || <UNDOFILE>              || <UNKNOWN>     ||
+    <UNTIL>       || <USE_FRM>   || <USER>   || <VALIDATION>                 ||
+    <VALUE>       || <VARIABLES> || <VIEW>   || <WAIT>      || <WARNINGS>    ||
+    <WEEK>        || <WEIGHT_STRING>         || <WITHOUT>   || <WORK>        ||
+    <X509>        || <XID>       || <XML>    || <YEAR_SYMACTION>             ||
     <YEAR>
   }
 
