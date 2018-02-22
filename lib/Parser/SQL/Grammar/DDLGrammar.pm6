@@ -106,7 +106,17 @@ grammar DDLGrammar {
     <FROM> [ <derived_table_list> || <DUAL> ]
   }
 
-  rule generated_always { <GENERATED> <ALWAYS> }
+  rule generated_always {
+    <GENERATED> <ALWAYS>
+  }
+
+  rule group_clause {
+    <GROUP> <BY> <order_expr> [ ',' <order_expr> ]* [ <WITH_CUBE> || <WITH_ROLLUP> ]?
+  }
+
+  rule having_clause {
+    <HAVING> <expr>
+  }
 
   rule index_lock_algo {
     [
@@ -116,7 +126,13 @@ grammar DDLGrammar {
     ]
   }
 
-  rule if_not_exists    { <IF> <NOT> <EXISTS> }
+  rule if_not_exists    {
+    <IF> <NOT> <EXISTS>
+  }
+
+  rule limit_clause {
+    <LIMIT> <limit_option> [ [ ',' || <OFFSET> ] <limit_option> ]?
+  }
 
   rule literal {
     <underscore_charset>? <text>
@@ -144,6 +160,20 @@ grammar DDLGrammar {
     ]
   }
 
+  rule order_expr    {
+    <expr> <order_dir>
+  }
+
+  rule order_clause {
+    <ORDER> <BY> <order_expr> [ ',' <order_expr> ]*
+  }
+
+  rule order_or_limit {
+    <order_clause> <limit_clause>?
+    |
+    <limit_clause>
+  }
+
   rule predicate {
     :my rule _in_expr { <IN> '(' [ <subselect> | <expr_list> ] ')' }
     [
@@ -168,6 +198,16 @@ grammar DDLGrammar {
     ]?
   }
 
+  rule procedure_analyse_clause {
+    <PROCEDURE> <ANALYSE> '(' <num> [ ',' <num> ]? ')'
+  }
+
+  rule query_spec {
+    <SELECT> <select_part2_derived> <table_expression>
+    |
+    '(' <select_paren_derived> ')' <order_or_limit>?
+  }
+
   rule select_item {
       <table_wild> | <expr> <select_alias>
   }
@@ -176,8 +216,24 @@ grammar DDLGrammar {
     [ <select_item> || '*' ] [ ',' <select_item> ]*
   }
 
+  rule select_lock_type {
+    <FOR> <UPDATE>
+    |
+    <LOCK> <IN> <SHARE> <MODE>
+  }
+
   rule select_option {
     <query_spec_option> || <SQL_NO_CACHE> || <SQL_CACHE>
+  }
+
+  rule select_paren_derived {
+    <SELECT> <select_part2_derived> <table_expression>
+    |
+    '(' <select_paren_derived> ')'
+  }
+
+  rule select_part2_derived {
+    <query_spec_option>? <select_item_list>
   }
 
   rule simple_ident_nospvar {
@@ -185,11 +241,25 @@ grammar DDLGrammar {
   }
 
   rule table_expression {
-    #...
+    <from_clause>?
+    <where_clause>?
+    <group_clause>?
+    <having_clause>?
+    <order_clause>?
+    <limit_clause>?
+    <procedure_analyse_clause>?
+    <select_lock_type>?
   }
 
   rule table_factor {
-    #...
+    [
+      <table_ident> <use_partition>? <table_alias>? <key_def>?
+      |
+      <SELECT> <select_option>* <select_item_list> <table_expression>
+      |
+      '(' <derived_table_list> <order_or_limit>?
+      [ <UNION> <union_opt>? <query_spec> ]*
+      ')' <table_alias>?
   }
 
   rule table_ref {
@@ -198,6 +268,10 @@ grammar DDLGrammar {
 
   rule table_wild {
     <ident> '.' [ <ident> '.' ]? '*'
+  }
+
+  rule where_clause {
+    <WHERE> <expr>
   }
 
   token row_types {
@@ -421,10 +495,8 @@ grammar DDLGrammar {
   }
 
   my rule _gorder_clause {
-    <ORDER> <BY> <_order_expr> [ ',' <_order_expr> ]*
+    <ORDER> <BY> <order_expr> [ ',' <order_expr> ]*
   }
-
-  my rule _order_expr    { <expr> <order_dir> }
 
   rule sum_expr {
     :my rule _in_sum_expr   { <ALL>? <expr> }
@@ -891,7 +963,7 @@ grammar DDLGrammar {
     [ <REPLACE> || <IGNORE> ]? <AS>? [
       <create_select> <union_clause>?
       |
-      '(' <create_select> ')' <union_opt>
+      '(' <create_select> ')' <union_opt>?
     ]
   }
 
@@ -901,7 +973,7 @@ grammar DDLGrammar {
           '(' [
             <create_field_list> ')' <create_table_opts>? <create_partitioning>? <create3>?
             |
-            <create_partitioning>? <create_select> ')' <union_opt>
+            <create_partitioning>? <create_select> ')' <union_opt>?
             |
             <LIKE> <table_ident> ')'
           ]
@@ -943,10 +1015,6 @@ grammar DDLGrammar {
 
 
   rule union_clause {
-    . { die "{ &?ROUTINE.name } NYI }" }
-  }
-
-  rule union_opt {
     . { die "{ &?ROUTINE.name } NYI }" }
   }
 

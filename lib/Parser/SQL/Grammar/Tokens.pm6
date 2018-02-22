@@ -609,6 +609,7 @@ our token signed_number is export { <[+-]>? <number> }
 our token ulong_num is export     { <number> || <hex_num> }
 
 our token order_dir is export     { <ASC> || <DESC> }
+our token union_opt is export     { <DISTINCT> || <ALL> }
 
 our token field_ident is export   { [ <table_ident>? '.' ]? <field_id=.ident> }
 our token ident is export         { <ident_sys> || <keyword> }
@@ -737,10 +738,10 @@ our token keyword_sp is export {
 token query_spec_option is export {
   <STRAIGHT_JOIN>       || <HIGH_PRIORITY>     || <DISTINCT>          ||
   <SQL_SMALL_RESULT>    || <SQL_BIG_RESULT>    || <SQL_BUFFER_RESULT> ||
-  <SQL_CALC_FOUND_ROWS> ||  <ALL>
+  <SQL_CALC_FOUND_ROWS> || <ALL>
 }
 
-token select_alias is export {
+our token select_alias is export {
   <AS>? [ <ident> || <text> ]
 }
 
