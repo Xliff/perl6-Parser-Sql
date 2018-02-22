@@ -591,17 +591,10 @@ our token VAR_SAMP is export                    { 'VAR_SAMP' }
 our token WEIGHT_STRING is export               { 'WEIGHT_STRING' }
 our token YEAR_SYMACTION is export              { 'YEAR_SYMACTION' }
 
-
-our token ulong_num is export {
-  <number> | <hex_num>
-}
-
 our token bin_num is export {
-  [
-    'B'  [ <[01]>+ || "'" <[01]>+ "'" ]
-    |
-    '0b' [ <[01]>+ || "'" <[01]>+ "'" ]
-  ]
+  'B'  [ <[01]>+ || "'" <[01]>+ "'" ]
+  ||
+  '0b' [ <[01]>+ || "'" <[01]>+ "'" ]
 }
 
 our token hex_num is export {
@@ -610,18 +603,15 @@ our token hex_num is export {
   ]
 }
 
-our token number is export {
-  \d+
-}
-
+our token number is export        { \d+ }
 our token num is export           { <[+-]>? <whole=.number> [ '.' <dec=.number> ]? }
 our token signed_number is export { <[+-]>? <number> }
+our token ulong_num is export     { <number> || <hex_num> }
 
-our token field_ident is export { [ <table_ident>? '.' ]? <field_id=.ident> }
+our token order_dir is export     { <ASC> || <DESC> }
 
-our token order_dir is export  { <ASC> || <DESC> }
-
-our token ident is export      { <ident_sys> || <keyword> }
+our token field_ident is export   { [ <table_ident>? '.' ]? <field_id=.ident> }
+our token ident is export         { <ident_sys> || <keyword> }
 
 our token ident_sys is export {
   # Can Identifier consist of a sole _, @ or #?
@@ -742,6 +732,16 @@ our token keyword_sp is export {
   <WEEK>        || <WEIGHT_STRING>         || <WITHOUT>   || <WORK>        ||
   <X509>        || <XID>       || <XML>    || <YEAR_SYMACTION>             ||
   <YEAR>
+}
+
+token query_spec_option is export {
+  <STRAIGHT_JOIN>       || <HIGH_PRIORITY>     || <DISTINCT>          ||
+  <SQL_SMALL_RESULT>    || <SQL_BIG_RESULT>    || <SQL_BUFFER_RESULT> ||
+  <SQL_CALC_FOUND_ROWS> ||  <ALL>
+}
+
+token select_alias is export {
+  <AS>? [ <ident> || <text> ]
 }
 
 our token simple_ident is export {

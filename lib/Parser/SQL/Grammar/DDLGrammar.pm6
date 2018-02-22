@@ -71,6 +71,17 @@ grammar DDLGrammar {
     [ <CHAR> <SET> | <CHARSET> ]
   }
 
+  rule create_select {
+    <SELECT> <select_option>* <select_item_list> <table_expression>
+  }
+
+  rule derived_table_list {
+    <esc_table_ref> [ ',' [
+      <table_ref> |
+      '(' <ident> <table_ref> ')'
+    ]*
+  }
+
   rule escape {
     <ESCAPE> <simple_expr>
   }
@@ -89,6 +100,10 @@ grammar DDLGrammar {
 
   rule expr_list {
     <expr> [ ',' <expr> ]*
+  }
+
+  rule from_clause {
+    <FROM> [ <derived_table_list> || <DUAL> ]
   }
 
   rule generated_always { <GENERATED> <ALWAYS> }
@@ -153,16 +168,32 @@ grammar DDLGrammar {
     ]?
   }
 
-  token select_alias {
-    <AS>? [ <ident> || <text> ]
-  }
-
   rule select_item {
       <table_wild> | <expr> <select_alias>
   }
 
+  rule select_item_list {
+    [ <select_item> || '*' ] [ ',' <select_item> ]*
+  }
+
+  rule select_option {
+    <query_spec_option> || <SQL_NO_CACHE> || <SQL_CACHE>
+  }
+
   rule simple_ident_nospvar {
     <ident> | <simple_ident_q>
+  }
+
+  rule table_expression {
+    #...
+  }
+
+  rule table_factor {
+    #...
+  }
+
+  rule table_ref {
+    <table_factor> | <join_table>
   }
 
   rule table_wild {
@@ -910,11 +941,6 @@ grammar DDLGrammar {
     ]
   }
 
-
-
-  rule create_select {
-    { die "{ &?ROUTINE.name } NYI }" }
-  }
 
   rule union_clause {
     . { die "{ &?ROUTINE.name } NYI }" }
