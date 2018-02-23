@@ -199,7 +199,7 @@ grammar DDLGrammar {
   }
 
   rule procedure_analyse_clause {
-    <PROCEDURE> <ANALYSE> '(' <num> [ ',' <num> ]? ')'
+    <PROCEDURE> <ANALYSE> '(' [ <num> [ ',' <num> ]? ]? ')'
   }
 
   rule query_spec {
@@ -230,6 +230,37 @@ grammar DDLGrammar {
     <SELECT> <select_part2_derived> <table_expression>
     |
     '(' <select_paren_derived> ')'
+  }
+
+  rule _into {
+    :my rule __select_var_ident { '@'? [ <ident> | <text> ] }
+    <INTO> [
+      <OUTFILE> <text> <load_data_charset>? <field_term> <line_item>?
+      |
+      <DUMPFILE> <text>
+      |
+      <__select_var_ident> [ ',' <__select_var_ident> ]*
+    ]
+  }
+
+  rule select_part2 {
+    <select_option> <select_item_list>
+    [
+      <order_clause>? <limit_clause>?
+      |
+      <_into>
+      |
+      <_into>?
+        <from_clause>
+        <where_clause>?
+        <group_clause>?
+        <having_clause>?
+        <order_clause>?
+        <limit_clause>?
+        <procedure_analyse_clause>?
+        <_into>?
+        <select_lock_type>?
+    ]
   }
 
   rule select_part2_derived {
@@ -502,10 +533,10 @@ grammar DDLGrammar {
     :my rule _in_sum_expr   { <ALL>? <expr> }
     [
       [
-        [ <AVG> || <MIN> || <MAX> || <SUM> ] '(' <DISTINCT>?
+        $<op>=[ <AVG> || <MIN> || <MAX> || <SUM> ] '(' <DISTINCT>?
         |
-        [ <BIT_AND>     || <BIT_OR>   || <BIT_XOR> || <STD> || <VARIANCE> ||
-          <STDDEV_SAMP> || <VAR_SAMP> ]
+        $<op>=[ <BIT_AND>     || <BIT_OR>      || <BIT_XOR> || <STD> ||
+                <VARIANCE>    || <STDDEV_SAMP> || <VAR_SAMP> ]
       '('
      ] <_in_sum_expr>
      |
@@ -933,6 +964,18 @@ grammar DDLGrammar {
     [ <SUBJECT> || <ISSUER> || <CIPHER> ] <text>
   }
 
+  rule select_init {
+    <SELECT> <select_part2> <union_list>?
+    |
+    '(' <select_paren> ')' <union_opt>
+  }
+
+  rule select_paren {
+    <SELECT> <select_part2>
+    |
+    '(' <select_paren> ')'
+  }
+
   rule server_option {
     [
       [ <USER> || <HOST> || <DATABASE> || <OWNER> || <PASSWORD> || <SOCKET> ]
@@ -961,7 +1004,7 @@ grammar DDLGrammar {
 
   rule create3 {
     [ <REPLACE> || <IGNORE> ]? <AS>? [
-      <create_select> <union_clause>?
+      <create_select> <union_list>?
       |
       '(' <create_select> ')' <union_opt>?
     ]
@@ -1013,9 +1056,8 @@ grammar DDLGrammar {
     ]
   }
 
-
-  rule union_clause {
-    . { die "{ &?ROUTINE.name } NYI }" }
+  rule union_list {
+    <UNION> <union_opt> <select_init>
   }
 
   rule subselect {

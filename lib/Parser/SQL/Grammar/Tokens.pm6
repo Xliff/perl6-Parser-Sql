@@ -70,15 +70,15 @@ our token interval_time_stamp is export {
   ]
 }
 
-our token all_or_any is export { <ALL> || <ANY> }
-our token and is export        { <AND> || '&&' }
-our token not is export        { <NOT> || '<>' }
-our token or is export         {  <OR> || '||' }
+our token all_or_any is export {  <ALL> || <ANY> }
+our token and is export        {  <AND> || '&&' }
+our token not is export        {  <NOT> || '<>' }
+our token or is export         {   <OR> || '||' }
 our token plus_minus is export { <PLUS> || <MINUS> }
 
 our token bit_ops is export {
-  '|' || '&' || '*' || '/' || '%' || '^' ||
-  <SHIFT_L> || <SHIFT_R> || <DIV> || <MOD>
+  '|' || '&' || '*' || '/' ||   '%' || '^' ||
+   <SHIFT_L> ||  <SHIFT_R> || <DIV> || <MOD>
 }
 
 our token comp_ops is export {
