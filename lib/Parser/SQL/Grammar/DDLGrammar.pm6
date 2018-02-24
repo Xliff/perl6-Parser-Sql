@@ -79,7 +79,7 @@ grammar DDLGrammar {
     <esc_table_ref> [ ',' [
       <table_ref> |
       '(' <ident> <table_ref> ')'
-    ]*
+    ] ]*
   }
 
   rule escape {
@@ -283,14 +283,13 @@ grammar DDLGrammar {
   }
 
   rule table_factor {
-    [
-      <table_ident> <use_partition>? <table_alias>? <key_def>?
-      |
-      <SELECT> <select_option>* <select_item_list> <table_expression>
-      |
-      '(' <derived_table_list> <order_or_limit>?
-      [ <UNION> <union_opt>? <query_spec> ]*
-      ')' <table_alias>?
+    <table_ident> <use_partition>? <table_alias>? <key_def>?
+    |
+    <SELECT> <select_option>* <select_item_list> <table_expression>
+    |
+    '(' <derived_table_list> <order_or_limit>?
+    [ <UNION> <union_opt>? <query_spec> ]*
+    ')' <table_alias>?
   }
 
   rule table_ref {

@@ -513,7 +513,6 @@ our token GET_FORMAT is export                  { 'GET_FORMAT' }
 our token GROUP_CONCAT is export                { 'GROUP_CONCAT' }
 our token GROUP_REPLICATION is export           { 'GROUP_REPLICATION' }
 our token HIGH_PRIORITY is export 		          { 'HIGH_PRIORITY' }
-our token HIGH_PRIORITY is export 		          { 'HIGH_PRIORITY' }
 our token IDENT_QUOTED is export                { 'IDENT_QUOTED' }
 our token IGNORE_SERVER_IDS is export           { 'IGNORE_SERVER_IDS' }
 our token INITIAL_SIZE is export                { 'INITIAL_SIZE' }
