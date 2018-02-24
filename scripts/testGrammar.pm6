@@ -5,7 +5,7 @@ my @defined_rules;
 sub checkfile($filename) {
   my $script = $filename.IO.open.slurp-rest or die "Cannot open file '$filename'";
 
-  for ( $script ~~ m:g/'use' \s+ [ $<word>=\w+ ] % '::' ';'/ ) -> $m {
+  for ( $script ~~ m:g/'use' \s+ [ $<word>=\w+ ]+ % '::' ';'/ ) -> $m {
     checkfile($m<word>[*-1].Str ~ ".pm6");
   }
 
