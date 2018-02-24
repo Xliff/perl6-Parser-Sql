@@ -184,6 +184,7 @@ our token DUPLICATE is export          { 'DUPLICATE' }
 our token DYNAMIC is export            { 'DYNAMIC' }
 our token ELSE is export               { 'ELSE' }
 our token ENABLE is export             { 'ENABLE' }
+our token ENCRYPTION is export 		     { 'ENCRYPTION' }
 our token END is export                { 'END' }
 our token ENDS is export               { 'ENDS' }
 our token ENGINE is export             { 'ENGINE' }
@@ -244,12 +245,12 @@ our token IMPORT is export             { 'IMPORT' }
 our token IN is export                 { 'IN' }
 our token INDEX is export              { 'INDEX' }
 our token INDEXES is export            { 'INDEXES' }
-our token INTERVAL is export           { 'INTERVAL' }
 our token INSERT is export             { 'INSERT' }
 our token INSTALL is export            { 'INSTALL' }
 our token INSTANCE is export           { 'INSTANCE' }
 our token INT is export                { 'INT' }
 our token INTERNAL is export           { 'INTERNAL' }
+our token INTERVAL is export           { 'INTERVAL' }
 our token INVOKER is export            { 'INVOKER' }
 our token IO is export                 { 'IO' }
 our token IPC is export                { 'IPC' }
@@ -328,6 +329,7 @@ our token PARSER is export             { 'PARSER' }
 our token PARTIAL is export            { 'PARTIAL' }
 our token PARTITION is export          { 'PARTITION' }
 our token PARTITIONING is export       { 'PARTITIONING' }
+our token PARTITIONS is export 		     { 'PARTITIONS' }
 our token PASSWORD is export           { 'PASSWORD' }
 our token PHASE is export              { 'PHASE' }
 our token PLUGIN is export             { 'PLUGIN' }
@@ -429,6 +431,8 @@ our token SWITCHES is export           { 'SWITCHES' }
 our token SYSDATE is export            { 'SYSDATE' }
 our token TABLE is export              { 'TABLE' }
 our token TABLES is export             { 'TABLES' }
+our token TABLESPACE is export 		     { 'TABLESPACE' }
+our token TEMPORARY is export 		     { 'TEMPORARY' }
 our token TEMPTABLE is export          { 'TEMPTABLE' }
 our token TEXT is export               { 'TEXT' }
 our token THAN is export               { 'THAN' }
@@ -448,6 +452,7 @@ our token TYPE is export               { 'TYPE' }
 our token TYPES is export              { 'TYPES' }
 our token UNCOMMITTED is export        { 'UNCOMMITTED' }
 our token UNDEFINED is export          { 'UNDEFINED' }
+our token UNDOFILE is export 		       { 'UNDOFILE' }
 our token UNICODE is export            { 'UNICODE' }
 our token UNINSTALL is export          { 'UNINSTALL' }
 our token UNION is export              { 'UNION' }
@@ -478,12 +483,12 @@ our token WITH is export               { 'WITH' }
 our token WITHOUT is export            { 'WITHOUT' }
 our token WORK is export               { 'WORK' }
 our token WRAPPER is export            { 'WRAPPER' }
+our token X509 is export 		           { 'X509' }
 our token XA is export                 { 'XA' }
 our token XID is export                { 'XID' }
 our token XML is export                { 'XML' }
 our token XOR is export                { 'XOR' }
 our token ZEROFILL is export           { 'ZEROFILL' }
-
 
 our token AUTO_INC is export                    { 'AUTO_INC' }
 our token AUTOEXTEND_SIZE is export             { 'AUTOEXTEND_SIZE' }
@@ -507,6 +512,8 @@ our token FILE_BLOCK_SIZE is export             { 'FILE_BLOCK_SIZE' }
 our token GET_FORMAT is export                  { 'GET_FORMAT' }
 our token GROUP_CONCAT is export                { 'GROUP_CONCAT' }
 our token GROUP_REPLICATION is export           { 'GROUP_REPLICATION' }
+our token HIGH_PRIORITY is export 		          { 'HIGH_PRIORITY' }
+our token HIGH_PRIORITY is export 		          { 'HIGH_PRIORITY' }
 our token IDENT_QUOTED is export                { 'IDENT_QUOTED' }
 our token IGNORE_SERVER_IDS is export           { 'IGNORE_SERVER_IDS' }
 our token INITIAL_SIZE is export                { 'INITIAL_SIZE' }
@@ -568,14 +575,18 @@ our token SCHEMA_NAME is export                 { 'SCHEMA_NAME' }
 our token SQL_AFTER_GTIDS is export             { 'SQL_AFTER_GTIDS' }
 our token SQL_AFTER_MTS_GAPS is export          { 'SQL_AFTER_MTS_GAPS' }
 our token SQL_BEFORE_GTIDS is export            { 'SQL_BEFORE_GTIDS' }
+our token SQL_BIG_RESULT is export 		          { 'SQL_BIG_RESULT' }
 our token SQL_BUFFER_RESULT is export           { 'SQL_BUFFER_RESULT' }
 our token SQL_CACHE is export                   { 'SQL_CACHE' }
+our token SQL_CALC_FOUND_ROWS is export 		    { 'SQL_CALC_FOUND_ROWS' }
 our token SQL_NO_CACHE is export                { 'SQL_NO_CACHE' }
+our token SQL_SMALL_RESULT is export 		        { 'SQL_SMALL_RESULT' }
 our token SQL_THREAD is export                  { 'SQL_THREAD' }
 our token STATS_AUTO_RECALC is export           { 'STATS_AUTO_RECALC' }
 our token STATS_PERSISTENT is export            { 'STATS_PERSISTENT' }
 our token STATS_SAMPLE_PAGES is export          { 'STATS_SAMPLE_PAGES' }
 our token STDDEV_SAMP is export                 { 'STDDEV_SAMP' }
+our token STRAIGHT_JOIN is export 		          { 'STRAIGHT_JOIN' }
 our token SUBCLASS_ORIGIN is export             { 'SUBCLASS_ORIGIN' }
 our token TABLE_CHECKSUM is export              { 'TABLE_CHECKSUM' }
 our token TABLE_NAME is export                  { 'TABLE_NAME' }
@@ -616,8 +627,8 @@ our token ident is export         { <ident_sys> || <keyword> }
 
 our token ident_sys is export {
   # Can Identifier consist of a sole _, @ or #?
-  :my token valid_id is export { <:Letter + [ _ @ # ]> <[ \w _ @ # $ ]>* };
-  <valid_id>
+  :my token _valid_id is export { <:Letter + [ _ @ # ]> <[ \w _ @ # $ ]>* };
+  <_valid_id>
   # YYY: Verify that this is IDENT_QUOTED
   ||
   '"' <ident> '"' || "'" <ident> "'"
@@ -735,7 +746,7 @@ our token keyword_sp is export {
   <YEAR>
 }
 
-token query_spec_option is export {
+our token query_spec_option is export {
   <STRAIGHT_JOIN>       || <HIGH_PRIORITY>     || <DISTINCT>          ||
   <SQL_SMALL_RESULT>    || <SQL_BIG_RESULT>    || <SQL_BUFFER_RESULT> ||
   <SQL_CALC_FOUND_ROWS> || <ALL>
