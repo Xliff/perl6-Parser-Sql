@@ -179,6 +179,7 @@ our token DISTINCT is export           { 'DISTINCT' }
 our token DIV is export                { 'DIV' }
 our token DO is export                 { 'DO' }
 our token DOUBLE is export             { 'DOUBLE' }
+our token DUAL is export               { 'DUAL' }
 our token DUMPFILE is export           { 'DUMPFILE' }
 our token DUPLICATE is export          { 'DUPLICATE' }
 our token DYNAMIC is export            { 'DYNAMIC' }
@@ -234,6 +235,7 @@ our token GRANTS is export             { 'GRANTS' }
 our token GROUP is export              { 'GROUP' }
 our token HANDLER is export            { 'HANDLER' }
 our token HASH is export               { 'HASH' }
+our token HAVING is export             { 'HAVING' }
 our token HELP is export               { 'HELP' }
 our token HOST is export               { 'HOST' }
 our token HOSTS is export              { 'HOSTS' }
@@ -251,6 +253,7 @@ our token INSTANCE is export           { 'INSTANCE' }
 our token INT is export                { 'INT' }
 our token INTERNAL is export           { 'INTERNAL' }
 our token INTERVAL is export           { 'INTERVAL' }
+our token INTO is export               { 'INTO' }
 our token INVOKER is export            { 'INVOKER' }
 our token IO is export                 { 'IO' }
 our token IPC is export                { 'IPC' }
@@ -267,6 +270,7 @@ our token LEFT is export               { 'LEFT' }
 our token LESS is export               { 'LESS' }
 our token LEVEL is export              { 'LEVEL' }
 our token LIKE is export               { 'LIKE' }
+our token LIMIT is export              { 'LIMIT' }
 our token LINEAR is export             { 'LINEAR' }
 our token LINESTRING is export         { 'LINESTRING' }
 our token LIST is export               { 'LIST' }
@@ -323,6 +327,7 @@ our token OPTION is export             { 'OPTION' }
 our token OPTIONS is export            { 'OPTIONS' }
 our token OR is export                 { 'OR' }
 our token ORDER is export              { 'ORDER' }
+our token OUTFILE is export            { 'OUTFILE' }
 our token OWNER is export              { 'OWNER' }
 our token PAGE is export               { 'PAGE' }
 our token PARSER is export             { 'PARSER' }
@@ -345,6 +350,7 @@ our token PRESERVE is export           { 'PRESERVE' }
 our token PREV is export               { 'PREV' }
 our token PRIMARY is export            { 'PRIMARY' }
 our token PRIVILEGES is export         { 'PRIVILEGES' }
+our token PROCEDURE is export          { 'PROCEDURE' }
 our token PROCESS is export            { 'PROCESS' }
 our token PROCESSLIST is export        { 'PROCESSLIST' }
 our token PROFILE is export            { 'PROFILE' }
@@ -358,6 +364,7 @@ our token REBUILD is export            { 'REBUILD' }
 our token RECOVER is export            { 'RECOVER' }
 our token REDOFILE is export           { 'REDOFILE' }
 our token REDUNDANT is export          { 'REDUNDANT' }
+our token REFERENCES is export         { 'REFERENCES' }
 our token REGEXP is export             { 'REGEXP' }
 our token RELAY is export              { 'RELAY' }
 our token RELAYLOG is export           { 'RELAYLOG' }
@@ -479,6 +486,7 @@ our token VIRTUAL is export            { 'VIRTUAL' }
 our token WAIT is export               { 'WAIT' }
 our token WARNINGS is export           { 'WARNINGS' }
 our token WHEN is export               { 'WHEN' }
+our token WHERE is export              { 'WHERE' }
 our token WITH is export               { 'WITH' }
 our token WITHOUT is export            { 'WITHOUT' }
 our token WORK is export               { 'WORK' }
@@ -599,6 +607,8 @@ our token UTC_TIME is export                    { 'UTC_TIME' }
 our token UTC_TIMESTAMP is export               { 'UTC_TIMESTAMP' }
 our token VAR_SAMP is export                    { 'VAR_SAMP' }
 our token WEIGHT_STRING is export               { 'WEIGHT_STRING' }
+our token WITH_CUBE is export                  { 'WITH_CUBE' }
+our token WITH_ROLLUP is export                { 'WITH_ROLLUP' }
 our token YEAR_SYMACTION is export              { 'YEAR_SYMACTION' }
 
 our token bin_num is export {
