@@ -1,8 +1,13 @@
 use v6.c;
 
 my @defined_rules;
+my %files_started;
 
 sub checkfile($filename) {
+  return if %files_started{$filename}
+  say "Checking '$filename'...";
+  %files_started{$filename}++
+  
   my $script = $filename.IO.open.slurp-rest or die "Cannot open file '$filename'";
 
   for ( $script ~~ m:g/'use' \s+ [ $<word>=\w+ ]+ % '::' ';'/ ) -> $m {
@@ -22,6 +27,7 @@ sub checkfile($filename) {
   for @used_rules {
     say "$_ in '$filename' not defined" if @defined_rules.none eq $_;
   }
+  say "Done checking '$filename'";
 }
 
 sub MAIN (Str $filename) {
