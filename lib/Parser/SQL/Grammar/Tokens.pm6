@@ -613,8 +613,8 @@ our token UTC_TIME is export                    { 'UTC_TIME' }
 our token UTC_TIMESTAMP is export               { 'UTC_TIMESTAMP' }
 our token VAR_SAMP is export                    { 'VAR_SAMP' }
 our token WEIGHT_STRING is export               { 'WEIGHT_STRING' }
-our token WITH_CUBE is export                  { 'WITH_CUBE' }
-our token WITH_ROLLUP is export                { 'WITH_ROLLUP' }
+our token WITH_CUBE is export                   { 'WITH_CUBE' }
+our token WITH_ROLLUP is export                 { 'WITH_ROLLUP' }
 our token YEAR_SYMACTION is export              { 'YEAR_SYMACTION' }
 
 our token bin_num is export {

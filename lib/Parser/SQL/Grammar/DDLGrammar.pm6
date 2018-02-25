@@ -68,7 +68,11 @@ grammar DDLGrammar {
   }
 
   rule charset {
-    [ <CHAR> <SET> | <CHARSET> ]
+    <CHAR> <SET> | <CHARSET>
+  }
+
+  rule charset_name_or_default {
+    <ident> || <text> || <BINARY> || <DEFAULT>
   }
 
   rule create_select {
@@ -154,6 +158,10 @@ grammar DDLGrammar {
     [ <NULL> || <FALSE> || <TRUE> ]
     |
     <underscore_charset>? [ <hex_num> || <bin_num> ]
+  }
+
+  rule load_data_charset {
+    <charset> <charset_name_or_default>
   }
 
   rule lock_expire_opts {
@@ -564,6 +572,14 @@ grammar DDLGrammar {
 
   rule udf_expr {
     <expr> <select_alias>
+  }
+
+  rule use_partition {
+    <PARTITION> '(' <using_list> ')'
+  }
+
+  rule using_list {
+    <ident>+ % ','
   }
 
   rule variable {
