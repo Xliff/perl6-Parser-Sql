@@ -620,6 +620,7 @@ our token ulong_num is export     { <number> || <hex_num> }
 
 our token order_dir is export     { <ASC> || <DESC> }
 our token union_opt is export     { <DISTINCT> || <ALL> }
+our token key_or_index is export  { <KEY> || <INDEX> }
 
 our token field_ident is export   { [ <table_ident>? '.' ]? <field_id=.ident> }
 our token ident is export         { <ident_sys> || <keyword> }

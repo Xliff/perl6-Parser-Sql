@@ -99,7 +99,7 @@ grammar DDLGrammar {
   }
 
   rule expr_list {
-    <expr> [ ',' <expr> ]*
+    <expr>+ % ','
   }
 
   rule from_clause {
@@ -111,7 +111,7 @@ grammar DDLGrammar {
   }
 
   rule group_clause {
-    <GROUP> <BY> <order_expr> [ ',' <order_expr> ]* [ <WITH_CUBE> || <WITH_ROLLUP> ]?
+    <GROUP> <BY> <order_expr>+ % ',' [ <WITH_CUBE> || <WITH_ROLLUP> ]?
   }
 
   rule having_clause {
@@ -165,7 +165,7 @@ grammar DDLGrammar {
   }
 
   rule order_clause {
-    <ORDER> <BY> <order_expr> [ ',' <order_expr> ]*
+    <ORDER> <BY> <order_expr>+ % ','
   }
 
   rule order_or_limit {
@@ -213,7 +213,7 @@ grammar DDLGrammar {
   }
 
   rule select_item_list {
-    [ <select_item> || '*' ] [ ',' <select_item> ]*
+    * || <select_item>+ % ','
   }
 
   rule select_lock_type {
@@ -239,7 +239,7 @@ grammar DDLGrammar {
       |
       <DUMPFILE> <text>
       |
-      <__select_var_ident> [ ',' <__select_var_ident> ]*
+      <__select_var_ident>+ % ','
     ]
   }
 
@@ -329,7 +329,7 @@ grammar DDLGrammar {
 
   rule __ws_levels {
     <LEVEL> ? $<ws_list> = [
-      <__ws_list_item> [ ',' <__ws_list_item> ]*
+      <__ws_list_item>+ %  ','
       |
       <number> '-' <number>
     ]
@@ -413,7 +413,7 @@ grammar DDLGrammar {
 
   rule _gen_function_call {
     [
-      <ident_sys> '(' <udf_expr> [ ',' <udf_expr> ]*
+      <ident_sys> '(' <udf_expr>+ % ','
       |
       <ident> '.' <ident> '(' <expr_list>
     ] ')'
@@ -460,7 +460,7 @@ grammar DDLGrammar {
   }
 
   rule simple_expr {
-    :my rule _ident_list { <simple_ident> [ ',' <simple_ident> ]* };
+    :my rule _ident_list { <simple_ident>+ % ',' };
     <simple_ident> [ <JSON_SEPARATOR> || <JSON_UNQ_SEPEARATOR> ] <text>
     |
     <_key_function_call>
@@ -518,14 +518,14 @@ grammar DDLGrammar {
     '(' <ident> <expr> ')'
     |
     <CASE> <expr>?
-    <_when_clause> [ <_when_clause>]*
+    <_when_clause>+
     [ <ELSE> <else_expr=.expr> ]? <END>
     |
     <INTERVAL> <expr> <interval> '+' <expr>
   }
 
   my rule _gorder_clause {
-    <ORDER> <BY> <order_expr> [ ',' <order_expr> ]*
+    <ORDER> <BY> <order_expr>+ % ','
   }
 
   rule sum_expr {
@@ -547,7 +547,7 @@ grammar DDLGrammar {
  }
 
   rule table_list {
-    <table_ident> [ ',' <table_ident> ]*
+    <table_ident>+ % ','
   }
 
   rule udf_expr {
@@ -564,7 +564,7 @@ grammar DDLGrammar {
   }
 
   rule create_table_opts {
-    <create_table_opt> [ ',' <create_table_opt> ]*
+    <create_table_opt>+ % ','
   }
 
   rule create_table_opt {
@@ -615,7 +615,7 @@ grammar DDLGrammar {
   }
 
   rule create_field_list {
-    <field_list_item> [ ',' <field_list_item> ]*
+    <field_list_item>+ % ','
   }
 
   rule field_list_item {
@@ -730,7 +730,7 @@ grammar DDLGrammar {
           |
           <LONGTEXT>
           |
-          [ <ENUM> || <SET> ] '(' <text> [ ',' <text> ]* ')'
+          [ <ENUM> || <SET> ] '(' <text>+ % ',' ')'
         ]
         [
           [ <ASCII> <BINARY> ] | [<BINARY> <ASCII> ]
@@ -810,7 +810,7 @@ grammar DDLGrammar {
   rule create_partitioning {
     <PARTITION> <BY> <part_type_def>
     [<PARTITIONS> <number>]?  <sub_part>?
-    [ '(' <part_definition> [ [ ',' <part_definition> ]* ]? ')' ]?
+    [ '(' <part_definition>+ % ',' ')' ]?
   }
 
   rule default_charset {
@@ -850,11 +850,7 @@ grammar DDLGrammar {
   }
 
   rule key_lists {
-    <key_list> [ ',' <key_list> ]*
-  }
-
-  token key_or_index {
-     <KEY> || <INDEX>
+    <key_list>+ % ','
   }
 
   rule _limits {
@@ -873,7 +869,8 @@ grammar DDLGrammar {
       |
       <REDOFILE> <file_text=.text>
     ]
-    [ <logfile_group_option> [ ','? <logfile_group_option> ]* ]?
+    # Not using % here because of optional delimiter.
+    [ <logfile_group_option> [ ','? <logfile_group_option> ]*
   }
 
   rule logfile_group_option {
@@ -934,13 +931,13 @@ grammar DDLGrammar {
   }
 
   rule part_value_item {
-    '(' <part_value_expr_item> [ [ ',' <part_value_expr_item> ]* ]? ')'
+    '(' <part_value_expr_item>+ % ',' ')'
   }
 
   rule part_values_in {
     <part_value_item>
     |
-    '(' <part_value_item> [ ',' <part_value_item> ]* ')'
+    '(' <part_value_item>+ % ',' ')'
   }
 
   rule references {
@@ -948,12 +945,13 @@ grammar DDLGrammar {
   }
 
   rule ref_list {
-    [ '(' <ident> [ ',' <ident> ]* ')' ]?
+    [ '(' <ident>+ % ',' ')' ]?
   }
 
   rule require_clause {
     <REQUIRE> [
-      <require_list_element> [ [ <AND>? <require_list_element> ]* ]?
+      # Not using # because of optional delimiter
+      <require_list_element> [ <AND>? <require_list_element> ]*
       |
       [ <SSL> || <X509> || <NONE> ]
     ]
@@ -985,7 +983,7 @@ grammar DDLGrammar {
   }
 
   rule server_opts {
-    <server_option> [ ',' <server_option> ]*
+    <server_option>+ % ','
   }
 
   rule spacial_key_opt {
@@ -997,7 +995,7 @@ grammar DDLGrammar {
     [
       <HASH> '(' <bit_expr> ')'
       |
-      <KEY> <key_alg>? '(' <ident> [ ',' <ident> ]* ')'
+      <KEY> <key_alg>? '(' <ident>+ % ',' ')'
     ] [ <SUBPARTITIONS> <number> ]?
   }
 
