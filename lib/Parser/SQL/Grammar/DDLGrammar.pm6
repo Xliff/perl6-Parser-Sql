@@ -76,10 +76,7 @@ grammar DDLGrammar {
   }
 
   rule derived_table_list {
-    <esc_table_ref> [ ',' [
-      <table_ref> |
-      '(' <ident> <table_ref> ')'
-    ] ]*
+    [ <table_ref> | '(' <ident> <table_ref> ')' ]* % ','
   }
 
   rule escape {
@@ -100,6 +97,13 @@ grammar DDLGrammar {
 
   rule expr_list {
     <expr>+ % ','
+  }
+
+  rule field_term {
+    <COLUMNS> [
+      $<t>=[ <TERMINATED> || <OPTIONALLY>? <ENCLOSED> || <ESCAPED> ]
+      <BY> $<s>=<text_string>
+    ]+
   }
 
   rule from_clause {
@@ -131,7 +135,11 @@ grammar DDLGrammar {
   }
 
   rule limit_clause {
-    <LIMIT> <limit_option> [ [ ',' || <OFFSET> ] <limit_option> ]?
+    <LIMIT> <limit_options> [ [ ',' || <OFFSET> ] <limit_options> ]?
+  }
+
+  rule line_term {
+    <LINES> [ $<t>=[ <TERMINATED> || <STARTING> ] <BY> $<s>=<text_string> ]+
   }
 
   rule literal {
@@ -213,7 +221,7 @@ grammar DDLGrammar {
   }
 
   rule select_item_list {
-    * || <select_item>+ % ','
+    [ <select_item> || '*' ]  [ ',' <select_item>+ % ',' ]?
   }
 
   rule select_lock_type {
@@ -235,7 +243,7 @@ grammar DDLGrammar {
   rule _into {
     :my rule __select_var_ident { '@'? [ <ident> | <text> ] }
     <INTO> [
-      <OUTFILE> <text> <load_data_charset>? <field_term> <line_item>?
+      <OUTFILE> <text> <load_data_charset>? <field_term>? <line_term>?
       |
       <DUMPFILE> <text>
       |
@@ -269,6 +277,10 @@ grammar DDLGrammar {
 
   rule simple_ident_nospvar {
     <ident> | <simple_ident_q>
+  }
+
+  rule table_alias {
+    [ <AS> || <EQ> ] <ident>
   }
 
   rule table_expression {
@@ -870,7 +882,7 @@ grammar DDLGrammar {
       <REDOFILE> <file_text=.text>
     ]
     # Not using % here because of optional delimiter.
-    [ <logfile_group_option> [ ','? <logfile_group_option> ]*
+    [ <logfile_group_option> [ ','? <logfile_group_option> ]* ]?
   }
 
   rule logfile_group_option {

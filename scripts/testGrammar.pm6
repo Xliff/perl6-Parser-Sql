@@ -32,11 +32,11 @@ sub checkfile($filename) {
       }
 
       default {
-        say "$_ in '$filename' not defined";
+        say "\t$_ in '$filename' not defined";
       }
     }
   }
-  say "Done checking '$filename'";
+  say "...Done checking '$filename'";
 }
 
 sub MAIN (Str $filename) {

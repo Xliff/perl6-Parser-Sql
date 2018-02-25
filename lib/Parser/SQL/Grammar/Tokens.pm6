@@ -185,6 +185,7 @@ our token DUPLICATE is export          { 'DUPLICATE' }
 our token DYNAMIC is export            { 'DYNAMIC' }
 our token ELSE is export               { 'ELSE' }
 our token ENABLE is export             { 'ENABLE' }
+our token ENCLOSED is export           { 'ENCLOSED' }
 our token ENCRYPTION is export 		     { 'ENCRYPTION' }
 our token END is export                { 'END' }
 our token ENDS is export               { 'ENDS' }
@@ -194,6 +195,7 @@ our token ENUM is export               { 'ENUM' }
 our token ERROR is export              { 'ERROR' }
 our token ERRORS is export             { 'ERRORS' }
 our token ESCAPE is export             { 'ESCAPE' }
+our token ESCAPED is export            { 'ESCAPED' }
 our token EVENT is export              { 'EVENT' }
 our token EVENTS is export             { 'EVENTS' }
 our token EVERY is export              { 'EVERY' }
@@ -272,6 +274,7 @@ our token LEVEL is export              { 'LEVEL' }
 our token LIKE is export               { 'LIKE' }
 our token LIMIT is export              { 'LIMIT' }
 our token LINEAR is export             { 'LINEAR' }
+our token LINES is export              { 'LINES' }
 our token LINESTRING is export         { 'LINESTRING' }
 our token LIST is export               { 'LIST' }
 our token LOCAL is export              { 'LOCAL' }
@@ -324,6 +327,7 @@ our token ONE is export                { 'ONE' }
 our token ONLY is export               { 'ONLY' }
 our token OPEN is export               { 'OPEN' }
 our token OPTION is export             { 'OPTION' }
+our token OPTIONALLY is export         { 'OPTIONALLY' }
 our token OPTIONS is export            { 'OPTIONS' }
 our token OR is export                 { 'OR' }
 our token ORDER is export              { 'ORDER' }
@@ -418,6 +422,7 @@ our token SPACIAL is export            { 'SPACIAL' }
 our token SSL is export                { 'SSL' }
 our token STACKED is export            { 'STACKED' }
 our token START is export              { 'START' }
+our token STARTING is export           { 'STARTING' }
 our token STARTS is export             { 'STARTS' }
 our token STATUS is export             { 'STATUS' }
 our token STD is export                { 'STD' }
@@ -441,6 +446,7 @@ our token TABLES is export             { 'TABLES' }
 our token TABLESPACE is export 		     { 'TABLESPACE' }
 our token TEMPORARY is export 		     { 'TEMPORARY' }
 our token TEMPTABLE is export          { 'TEMPTABLE' }
+our token TERMINATED is export         { 'TERMINATED' }
 our token TEXT is export               { 'TEXT' }
 our token THAN is export               { 'THAN' }
 our token THEN is export               { 'THEN' }
@@ -756,6 +762,8 @@ our token keyword_sp is export {
   <YEAR>
 }
 
+our token limit_options is export { <ident> || <PARAM_MARK> || <num> }
+
 our token query_spec_option is export {
   <STRAIGHT_JOIN>       || <HIGH_PRIORITY>     || <DISTINCT>          ||
   <SQL_SMALL_RESULT>    || <SQL_BIG_RESULT>    || <SQL_BUFFER_RESULT> ||
@@ -780,7 +788,11 @@ our token table_ident is export {
 
 our token text is export {
     # Are double quotes allowed as text strings?
-    "'" ( <-[']>+ ) "'" | '"' ( <-["]>+ ) '"'
+    "'" ( <-[']>+ ) "'" || '"' ( <-["]>+ ) '"'
+}
+
+our token text_string is export {
+  <text> || <hex_num> || <bin_num>
 }
 
 our token underscore_charset {
