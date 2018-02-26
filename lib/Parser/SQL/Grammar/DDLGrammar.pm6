@@ -312,8 +312,29 @@ grammar DDLGrammar {
     ')' <table_alias>?
   }
 
+  rule _join_table {
+    :my rule __onexpr { <ON> <expr> };
+    <table_ref> [
+      [ <INNER> || <CROSS> ]? <JOIN> <table_ref> [
+        <__onexpr>
+        ||
+        <USING> '(' <using_list> ')'
+      ]?
+      ||
+      <STRAIGHT_JOIN> <table_factor> <__onexpr>?
+      ||
+      <NATURAL> [ [ <LEFT> || <RIGHT> ] <OUTER>? ]? <JOIN> <table_factor>
+      ||
+      [ <LEFT> || <RIGHT> ] <OUTER>? <JOIN> [
+       <table_ref> <__onexpr>
+       ||
+       <table_factor> <USING> '(' <using_list> ')'
+     ]
+    ]
+  }
+
   rule table_ref {
-    <table_factor> | <join_table>
+    <table_factor> | <_join_table>
   }
 
   rule table_wild {

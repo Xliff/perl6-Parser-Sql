@@ -155,6 +155,7 @@ our token CONVERT is export            { 'CONVERT' }
 our token COUNT is export              { 'COUNT' }
 our token CPU is export                { 'CPU' }
 our token CREATE is export             { 'CREATE' }
+our token CROSS is export              { 'CROSS' }
 our token CUBE is export               { 'CUBE' }
 our token CURDATE is export            { 'CURDATE' }
 our token CURRENT is export            { 'CURRENT' }
@@ -249,6 +250,7 @@ our token IMPORT is export             { 'IMPORT' }
 our token IN is export                 { 'IN' }
 our token INDEX is export              { 'INDEX' }
 our token INDEXES is export            { 'INDEXES' }
+our token INNER is export              { 'INNER' }
 our token INSERT is export             { 'INSERT' }
 our token INSTALL is export            { 'INSTALL' }
 our token INSTANCE is export           { 'INSTANCE' }
@@ -262,6 +264,7 @@ our token IPC is export                { 'IPC' }
 our token IS is export                 { 'IS' }
 our token ISOLATION is export          { 'ISOLATION' }
 our token ISSUER is export             { 'ISSUER' }
+our token JOIN is export               { 'JOIN' }
 our token JSON is export               { 'JSON' }
 our token KEY is export                { 'KEY' }
 our token LANGUAGE is export           { 'LANGUAGE' }
@@ -331,6 +334,7 @@ our token OPTIONALLY is export         { 'OPTIONALLY' }
 our token OPTIONS is export            { 'OPTIONS' }
 our token OR is export                 { 'OR' }
 our token ORDER is export              { 'ORDER' }
+our token OUTER is export              { 'OUTER' }
 our token OUTFILE is export            { 'OUTFILE' }
 our token OWNER is export              { 'OWNER' }
 our token PAGE is export               { 'PAGE' }
@@ -503,6 +507,7 @@ our token XID is export                { 'XID' }
 our token XML is export                { 'XML' }
 our token XOR is export                { 'XOR' }
 our token ZEROFILL is export           { 'ZEROFILL' }
+
 
 our token AUTO_INC is export                    { 'AUTO_INC' }
 our token AUTOEXTEND_SIZE is export             { 'AUTOEXTEND_SIZE' }
