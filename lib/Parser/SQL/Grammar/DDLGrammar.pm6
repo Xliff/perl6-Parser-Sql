@@ -191,7 +191,7 @@ grammar DDLGrammar {
   }
 
   rule predicate {
-    :my rule _in_expr { <IN> '(' [ <subselect> | <expr_list> ] ')' }
+    :my rule _in_expr { <IN> '(' [ <subselect> || <expr_list> ] ')' }
     [
       <AND> <bit_expr> <BETWEEN> <not>?
       |
@@ -229,7 +229,7 @@ grammar DDLGrammar {
   }
 
   rule select_item_list {
-    [ <select_item> || '*' ]  [ ',' <select_item>+ % ',' ]?
+    [ <select_item> || '*' ] [ ',' <select_item>+ % ',' ]?
   }
 
   rule select_lock_type {
@@ -570,7 +570,7 @@ grammar DDLGrammar {
   }
 
   rule sum_expr {
-    :my rule _in_sum_expr   { <ALL>? <expr> }
+    :my rule _in_sum_expr { <ALL>? <expr> }
     [
       [
         $<op>=[ <AVG> || <MIN> || <MAX> || <SUM> ] '(' <DISTINCT>?
@@ -688,15 +688,13 @@ grammar DDLGrammar {
   }
 
   rule gcol_attr {
-    [
-      <UNIQUE> <KEY>?
-      |
-      <COMMENT> <text>
-      |
-      <not>? <NULL>
-      |
-      <PRIMARY>? <KEY>
-    ]
+    <UNIQUE> <KEY>?
+    |
+    <COMMENT> <text>
+    |
+    <not>? <NULL>
+    |
+    <PRIMARY>? <KEY>
   }
 
   rule now {
@@ -730,122 +728,115 @@ grammar DDLGrammar {
   }
 
   rule part_type_def {
-    [
-      [
-        <LINEAR>? [
-          <KEY> [ <ALGORITHM> <EQ> <num> ]?
-          '(' <part_field_list> ')'
-          |
-          <HASH> '(' <bit_expr> ')'
-        ]
-        |
-        [ <RANGE> || <LIST> ] [
-          '(' <bit_expr> ')' | <COLUMNS> '(' <part_field_list> ')'
-        ]
-      ]
+    <LINEAR>? [
+      <KEY> [ <ALGORITHM> <EQ> <num> ]?
+      '(' <part_field_list> ')'
+      |
+      <HASH> '(' <bit_expr> ')'
+    ]
+    |
+    [ <RANGE> || <LIST> ] [
+      '(' <bit_expr> ')' | <COLUMNS> '(' <part_field_list> ')'
     ]
   }
 
   rule type {
+    [ <INT> || <TINYINT> || <SMALLINT> || <MEDIUMINT> || <BIGINT> || <YEAR> ]
+    [ '(' <num> ')' ]?
+    |
+    [ <REAL> | <DOUBLE> <PRECISION>? ]
+    |
+    [ <FLOAT> || <DECIMAL> || <NUMERIC> || <FIXED> ]
     [
-      [ <INT> || <TINYINT> || <SMALLINT> || <MEDIUMINT> || <BIGINT> || <YEAR> ]
-      [ '(' <num> ')' ]?
+      '(' [
+        [ <number> ]
+        |
+        [ <m=.number> ',' <d=.number> ]
+      ')' ]
+    ]? $<options>=[ <SIGNED> || <UNSIGNED> || <ZEROFILL> ]*
+    |
+    [
       |
-      [ <REAL> | <DOUBLE> <PRECISION>? ]
+      [ <BIT> || <BINARY> ] '(' <num> ')'
       |
-      [ <FLOAT> || <DECIMAL> || <NUMERIC> || <FIXED> ]
+      [ <BOOL> || <BOOLEAN> ]
+      |
       [
-        '(' [
-          [ <number> ]
-          |
-          [ <m=.number> ',' <d=.number> ]
-        ')' ]
-      ]? $<options>=[ <SIGNED> || <UNSIGNED> || <ZEROFILL> ]*
-      |
-      [
+        [ <CHAR> || <VARCHAR> ] '(' <num> ')'
         |
-        [ <BIT> || <BINARY> ] '(' <num> ')'
+        <TINYTEXT>
         |
-        [ <BOOL> || <BOOLEAN> ]
+        <TEXT> [ '(' <num> ')' ]?
         |
-        [
-          [ <CHAR> || <VARCHAR> ] '(' <num> ')'
-          |
-          <TINYTEXT>
-          |
-          <TEXT> [ '(' <num> ')' ]?
-          |
-          <MEDIUMTEXT>
-          |
-          <LONGTEXT>
-          |
-          [ <ENUM> || <SET> ] '(' <text>+ % ',' ')'
-        ]
-        [
-          [ <ASCII> <BINARY> ] | [<BINARY> <ASCII> ]
-          |
-          [ <UNICODE> <BINARY> ] | [ <BINARY> <UNICODE> ]
-          |
-          <BYTE>
-          |
-          <charset> [ <ident> || <text> ] <BINARY>?
-          |
-          <BINARY>? <charset> [ <ident> || <text> ]
-        ]
+        <MEDIUMTEXT>
+        |
+        <LONGTEXT>
+        |
+        [ <ENUM> || <SET> ] '(' <text>+ % ',' ')'
       ]
-      |
       [
-        [ <NCHAR> | <NATIONAL> <CHAR> ] [ '(' <num> ')' ]?
+        [ <ASCII> <BINARY> ] | [<BINARY> <ASCII> ]
         |
-        [
-          <NATIONAL>  [ <VARCHAR> ] | [ <CHAR> <VARYING> ]
-          |
-          <NVARCHAR>
-          |
-          <NCHAR> [ <VARCHAR> || <VARYING> ]
-        ]
-      ] <BINARY>?
-      |
-      <DATE>
-      |
-      [ <TIME> || <TIMESTAMP> || <DATETIME> ] [ '(' <num> ')' ]?
-      |
-      <TINYBLOB>
-      |
-      <BLOB> [ '(' <num> ')' ]?
-      |
-      [
-        <GEOMETRY>           ||
-        <GEOMETRYCOLLECTION> ||
-        <POINT>              ||
-        <MULTIPOINT>         ||
-        <LINESTRING>         ||
-        <MULTILINESTRING>    ||
-        <POLYGON>            ||
-        <MULTIPOLYGON>
-      ]
-      |
-      [ <MEDIUMBLOB> || <LONGBLOB> ]
-      |
-      <LONG> [
-        <VARBINARY>
+        [ <UNICODE> <BINARY> ] | [ <BINARY> <UNICODE> ]
         |
-        [ <CHAR> <VARYING> | <VARCHAR> ]? <BINARY>?
+        <BYTE>
+        |
+        <charset> [ <ident> || <text> ] <BINARY>?
+        |
+        <BINARY>? <charset> [ <ident> || <text> ]
       ]
-      |
-      <SERIAL>
-      |
-      <JSON>
     ]
+    |
+    [
+      [ <NCHAR> | <NATIONAL> <CHAR> ] [ '(' <num> ')' ]?
+      |
+      [
+        <NATIONAL>  [ <VARCHAR> ] | [ <CHAR> <VARYING> ]
+        |
+        <NVARCHAR>
+        |
+        <NCHAR> [ <VARCHAR> || <VARYING> ]
+      ]
+    ] <BINARY>?
+    |
+    <DATE>
+    |
+    [ <TIME> || <TIMESTAMP> || <DATETIME> ] [ '(' <num> ')' ]?
+    |
+    <TINYBLOB>
+    |
+    <BLOB> [ '(' <num> ')' ]?
+    |
+    [
+      <GEOMETRY>           ||
+      <GEOMETRYCOLLECTION> ||
+      <POINT>              ||
+      <MULTIPOINT>         ||
+      <LINESTRING>         ||
+      <MULTILINESTRING>    ||
+      <POLYGON>            ||
+      <MULTIPOLYGON>
+    ]
+    |
+    [ <MEDIUMBLOB> || <LONGBLOB> ]
+    |
+    <LONG> [
+      <VARBINARY>
+      |
+      [ <CHAR> <VARYING> | <VARCHAR> ]? <BINARY>?
+    ]
+    |
+    <SERIAL>
+    |
+    <JSON>
   }
 
-
   rule all_key_opt {
-    [ <KEY_BLOCK_SIZE> <EQ>? <num> | <COMMENT> <text> ]
+    <KEY_BLOCK_SIZE> <EQ>? <num> | <COMMENT> <text>
   }
 
   rule constraint_key_type {
-    [ <PRIMARY> <KEY> | <UNIQUE> <key_or_index> ]
+    <PRIMARY> <KEY> | <UNIQUE> <key_or_index>
   }
 
   rule connect_opts {
@@ -870,16 +861,14 @@ grammar DDLGrammar {
     <DEFAULT>? <COLLATE> <EQ> [ <ident> || <text> ]
   }
 
-  rule delete_option {
-    [
-      <RESTRICT>
-      |
-      <CASCADE>
-      |
-      <SET> [ <NULL> || <DEFAULT> ]
-      |
-      <NO> <ACTION>
-    ]
+rule delete_option {
+    <RESTRICT>
+    ||
+    <CASCADE>
+    ||
+    <SET> [ <NULL> || <DEFAULT> ]
+    ||
+    <NO> <ACTION>
   }
 
   rule fulltext_key_opt {
@@ -923,25 +912,23 @@ grammar DDLGrammar {
   }
 
   rule logfile_group_option {
-    [
-      <INITIAL_SIZE> <EQ>? [ <num> || <ident_sys> ]
-      |
-      <MAX_SIZE> <EQ>? [ <num> || <ident_sys> ]
-      |
-      <EXTENT_SIZE> <EQ>? [ <num> || <ident_sys> ]
-      |
-      <UNDO_BUFFER_SIZE> <EQ>? [ <num> || <ident_sys> ]
-      |
-      <REDO_BUFFER_SIZE> <EQ>? [ <num> || <ident_sys> ]
-      |
-      <NODEGROUP> <EQ>? <num>
-      |
-      <STORAGE>? <ENGINE> <EQ>? [ <storage_id=.ident> || <storage_txt=.text> ]
-      |
-      [ <WAIT> || <NO_WAIT> ]
-      |
-      <COMMENT> <EQ>? <comment_txt=.text>
-    ]
+    <INITIAL_SIZE> <EQ>? [ <num> || <ident_sys> ]
+    |
+    <MAX_SIZE> <EQ>? [ <num> || <ident_sys> ]
+    |
+    <EXTENT_SIZE> <EQ>? [ <num> || <ident_sys> ]
+    |
+    <UNDO_BUFFER_SIZE> <EQ>? [ <num> || <ident_sys> ]
+    |
+    <REDO_BUFFER_SIZE> <EQ>? [ <num> || <ident_sys> ]
+    |
+    <NODEGROUP> <EQ>? <num>
+    |
+    <STORAGE>? <ENGINE> <EQ>? [ <storage_id=.ident> || <storage_txt=.text> ]
+    |
+    [ <WAIT> || <NO_WAIT> ]
+    |
+    <COMMENT> <EQ>? <comment_txt=.text>
   }
 
   rule match_clause {
@@ -1013,7 +1000,7 @@ grammar DDLGrammar {
   rule select_init {
     <SELECT> <select_part2> <union_list>?
     |
-    '(' <select_paren> ')' <union_opt>
+    '(' <select_paren> ')' <union_opt>?
   }
 
   rule select_paren {
@@ -1023,12 +1010,10 @@ grammar DDLGrammar {
   }
 
   rule server_option {
-    [
-      [ <USER> || <HOST> || <DATABASE> || <OWNER> || <PASSWORD> || <SOCKET> ]
-      <text>
-      |
-      <PORT> <num>
-    ]
+    [ <USER> || <HOST> || <DATABASE> || <OWNER> || <PASSWORD> || <SOCKET> ]
+    <text>
+    |
+    <PORT> <num>
   }
 
   rule server_opts {
@@ -1103,11 +1088,13 @@ grammar DDLGrammar {
   }
 
   rule union_list {
-    <UNION> <union_opt> <select_init>
+    <UNION> <union_opt>? <select_init>
   }
 
   rule subselect {
-    . { die "{ &?ROUTINE.name } NYI }" }
+    <union_opt>? <UNION>
+    ||
+    <query_spec>
   }
 
 
