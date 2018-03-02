@@ -6,53 +6,49 @@ grammar DDLGrammar {
   token TOP { <CREATE_ST> }
 
   rule alter_algo_option {
-    <ALGORITHM> <EQ>? [ <DEFAULT> || <ident> ]
+    <ALGORITHM> <EQ>? $<o>=[ <DEFAULT> || <ident> ]
   }
 
   rule alter_lock_option {
-    <LOCK> <EQ>? [ <DEFAULT> || <ident> ]
+    <LOCK> <EQ>? $<o>=[ <DEFAULT> || <ident> ]
   }
 
   rule attribute {
-    [
-      <not>? <NULL>
-      |
-      <DEFAULT> [ <now> || <num> || <literal> ]
-      |
-      <ON> <UPDATE> <now>
-      |
-      <AUTO_INC>
-      |
-      <SERIAL> <DEFAULT> <VALUE>
-      |
-      <PRIMARY>? <KEY>
-      |
-      <UNIQUE> <KEY>?
-      |
-      <COMMENT> <comment_txt=.text>
-      |
-      <COLLATE> [ <collate_id=.ident> || <collate_txt=.text> ]
-      |
-      <COLUMN_FORMAT> [ <DEFAULT> || <FIXED> || <DYNAMIC> ]
-      |
-      <STORAGE> [ <DEFAULT> || <DISK> || <MEMORY> ]
-    ]
+    <not>? <NULL>
+    ||
+    <DEFAULT> $<o>=[ <now> || <num> || <literal> ]
+    ||
+    <ON> <UPDATE> <now>
+    ||
+    <AUTO_INC>
+    ||
+    <SERIAL> <DEFAULT> <VALUE>
+    ||
+    <PRIMARY>? <KEY>
+    ||
+    <UNIQUE> <KEY>?
+    ||
+    <COMMENT> <comment_txt=.text>
+    ||
+    <COLLATE> [ <collate_id=.ident> || <collate_txt=.text> ]
+    ||
+    <COLUMN_FORMAT> $<o>=[ <DEFAULT> || <FIXED> || <DYNAMIC> ]
+    ||
+    <STORAGE> $<o>=[ <DEFAULT> || <DISK> || <MEMORY> ]
   }
 
   rule bit_expr {
-    [
-      <bit_expr> [
-        <bit_ops> <bit_expr>
-        |
-        <plus_minus> [
-          <bit_expr>
-          |
-          <INTERNAL> <expr> <interval>
-        ]
-      ]
+    <bit_expr> [
+      <bit_ops> <bit_expr>
       |
-      <simple_expr>
+      <plus_minus> [
+        <bit_expr>
+        |
+        <INTERNAL> <expr> <interval>
+      ]
     ]
+    |
+    <simple_expr>
   }
 
   rule bool_pri {
@@ -89,14 +85,12 @@ grammar DDLGrammar {
 
   rule expr {
     [
-      [
-        <expr> [ <or> | <XOR> | <and> ]
-        |
-        <NOT>
-      ] <expr>
+      <expr> [ <or> | <XOR> | <and> ]
       |
-      <bool_pri> [ <IS> <not>? [ <TRUE> | <FALSE> | <UNKNOWN> ] ]?
-    ]
+      <NOT>
+    ] <expr>
+    |
+    <bool_pri> [ <IS> <not>? [ <TRUE> | <FALSE> | <UNKNOWN> ] ]?
   }
 
   rule expr_list {
@@ -127,11 +121,9 @@ grammar DDLGrammar {
   }
 
   rule index_lock_algo {
-    [
-      <alter_lock_option> <alter_algo_option>?
-      |
-      <alter_algo_option> <alter_lock_option>?
-    ]
+    <alter_lock_option> <alter_algo_option>?
+    |
+    <alter_algo_option> <alter_lock_option>?
   }
 
   rule if_not_exists    {
@@ -165,14 +157,12 @@ grammar DDLGrammar {
   }
 
   rule lock_expire_opts {
-    [
-      <ACCOUNT> [ <UNLOCK> || <LOCK> ]
+    <ACCOUNT> [ <UNLOCK> || <LOCK> ]
+    |
+    <PASSWORD> <EXPIRE> [
+      <INTERVAL> <num> <DAY>
       |
-      <PASSWORD> <EXPIRE> [
-        <INTERVAL> <num> <DAY>
-        |
-        [ <NEVER> || <DEFAULT> ]
-      ]
+      [ <NEVER> || <DEFAULT> ]
     ]
   }
 
@@ -225,7 +215,7 @@ grammar DDLGrammar {
   }
 
   rule select_item {
-      <table_wild> | <expr> <select_alias>
+    <table_wild> | <expr> <select_alias>
   }
 
   rule select_item_list {
@@ -304,9 +294,9 @@ grammar DDLGrammar {
 
   rule table_factor {
     <table_ident> <use_partition>? <table_alias>? <key_def>?
-    |
+    ||
     <SELECT> <select_option>* <select_item_list> <table_expression>
-    |
+    ||
     '(' <derived_table_list> <order_or_limit>?
     [ <UNION> <union_opt>? <query_spec> ]*
     ')' <table_alias>?
@@ -346,7 +336,7 @@ grammar DDLGrammar {
   }
 
   token row_types {
-    [ <DEFAULT> || <FIXED> || <DYNAMIC> || <COMPRESSED> || <REDUNDANT> || <COMPACT> ]
+    <DEFAULT> || <FIXED> || <DYNAMIC> || <COMPRESSED> || <REDUNDANT> || <COMPACT>
   }
 
   rule _cast_type {
@@ -393,27 +383,27 @@ grammar DDLGrammar {
           <WEEK> '('
         ] <expr> ','?
       ] <expr>
-      |
+      ||
       <COALESCE> '(' <expr_list>
-      |
+      ||
       [ <DATABASE> || <ROW_COUNT> ] '('
-      |
+      ||
       <WEIGHT_STRING> '(' <expr> [
         <__ws_levels>?
-        |
+        ||
         ',' <number> ',' <number> ',' <number>
-        |
+        ||
         <AS> [
           <CHAR> <__ws_nweights> <__ws_levels>?
-          |
+          ||
           <BINARY> <__ws_nweights>
         ]
       ]
-      |
+      ||
       [ <CONTAINS> || <POINT> ] '(' <expr> ',' <expr>
-      |
+      ||
       <GEOMETRYCOLLECTION> '(' <expr_list>?
-      |
+      ||
       [ <LINESTRING> || <MULTILINESTRING> || <MULTIPOINT> || <MULTIPOLYGON> ||
         <POLYGON> ]
       '(' <expr_list>
@@ -466,33 +456,33 @@ grammar DDLGrammar {
       [ <ADDDATE> || <SUBDATE> ] '(' <expr> ',' [
         <expr> | <INTERVAL> <expr> <interval>
       ]
-      |
+      ||
       [ <DATE_ADD> | <DATE_SUB> ] '(' <expr> ',' <INTERVAL> <expr> <interval>
-      |
+      ||
       [
         <EXTRACT> '(' <interval> <FROM>
-        |
+        ||
         [
           <GET_FORMAT> [ <DATE> || <TIME> || <TIMESTAMP> || <DATETIME> ]
-          |
+          ||
           [ <TIMESTAMP_ADD> || <TIMESTAMP_DIFF> ] '(' <interval_time_stamp> ','
           <expr>
         ] ','
-        |
+        ||
         <POSITION> '(' <bit_expr> <IN>
-        |
+        ||
         <SUBSTRING> '(' <expr> [
           ',' [ <expr> ',' ]?
-          |
+          ||
           <FROM> [ <expr> <FOR> ]?
         ]
       ] <expr>
     ] ')'
-    |
+    ||
     [ <CURDATE> || <UTC_DATE> ] [ '(' ')' ]?
-    |
+    ||
     [ <CURTIME> || <SYSDATE> || <UTC_TIME> || <UTC_TIMESTAMP> ] <_precision>?
-    |
+    ||
     <NOW> <_precision>?
   }
 
@@ -513,8 +503,8 @@ grammar DDLGrammar {
     <_con_function_call>
     |
     <simple_expr> [
-      <COLLATE> <ident> || <text>
-      |
+      <COLLATE> [ <ident> || <text> ]
+      ||
       <OR2> <simple_expr>
     ]
     |
@@ -540,7 +530,7 @@ grammar DDLGrammar {
       <bit_expr> [
         [ <IN> <NATURAL> <LANGUAGE> <MODE> ]?
         [ <WITH> <QUERY> <EXPANSION> ]?
-        |
+        ||
         <IN> <BOOLEAN> <MODE>
       ]
       <CAST> '(' <expr> <AS> <_cast_type> ')'
@@ -551,7 +541,7 @@ grammar DDLGrammar {
       |
       <CONVERT> '(' <EXPR> [
         ',' <_cast_type>
-        |
+        ||
         <USING> <charset_name=.ident>
       ]
     ] ')'
@@ -618,36 +608,33 @@ grammar DDLGrammar {
 
   rule create_table_opt {
     [
-      <ENGINE> <EQ>? [ <engine_id=.itent> | <engine_txt=.text> ]
-      |
-      [
-        <MAX_ROWS> || <MIN_ROWS>       || <AUTO_INC>        || <AVG_ROW_LENGTH> ||
+      <ENGINE> <EQ>? $<o>=[ <ident> | <text> ]
+      ||
+      [ <MAX_ROWS> || <MIN_ROWS>       || <AUTO_INC>        || <AVG_ROW_LENGTH> ||
         <CHECKSUM> || <TABLE_CHECKSUM> || <DELAY_KEY_WRITE> || <KEY_BLOCK_SIZE>
       ] <EQ>? <num>
-      |
-      [
-        <PASSWORD> || <COMMENT> || <COMPRESSION> || <ENCRYPTION> ||
-        [ <DATA> | <INDEX> ] <DIRECTORY> || <CONNECTION>
+      ||
+      $<t>=[ <PASSWORD> || <COMMENT> || <COMPRESSION> || <ENCRYPTION> ||
+                    [ <DATA> || <INDEX> ] <DIRECTORY> || <CONNECTION>
       ] <EQ>? <text>
-      |
-      [
-        <PACK_KEYS> || <STATS_AUTO_RECALC> || <STATS_PERSISTENT> |
-        <STATS_SAMPLE_PAGES>
-      ] <EQ>? [ <number> || <DEFAULT> ]
-      |
+      ||
+      $<t>=[ <PACK_KEYS> || <STATS_AUTO_RECALC> || <STATS_PERSISTENT> |
+             <STATS_SAMPLE_PAGES>
+      ] <EQ>? $<o>=[ <number> || <DEFAULT> ]
+      ||
       <ROW_FORMAT> <EQ>? <row_types>
-      |
+      ||
       <UNION> <EQ>? '(' <table_list>? ')'
-      |
-      <DEFAULT>? <charset> <EQ>? [ <char_id=.ident> || <char_txt=.text> ]
-      |
-      <DEFAULT>? <COLLATE> <EQ>? [ <collate_id=.ident> || <collate_txt=.text> ]
-      |
-      <INSERT_METHOD> <EQ>? [ <NO> || <FIRST> || <LAST> ]
-      |
+      ||
+      <DEFAULT>? <charset> <EQ>? $<o>=[ <ident> || <text> ]
+      ||
+      <DEFAULT>? <COLLATE> <EQ>? $<o>=[ <ident> || <text> ]
+      ||
+      <INSERT_METHOD> <EQ>? $<o>=[ <NO> || <FIRST> || <LAST> ]
+      ||
       <TABLESPACE> <EQ>? <ts_ident=.ident>
-      |
-      <STORAGE> [ <DISK> || <MEMORY> ]
+      ||
+      <STORAGE> $<o>=[ <DISK> || <MEMORY> ]
     ]
   }
 
@@ -656,7 +643,7 @@ grammar DDLGrammar {
   }
 
   rule collate_explicit {
-    <COLLATE> [ <collate_id=.ident> || <collate_txt=.text> ]
+    <COLLATE> $<o>=[ <ident> || <text> ]
   }
 
   rule constraint {
@@ -668,7 +655,7 @@ grammar DDLGrammar {
   }
 
   rule field_list_item {
-    [ <col_def> | <key_def> ]
+    <col_def> | <key_def>
   }
 
   rule field_def {
@@ -741,45 +728,44 @@ grammar DDLGrammar {
   }
 
   rule type {
-    [ <INT> || <TINYINT> || <SMALLINT> || <MEDIUMINT> || <BIGINT> || <YEAR> ]
+    $<t>=[ <INT> || <TINYINT> || <SMALLINT> || <MEDIUMINT> || <BIGINT> || <YEAR> ]
     [ '(' <num> ')' ]?
-    |
-    [ <REAL> | <DOUBLE> <PRECISION>? ]
-    |
-    [ <FLOAT> || <DECIMAL> || <NUMERIC> || <FIXED> ]
+    ||
+    $<t>=[ <REAL> || <DOUBLE> <PRECISION>? ]
+    ||
+    $<t>=[ <FLOAT> || <DECIMAL> || <NUMERIC> || <FIXED> ]
     [
       '(' [
-        [ <number> ]
+        [ <n=.number> ]
         |
         [ <m=.number> ',' <d=.number> ]
       ')' ]
-    ]? $<options>=[ <SIGNED> || <UNSIGNED> || <ZEROFILL> ]*
+    ]? $<o>=[ <SIGNED> || <UNSIGNED> || <ZEROFILL> ]*
     |
     [
+      $<t>=[ <BIT> || <BINARY> ] '(' <num> ')'
       |
-      [ <BIT> || <BINARY> ] '(' <num> ')'
-      |
-      [ <BOOL> || <BOOLEAN> ]
+      $<t>=[ <BOOL> || <BOOLEAN> ]
       |
       [
-        [ <CHAR> || <VARCHAR> ] '(' <num> ')'
+        $<t>=[ <CHAR> || <VARCHAR> ] '(' <num> ')'
         |
-        <TINYTEXT>
+        <t=.TINYTEXT>
         |
-        <TEXT> [ '(' <num> ')' ]?
+        <t=.TEXT> [ '(' <num> ')' ]?
         |
-        <MEDIUMTEXT>
+        <t=.MEDIUMTEXT>
         |
-        <LONGTEXT>
+        <t=.LONGTEXT>
         |
-        [ <ENUM> || <SET> ] '(' <text>+ % ',' ')'
+        $<t>=[ <ENUM> || <SET> ] '(' <text>+ % ',' ')'
       ]
       [
-        [ <ASCII> <BINARY> ] | [<BINARY> <ASCII> ]
+        $<t>=[ [ <ASCII> <BINARY> ] || [<BINARY> <ASCII> ] ]
         |
-        [ <UNICODE> <BINARY> ] | [ <BINARY> <UNICODE> ]
+        $<t>=[ [ <UNICODE> <BINARY> ] || [ <BINARY> <UNICODE> ] ]
         |
-        <BYTE>
+        <t=.BYTE>
         |
         <charset> [ <ident> || <text> ] <BINARY>?
         |
@@ -788,26 +774,26 @@ grammar DDLGrammar {
     ]
     |
     [
-      [ <NCHAR> | <NATIONAL> <CHAR> ] [ '(' <num> ')' ]?
+      $<t>=[ <NCHAR> | <NATIONAL> <CHAR> ] [ '(' <num> ')' ]?
       |
       [
-        <NATIONAL>  [ <VARCHAR> ] | [ <CHAR> <VARYING> ]
+        $<t>=[ <NATIONAL>  [ <VARCHAR> ] || [ <CHAR> <VARYING> ] ]
         |
-        <NVARCHAR>
+        <t=.NVARCHAR>
         |
-        <NCHAR> [ <VARCHAR> || <VARYING> ]
+        $<t>=[ <NCHAR> [ <VARCHAR> || <VARYING> ] ]
       ]
     ] <BINARY>?
     |
-    <DATE>
+    <t=.DATE>
     |
-    [ <TIME> || <TIMESTAMP> || <DATETIME> ] [ '(' <num> ')' ]?
+    $<t>=[ <TIME> || <TIMESTAMP> || <DATETIME> ] [ '(' <num> ')' ]?
     |
-    <TINYBLOB>
+    <t=.TINYBLOB>
     |
-    <BLOB> [ '(' <num> ')' ]?
+    <t=.BLOB> [ '(' <num> ')' ]?
     |
-    [
+    $<t>=[
       <GEOMETRY>           ||
       <GEOMETRYCOLLECTION> ||
       <POINT>              ||
@@ -818,17 +804,17 @@ grammar DDLGrammar {
       <MULTIPOLYGON>
     ]
     |
-    [ <MEDIUMBLOB> || <LONGBLOB> ]
+    $<t>=[ <MEDIUMBLOB> || <LONGBLOB> ]
     |
-    <LONG> [
+    <t=.LONG> $<o>=[
       <VARBINARY>
-      |
-      [ <CHAR> <VARYING> | <VARCHAR> ]? <BINARY>?
+      ||
+      [ <CHAR> <VARYING> || <VARCHAR> ]? <b=.BINARY>?
     ]
     |
-    <SERIAL>
+    <t=.SERIAL>
     |
-    <JSON>
+    <t=.JSON>
   }
 
   rule all_key_opt {

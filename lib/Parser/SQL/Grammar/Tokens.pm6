@@ -776,7 +776,7 @@ our token query_spec_option is export {
 }
 
 our token select_alias is export {
-  <AS>? [ <ident> || <text> ]
+  <AS>? <.ws> $<a>=[ <ident> || <text> ]
 }
 
 our token simple_ident is export {
