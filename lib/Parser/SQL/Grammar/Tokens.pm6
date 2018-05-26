@@ -154,7 +154,7 @@ our token CONTEXT is export            { 'CONTEXT' }
 our token CONVERT is export            { 'CONVERT' }
 our token COUNT is export              { 'COUNT' }
 our token CPU is export                { 'CPU' }
-our token CREATE is export             { 'CREATE' }
+our token CREAT_E is export            { 'CREATE' }
 our token CROSS is export              { 'CROSS' }
 our token CUBE is export               { 'CUBE' }
 our token CURDATE is export            { 'CURDATE' }
@@ -635,6 +635,10 @@ our token hex_num is export {
   ]
 }
 
+our token table_ident is export {
+  [ <ns_ident=.ident> '.' || '.' ]? <tbl_ident=.ident>
+}
+
 our token number is export        { \d+ }
 our token num is export           { <[+-]>? <whole=.number> [ '.' <dec=.number> ]? }
 our token signed_number is export { <[+-]>? <number> }
@@ -786,10 +790,6 @@ our token simple_ident is export {
 
 our token simple_ident_q is export {
   [ <ident>? '.' ]? <ident> '.' <ident>
-}
-
-our token table_ident is export {
-  [ <ns_ident=.ident> '.' || '.' ]? <tbl_ident=.ident>
 }
 
 our token text is export {

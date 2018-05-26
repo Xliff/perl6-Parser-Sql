@@ -1,8 +1,9 @@
 use v6.c;
 
+use Grammar::Tracer;
 use Parser::SQL::Grammar::Tokens;
 
-grammar DDLGrammar {
+grammar Parser::SQL::Grammar::DDLGrammar {
   token TOP { <CREATE_ST> }
 
   rule alter_algo_option {
@@ -736,9 +737,9 @@ grammar DDLGrammar {
     $<t>=[ <FLOAT> || <DECIMAL> || <NUMERIC> || <FIXED> ]
     [
       '(' [
-        [ <n=.number> ]
+        [ <n=number> ]
         |
-        [ <m=.number> ',' <d=.number> ]
+        [ <m=number> ',' <d=number> ]
       ')' ]
     ]? $<o>=[ <SIGNED> || <UNSIGNED> || <ZEROFILL> ]*
     |
@@ -750,13 +751,13 @@ grammar DDLGrammar {
       [
         $<t>=[ <CHAR> || <VARCHAR> ] '(' <num> ')'
         |
-        <t=.TINYTEXT>
+        <t=TINYTEXT>
         |
-        <t=.TEXT> [ '(' <num> ')' ]?
+        <t=TEXT> [ '(' <num> ')' ]?
         |
-        <t=.MEDIUMTEXT>
+        <t=MEDIUMTEXT>
         |
-        <t=.LONGTEXT>
+        <t=LONGTEXT>
         |
         $<t>=[ <ENUM> || <SET> ] '(' <text>+ % ',' ')'
       ]
@@ -765,7 +766,7 @@ grammar DDLGrammar {
         |
         $<t>=[ [ <UNICODE> <BINARY> ] || [ <BINARY> <UNICODE> ] ]
         |
-        <t=.BYTE>
+        <t=BYTE>
         |
         <charset> [ <ident> || <text> ] <BINARY>?
         |
@@ -779,19 +780,19 @@ grammar DDLGrammar {
       [
         $<t>=[ <NATIONAL>  [ <VARCHAR> ] || [ <CHAR> <VARYING> ] ]
         |
-        <t=.NVARCHAR>
+        <t=NVARCHAR>
         |
         $<t>=[ <NCHAR> [ <VARCHAR> || <VARYING> ] ]
       ]
     ] <BINARY>?
     |
-    <t=.DATE>
+    <t=DATE>
     |
     $<t>=[ <TIME> || <TIMESTAMP> || <DATETIME> ] [ '(' <num> ')' ]?
     |
-    <t=.TINYBLOB>
+    <t=TINYBLOB>
     |
-    <t=.BLOB> [ '(' <num> ')' ]?
+    <t=BLOB> [ '(' <num> ')' ]?
     |
     $<t>=[
       <GEOMETRY>           ||
@@ -806,15 +807,15 @@ grammar DDLGrammar {
     |
     $<t>=[ <MEDIUMBLOB> || <LONGBLOB> ]
     |
-    <t=.LONG> $<o>=[
+    <t=LONG> $<o>=[
       <VARBINARY>
       ||
-      [ <CHAR> <VARYING> || <VARCHAR> ]? <b=.BINARY>?
+      [ <CHAR> <VARYING> || <VARCHAR> ]? <b=BINARY>?
     ]
     |
-    <t=.SERIAL>
+    <t=SERIAL>
     |
-    <t=.JSON>
+    <t=JSON>
   }
 
   rule all_key_opt {
@@ -1087,7 +1088,7 @@ rule delete_option {
   }
 
   rule CREATE_ST {
-    <CREATE> [
+    <CREAT_E> [
         <TEMPORARY>? <TABLE> <if_not_exists>? <table_ident> [
           '(' [
             <create_field_list> ')' <create_table_opts>? <create_partitioning>? <create3>?
@@ -1115,7 +1116,6 @@ rule delete_option {
         <DATABASE> <if_not_exists>? <ident> <create_database_opts>?
         |
         <USER> <if not exists>?
-          #<clear_privs>
           <grant_opts>
           <require_clause>
           <connect_opts>
@@ -1144,6 +1144,19 @@ rule delete_option {
     <query_spec>
   }
 
-
-
 };
+
+our sub MAIN is export {
+  my $test = qq:to/SQL/;
+  CREATE TABLE Persons (
+      PersonID int,
+      LastName varchar(255),
+      FirstName varchar(255),
+      Address varchar(255),
+      City varchar(255)
+  );
+  SQL
+
+  my $a = Parser::SQL::Grammar::DDLGrammar.parse($test);
+  say $a;
+}
