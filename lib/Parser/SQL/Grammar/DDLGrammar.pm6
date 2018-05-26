@@ -1050,7 +1050,7 @@ rule delete_option {
   }
 
   rule ts_engine {
-    <STORAGE>? <ENGINE> <EQ>? <engine=[ <ident> | <text> ]>
+    <STORAGE>? <ENGINE> <EQ>? [ <engine=.ident> | <engine=.text> ]
   }
 
   rule ts_file_block_size {
@@ -1062,7 +1062,7 @@ rule delete_option {
   }
 
   rule tablespace_option_list {
-    :my rule _ts_option = {
+    :my rule _ts_option {
       [
         <ts_initial_size>     |
         <ts_autoextend_size>  |
