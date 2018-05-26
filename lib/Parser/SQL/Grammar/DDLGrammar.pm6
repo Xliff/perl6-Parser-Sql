@@ -1088,7 +1088,7 @@ rule delete_option {
   }
 
   rule CREATE_ST {
-    <CREAT_E> [
+    <_CREATE> [
         <TEMPORARY>? <TABLE> <if_not_exists>? <table_ident> [
           '(' [
             <create_field_list> ')' <create_table_opts>? <create_partitioning>? <create3>?

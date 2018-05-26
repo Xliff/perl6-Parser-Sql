@@ -154,7 +154,7 @@ our token CONTEXT is export            { 'CONTEXT' }
 our token CONVERT is export            { 'CONVERT' }
 our token COUNT is export              { 'COUNT' }
 our token CPU is export                { 'CPU' }
-our token CREAT_E is export            { 'CREATE' }
+our token _CREATE is export            { 'CREATE' }
 our token CROSS is export              { 'CROSS' }
 our token CUBE is export               { 'CUBE' }
 our token CURDATE is export            { 'CURDATE' }
