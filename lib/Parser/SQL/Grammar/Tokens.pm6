@@ -2,18 +2,18 @@ use v6.c;
 
 unit module Parser::SQL::Grammar::Tokens;
 
-our token EQ is export          { 'EQ' | '='  }
-our token GE is export          { 'GE' | '>=' }
-our token GT is export          { 'GT' | '>' }
-our token LE is export          { 'LE' | '<=' }
-our token LT is export          { 'LT' | '<' }
-our token NE is export          { 'NE' | '<>' }
+our token EQ is export          { «'EQ'» || '='  }
+our token GE is export          { «'GE'» || '>=' }
+our token LE is export          { «'LE'» || '<=' }
+our token GT is export          { «'GT'» || '>' }
+our token LT is export          { «'LT'» || '<' }
+our token NE is export          { «'NE'» || '<>' }
 
 our token AND2 is export        { '&&' }
 our token BIT_AND is export		  { '&' }
 our token BIT_NOT is export     { '~' }
 our token BIT_OR is export		  { '|' }
-our token BIT_XOR is export		  { 'XOR' }
+our token BIT_XOR is export		  { «'XOR'» }
 our token MINUS is export       { '-' }
 our token NOT_OP is export      { '!' }
 our token NOT2                  { '<>' }
@@ -69,15 +69,6 @@ our token interval_time_stamp is export {
     <DAY>    | <WEEK>        | <HOUR> | <MINUTE> | <MONTH> | <QUARTER> |
     <SECOND> | <MICROSECOND> | <YEAR>
   ]
-}
-
-our token bit_ops is export {
-  '|' || '&' || '*' || '/' ||   '%' || '^' ||
-   <SHIFT_L> ||  <SHIFT_R> || <DIV> || <MOD>
-}
-
-our token comp_ops is export {
-  <EQ> || <GE> || <GT> || <LE> || <LT> || <NE>
 }
 
 our token ACCOUNT is export            { 'ACCOUNT' }
@@ -624,6 +615,15 @@ our token not is export         {  <NOT> | <NOT2> }
 our token or is export          {   <OR> | <OR2> }
 our token plus_minus is export  { <PLUS> | <MINUS> }
 
+our token bit_ops is export {
+  '|' || '&' || '*' || '/' || '%' || '^' ||
+   <SHIFT_L> || <SHIFT_R> || <DIV> || <MOD>
+}
+
+our token comp_ops is export {
+  <EQ> | <GE> | <GT> | <LE> | <LT> | <NE>
+}
+
 our token bin_num is export {
   'B'  [ <[01]>+ || "'" <[01]>+ "'" ]
   ||
@@ -636,9 +636,7 @@ our token hex_num is export {
   ]
 }
 
-our token table_ident is export {
-  [ <ns_ident=.ident> '.' || '.' ]? <tbl_ident=.ident>
-}
+
 
 our token number is export        { \d+ }
 our token num is export           { <[+-]>? <whole=.number> [ '.' <dec=.number> ]? }
@@ -648,35 +646,6 @@ our token ulong_num is export     { <number> || <hex_num> }
 our token order_dir is export     { <ASC> || <DESC> }
 our token union_opt is export     { <DISTINCT> || <ALL> }
 our token key_or_index is export  { <KEY> || <INDEX> }
-
-our token field_ident is export   { [ <table_ident>? '.' ]? <field_id=.ident> }
-our token ident is export         { <ident_sys> || <keyword> }
-
-our token ident_sys is export {
-  # Can Identifier consist of a sole _, @ or #?
-  :my token _valid_id is export { <:Letter + [ _ @ # ]> <[ \w _ @ # $ ]>* };
-  <_valid_id>
-  # YYY: Verify that this is IDENT_QUOTED
-  ||
-  '"' <ident> '"' || "'" <ident> "'"
-}
-
-our token keyword is export {
-  <keyword_sp> || <ACCOUNT>  || <ASCII>     || <ALWAYS>   || <BACKUP>   ||
-  <BEGIN>      || <BYTE>     || <CACHE>     || <CHARSET>  || <CHECKSUM> ||
-  <CLOSE>      || <COMMENT>  || <COMMIT>    || <CONTAINS> ||
-  <DEALLOCATE> || <DO>       || <END>       || <EXECUTE>  || <FLUSH>    ||
-  <FOLLOWS>    || <FORMAT>   ||
-  <GROUP_REPLICATION>        || <HANDLER>   || <HELP>     || <HOST>     ||
-  <INSTALL>    || <LANGUAGE> || <NO>        || <OPEN>     || <OPTIONS>  ||
-  <OWNER>      || <PARSER>   ||
-  <PARSE_GCOL_EXPR>          || <PORT>      || <PRECEDES> || <PREPARE>  ||
-  <REMOVE>     || <REPAIR>   || <RESET>     || <RESTORE>  || <ROLLBACK> ||
-  <SAVEPOINT>  || <SECURITY> || <SERVER>    || <SHUTDOWN> || <SIGNED>   ||
-  <SOCKET>     || <SLAVE>    || <SONAME>    || <START>    || <STOP>     ||
-  <TRUNCATE>   || <UNICODE>  || <UNINSTALL> || <WRAPPER>  || <XA>       ||
-  <UPGRADE>
-}
 
 our token keyword_sp is export {
   <ACTION>      || <ADDDATE>   || <AFTER>   || <AGAINST>   || <AGGREGATE>  ||
@@ -772,6 +741,40 @@ our token keyword_sp is export {
   <X509>        || <XID>       || <XML>    || <YEAR_SYMACTION>             ||
   <YEAR>
 }
+
+our token keyword is export {
+  <keyword_sp> || <ACCOUNT>  || <ASCII>     || <ALWAYS>   || <BACKUP>   ||
+  <BEGIN>      || <BYTE>     || <CACHE>     || <CHARSET>  || <CHECKSUM> ||
+  <CLOSE>      || <COMMENT>  || <COMMIT>    || <CONTAINS> ||
+  <DEALLOCATE> || <DO>       || <END>       || <EXECUTE>  || <FLUSH>    ||
+  <FOLLOWS>    || <FORMAT>   ||
+  <GROUP_REPLICATION>        || <HANDLER>   || <HELP>     || <HOST>     ||
+  <INSTALL>    || <LANGUAGE> || <NO>        || <OPEN>     || <OPTIONS>  ||
+  <OWNER>      || <PARSER>   ||
+  <PARSE_GCOL_EXPR>          || <PORT>      || <PRECEDES> || <PREPARE>  ||
+  <REMOVE>     || <REPAIR>   || <RESET>     || <RESTORE>  || <ROLLBACK> ||
+  <SAVEPOINT>  || <SECURITY> || <SERVER>    || <SHUTDOWN> || <SIGNED>   ||
+  <SOCKET>     || <SLAVE>    || <SONAME>    || <START>    || <STOP>     ||
+  <TRUNCATE>   || <UNICODE>  || <UNINSTALL> || <WRAPPER>  || <XA>       ||
+  <UPGRADE>
+}
+
+our token ident_sys is export {
+  # Can Identifier consist of a sole _, @ or #?
+  :my token _valid_id { <:Letter + [ _ @ # ]> <:Letter + [ _ @ # $ ]>* };
+  <_valid_id>
+  # YYY: Verify that this is IDENT_QUOTED
+  ||
+  '"' <ident> '"' || "'" <ident> "'"
+}
+
+our token table_ident is export {
+  [ <ns_ident=.ident> '.' || '.' ]? <tbl_ident=.ident>
+}
+
+our token ident is export   { <ident_sys> || <keyword> }
+
+our token field_ident is export   { [ <table_ident>? '.' ]? <ident> }
 
 our token limit_options is export { <ident> || <PARAM_MARK> || <num> }
 
