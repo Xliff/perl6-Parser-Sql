@@ -612,6 +612,7 @@ our token TIMESTAMP_ADD is export               { 'TIMESTAMP_ADD' }
 our token TIMESTAMP_DIFF is export              { 'TIMESTAMP_DIFF' }
 our token UDF_RETURNS is export                 { 'UDF_RETURNS' }
 our token UNDO_BUFFER_SIZE is export            { 'UNDO_BUFFER_SIZE' }
+our token USE is export                         { 'USE' }
 our token USE_FRM is export                     { 'USE_FRM' }
 our token UTC_DATE is export                    { 'UTC_DATE' }
 our token UTC_TIME is export                    { 'UTC_TIME' }

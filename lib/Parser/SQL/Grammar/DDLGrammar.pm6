@@ -1019,6 +1019,65 @@ rule delete_option {
     ] [ <SUBPARTITIONS> <number> ]?
   }
 
+  rule tablespace_info {
+    <ts_name=.ident> <ADD> <DATAFILE> <df_name=.text>
+    [ <USE> <LOGFILE> <GROUP> <grp_name=.ident> ]?
+    <tablespace_option_list>
+  }
+
+  rule ts_initial_size {
+    <INITIAL_SIZE> <EQ>? <number>
+  }
+
+  rule ts_autoextend_size {
+    <AUTOEXTEND_SIZE> <EQ>? <number>
+  }
+
+  rule ts_comment {
+    <COMMENT> <EQ>? <text_string>
+  }
+
+  rule ts_max_size {
+    <MAX_SIZE> <EQ>? <number>
+  }
+
+  rule ts_extent_size {
+    <EXTENT_SIZE> <EQ>? <number>
+  }
+
+  rule ts_nodegroup {
+    <NODEGROUP> <EQ>? <ulong_num>
+  }
+
+  rule ts_engine {
+    <STORAGE>? <ENGINE> <EQ>? <engine=[ <ident> | <text> ]>
+  }
+
+  rule ts_file_block_size {
+    <FILE_BLOCK_SIZE> <EQ>? <number>
+  }
+
+  rule ts_wait {
+    <WAIT> | <NO_WAIT>
+  }
+
+  rule tablespace_option_list {
+    :my rule _ts_option = {
+      [
+        <ts_initial_size>     |
+        <ts_autoextend_size>  |
+        <ts_max_size>         |
+        <ts_extent_size>      |
+        <ts_nodegroup>        |
+        <ts_engine>           |
+        <ts_wait>             |
+        <ts_comment>          |
+        <ts_file_block_size>
+      ]
+    };
+    <_ts_option>* % ','
+  }
+
   rule create3 {
     [ <REPLACE> || <IGNORE> ]? <AS>? [
       <create_select> <union_list>?
@@ -1063,6 +1122,8 @@ rule delete_option {
           <lock_expire_opts>?
         |
         <LOGFILE> <GROUP> <logfile_group_info>
+        |
+        <TABLESPACE> <tablespace_info>
         |
         <SERVER>
           [ <server_ident=.ident> || <server_text=.text> ]
