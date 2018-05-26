@@ -2,12 +2,12 @@ use v6.c;
 
 unit module Parser::SQL::Grammar::Tokens;
 
-our token EQ is export          { 'EQ' || '='  }
-our token GE is export          { 'GE' || '>=' }
-our token GT is export          { 'GT' || '>' }
-our token LE is export          { 'LE' || '<=' }
-our token LT is export          { 'LT' || '<' }
-our token NE is export          { 'NE' || '<>' }
+our token EQ is export          { 'EQ' | '='  }
+our token GE is export          { 'GE' | '>=' }
+our token GT is export          { 'GT' | '>' }
+our token LE is export          { 'LE' | '<=' }
+our token LT is export          { 'LT' | '<' }
+our token NE is export          { 'NE' | '<>' }
 
 our token AND2 is export        { '&&' }
 our token BIT_AND is export		  { '&' }
@@ -16,6 +16,7 @@ our token BIT_OR is export		  { '|' }
 our token BIT_XOR is export		  { 'XOR' }
 our token MINUS is export       { '-' }
 our token NOT_OP is export      { '!' }
+our token NOT2                  { '<>' }
 our token OR2 is export         { '||' }
 our token PLUS is export        { '+' }
 our token SHIFT_L is export     { '<<' }
@@ -65,16 +66,10 @@ our token interval is export {
 
 our token interval_time_stamp is export {
   [
-    <DAY>    || <WEEK>        || <HOUR> || <MINUTE> || <MONTH> || <QUARTER> ||
-    <SECOND> || <MICROSECOND> || <YEAR>
+    <DAY>    | <WEEK>        | <HOUR> | <MINUTE> | <MONTH> | <QUARTER> |
+    <SECOND> | <MICROSECOND> | <YEAR>
   ]
 }
-
-our token all_or_any is export {  <ALL> || <ANY> }
-our token and is export        {  <AND> || '&&' }
-our token not is export        {  <NOT> || '<>' }
-our token or is export         {   <OR> || '||' }
-our token plus_minus is export { <PLUS> || <MINUS> }
 
 our token bit_ops is export {
   '|' || '&' || '*' || '/' ||   '%' || '^' ||
@@ -622,6 +617,12 @@ our token WEIGHT_STRING is export               { 'WEIGHT_STRING' }
 our token WITH_CUBE is export                   { 'WITH_CUBE' }
 our token WITH_ROLLUP is export                 { 'WITH_ROLLUP' }
 our token YEAR_SYMACTION is export              { 'YEAR_SYMACTION' }
+
+our token all_or_any is export  {  <ALL> | <ANY> }
+our token and is export         {  <AND> | <AND2> }
+our token not is export         {  <NOT> | <NOT2> }
+our token or is export          {   <OR> | <OR2> }
+our token plus_minus is export  { <PLUS> | <MINUS> }
 
 our token bin_num is export {
   'B'  [ <[01]>+ || "'" <[01]>+ "'" ]
