@@ -126,6 +126,32 @@ for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
       nok test("\"misquoted2'"), "\"misquoted2\' FAILS <ident_sys>";
     }
 
+    when 'interval' {
+      my @syms = <
+        DAY_HOUR
+        DAY_MICROSECOND
+        DAY_MINUTE
+        DAY_SECOND
+        HOUR_MICROSECOND
+        HOUR_MINUTE
+        HOUR_SECOND
+        MINUTE_MICROSECOND
+        MINUTE_SECOND
+        SECOND_MICROSECOND
+        YEAR_MONTH
+      >;
+
+      for @syms -> $s {
+        my $sm = "a{$s}b";
+
+         ok $s ~~ /^<interval>/,  " $s passes <interval>";
+        nok $sm ~~ /^<interval>/, "$sm FAILS <interval>";
+      }
+    }
+
+
+    # cw: Ideally, we'd mix these. That can be a TODO for later.
+
     when 'interval_time_stamp' {
       for <
         DAY
@@ -137,8 +163,11 @@ for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
         SECOND
         WEEK
         YEAR
-      > -> $is {
-        ok $is ~~ /<interval_time_stamp>/, "$is passes <interval_time_stamp>";
+      > -> $s {
+        my $sm = "a{$s}b";
+
+          ok $s ~~ /^<interval_time_stamp>/, " $s passes <interval_time_stamp>";
+        nok $sm ~~ /^<interval_time_stamp>/, "$sm FAILS <interval_time_stamp>";
       }
     }
 

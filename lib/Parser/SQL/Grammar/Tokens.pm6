@@ -47,28 +47,31 @@ our token MINUTE_SECOND is export		   { 'MINUTE_SECOND' }
 our token SECOND_MICROSECOND is export { 'SECOND_MICROSECOND' }
 our token YEAR_MONTH is export         { 'YEAR_MONTH' }
 
-our token interval is export {
-  [
-    <interval_time_stamp> ||
-    <DAY_HOUR>            ||
-    <DAY_MICROSECOND>     ||
-    <DAY_MINUTE>          ||
-    <DAY_SECOND>          ||
-    <HOUR_MICROSECOND>    ||
-    <HOUR_MINUTE>         ||
-    <HOUR_SECOND>         ||
-    <MINUTE_MICROSECOND>  ||
-    <MINUTE_SECOND>       ||
-    <SECOND_MICROSECOND>  ||
-    <YEAR_MONTH>
-  ]
+our token interval_time_stamp is export {
+    <DAY>         |
+    <HOUR>        |
+    <MICROSECOND> |
+    <MINUTE>      |
+    <MONTH>       |
+    <QUARTER>     |
+    <SECOND>      |
+    <WEEK>        |
+    <YEAR>
 }
 
-our token interval_time_stamp is export {
-  [
-    <DAY>    | <WEEK>        | <HOUR> | <MINUTE> | <MONTH> | <QUARTER> |
-    <SECOND> | <MICROSECOND> | <YEAR>
-  ]
+our token interval is export {
+    <interval_time_stamp> |
+    <DAY_HOUR>            |
+    <DAY_MICROSECOND>     |
+    <DAY_MINUTE>          |
+    <DAY_SECOND>          |
+    <HOUR_MICROSECOND>    |
+    <HOUR_MINUTE>         |
+    <HOUR_SECOND>         |
+    <MINUTE_MICROSECOND>  |
+    <MINUTE_SECOND>       |
+    <SECOND_MICROSECOND>  |
+    <YEAR_MONTH>
 }
 
 our token ACCOUNT is export            { 'ACCOUNT' }
@@ -772,6 +775,8 @@ our token ident_sys is export {
   "'" [ <~~> ] "'"
 }
 
+# Check to see if keyword is supposed to be in both ident_sys AND _ident.
+# That doesn't make much sense.
 our regex _ident is export   { <keyword> | <ident_sys> }
 
 our regex table_ident is export {
