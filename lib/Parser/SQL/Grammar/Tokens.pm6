@@ -759,13 +759,17 @@ our token keyword is export {
   <UPGRADE>
 }
 
+# cw: Note the circular ref and how it needed to be avoided.
+# Can Identifier consist of a sole _, @ or #?
 our token ident_sys is export {
-  # Can Identifier consist of a sole _, @ or #?
-  :my token _valid_id { <:Letter + [ _ @ # ]> <:Letter + [ _ @ # $ ]>* };
-  <_valid_id>
+  <keyword>
+  |
+  $<o>=[ <:Letter + [ _ @ # ]> <:Letter + [ _ @ # $ ]>* ]
+  |
   # YYY: Verify that this is IDENT_QUOTED
-  ||
-  '"' <ident> '"' || "'" <ident> "'"
+  '"' [ <~~> ] '"'
+  |
+  "'" [ <~~> ] "'"
 }
 
 our regex _ident is export   { <keyword> | <ident_sys> }

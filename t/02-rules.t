@@ -3,9 +3,6 @@ use v6.c;
 use Test;
 use Parser::SQL::Grammar::Tokens;
 
-my @syms;
-
-# cw: Adapt for testing harness.
 for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
   next unless $s ~~ ! /^\&_?<[A..Z0..9]>+/;
 
@@ -81,6 +78,52 @@ for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
       nok "fae" ~~ /<hex_num>/, "fae FAILS <hex_num>";
       nok "123" ~~ /<hex_num>/, "123 FAILS <hex_num>";
       nok "0x213efg" ~~ /<hex_num>/, "0x213efg FAILS <hex_num>";
+    }
+
+    when 'ident_sys' {
+      my $m;
+      sub test(Str $s) {
+       $m = $s ~~ /^<ident_sys>/;
+      }
+
+      ok
+        test("\@identifier"),
+        "\@identifier matches <ident_sys>";
+
+      ok
+        test("\@\@why_would_you_use_this_name"),
+        "\@\@why_would_you_use_this_name matches <ident_sys>";
+
+      ok
+        test("\@\$please__no"),
+        "\@\$please__no matches <ident_sys>";
+
+      ok
+        test("#\@now_you_are_hurting_me"),
+        "#\@now_you_are_hurting_me matches <ident_sys>";
+
+      test("REMOVE");
+      ok
+        $m<ident_sys><keyword>,
+        "REMOVE keyword matches <ident_sys>";
+
+      ok
+        test('"quoted_identifier"'),
+        '"quoted_identifier" matches <ident_sys>';
+
+      ok
+        test("'quoted_identifier'"),
+        "'quoted_identifier' MATCHES <ident_sys>";
+
+      ok
+        test("__ident"), "__ident matches <ident_sys>";
+
+      nok test("\!not"), "!not FAILS <ident_sys>";
+      nok test("\$dolla"), "\$dolla FAILS <ident_sys>";
+      nok test("0\@notavar"), "0\@notavar FAILS <ident_sys>";
+      nok test("\%caseabeer"), "\%caseabeer FAILS <ident_sys>";
+      nok test("'misquoted\""), "'misquoted\" FAILS <ident_sys>";
+      nok test("\"misquoted2'"), "\"misquoted2\' FAILS <ident_sys>";
     }
 
     when 'interval_time_stamp' {
