@@ -12,6 +12,12 @@ for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
   diag $s;
 
   given (S/^\&// given $s) {
+
+    when 'all_or_any' {
+      ok 'ALL' ~~ ::("&{$_}"), "ALL passes &$_";
+      ok 'ANY' ~~ ::("&{$_}"), "ANY passes &$_";
+    }
+
     when 'and' {
       ok  '&&' ~~ /<and>/, '&& passes <and>';
       nok '&+' ~~ /<and>/, '&+ FAILS <and>';
@@ -66,28 +72,15 @@ for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
       #  "namespace:table:field fails <field_ident>";
     }
 
-    when 'not' {
-      ok  '<>' ~~ /<not>/, '<> passes <not>';
-      nok '><' ~~ /<not>/, '>< FAILS <not>';
-    }
+    when 'hex_num' {
+      ok "0xdeadBEeF" ~~ /<hex_num>/, "0xdeadBEeF passes <hex_num>";
+      ok "0XbEeFDeAd" ~~ /<hex_num>/, "0XbEeFDeAd passes <hex_num>";
+      ok "x3af" ~~ /<hex_num>/, "x3af passes <hex_num>";
+      ok "XfA3" ~~ /<hex_num>/, "XfA3 passes <hex_num>";
 
-    when 'or' {
-      ok  '||' ~~ /<or>/, '|| passes <or>';
-      nok '|' ~~ /<or>/,  '| FAILS <or>';
-    }
-
-    when 'plus_minus' {
-      ok  '+' ~~ /<plus_minus>/, '+ passes <plus_minus>';
-      ok  '-' ~~ /<plus_minus>/, '- passes <plus_minus>';
-      nok '*' ~~ /<plus_minus>/, '* FAILS <plus_minus>';
-    }
-
-    when '_given_id' {
-    }
-
-    when 'all_or_any' {
-      ok 'ALL' ~~ ::("&{$_}"), "ALL passes &$_";
-      ok 'ANY' ~~ ::("&{$_}"), "ANY passes &$_";
+      nok "fae" ~~ /<hex_num>/, "fae FAILS <hex_num>";
+      nok "123" ~~ /<hex_num>/, "123 FAILS <hex_num>";
+      nok "0x213efg" ~~ /<hex_num>/, "0x213efg FAILS <hex_num>";
     }
 
     when 'interval_time_stamp' {
@@ -106,6 +99,29 @@ for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
       }
     }
 
+    when 'not' {
+      ok  '<>' ~~ /<not>/, '<> passes <not>';
+      nok '><' ~~ /<not>/, '>< FAILS <not>';
+    }
+
+    when 'or' {
+      ok  '||' ~~ /<or>/, '|| passes <or>';
+      nok '|' ~~ /<or>/,  '| FAILS <or>';
+    }
+
+    when 'order_dir' {
+      ok  'ASC' ~~ /<order_dir>/, 'ASC passes <order_dir>';
+      nok 'ARC' ~~ /<order_dir>/, 'ARC FAILS <order_dir>';
+
+      ok  'DESC' ~~ /<order_dir>/, 'DESC passes <order_dir>';
+      nok 'DISC' ~~ /<order_dir>/, 'DISC FAILS <order_dir>';
+    }
+
+    when 'plus_minus' {
+      ok  '+' ~~ /<plus_minus>/, '+ passes <plus_minus>';
+      ok  '-' ~~ /<plus_minus>/, '- passes <plus_minus>';
+      nok '*' ~~ /<plus_minus>/, '* FAILS <plus_minus>';
+    }
 
   }
 }

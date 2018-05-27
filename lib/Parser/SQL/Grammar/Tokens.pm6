@@ -631,9 +631,9 @@ our token bin_num is export {
 }
 
 our token hex_num is export {
-  '0'? 'X' [
-    <[0123456789ABCDEF]>+ || "'" <[0123456789ABCDEF]>+ "'"
-  ]
+  '0'? [ 'x' || 'X' ] [
+    <[0123456789ABCDEFabcdef]>+ || "'" <[0123456789ABCDEFabcdef]>+ "'"
+  ] »
 }
 
 
