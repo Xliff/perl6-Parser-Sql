@@ -642,13 +642,18 @@ our token hex_num is export {
 
 
 our token number is export        { \d+ }
-our token num is export           { <[+-]>? <whole=.number> [ '.' <dec=.number> ]? }
-our token signed_number is export { <[+-]>? <number> }
+# cw: <item=.rule> should mean that .rule is non-capturing and the results should
+#     go to item, instead. Has there been a syntax change? Try and one-liner for
+#     #perl6
+our token num is export           {
+  $<s>=<[+-]>? <whole=number> [ '.' <dec=number> ]? <!before '.'>
+}
+our token signed_number is export { $<s>=<[+-]>? <number> }
 our token ulong_num is export     { <number> || <hex_num> }
 
-our token order_dir is export     { <ASC> || <DESC> }
-our token union_opt is export     { <DISTINCT> || <ALL> }
-our token key_or_index is export  { <KEY> || <INDEX> }
+our token order_dir is export     { <ASC> | <DESC> }
+our token union_opt is export     { <DISTINCT> | <ALL> }
+our token key_or_index is export  { <KEY> | <INDEX> }
 
 our token keyword_sp is export {
   <ACTION>      | <ADDDATE>   | <AFTER>   | <AGAINST>   | <AGGREGATE>  |

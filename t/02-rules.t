@@ -149,7 +149,6 @@ for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
       }
     }
 
-
     # cw: Ideally, we'd mix these. That can be a TODO for later.
 
     when 'interval_time_stamp' {
@@ -171,6 +170,14 @@ for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
       }
     }
 
+    when 'key_or_index' {
+      for <KEY INDEX> -> $s {
+        my $sm = "a{$s}b";
+         ok $s ~~ /^<key_or_index>/,  " $s passes <key_or_index>";
+        nok $sm ~~ /^<key_or_index>/, "$sm FAILS <key_or_index>";
+      }
+    }
+
     when 'not' {
       ok  '<>' ~~ /<not>/, '<> passes <not>';
       nok '><' ~~ /<not>/, '>< FAILS <not>';
@@ -179,6 +186,35 @@ for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
     when 'or' {
       ok  '||' ~~ /<or>/, '|| passes <or>';
       nok '|' ~~ /<or>/,  '| FAILS <or>';
+    }
+
+    when 'num' {
+      my $m;
+      sub test(Str $s) {
+       $m = $s ~~ /^<num>/;
+      }
+
+      ok test('+123'), '+123 passes <num>';
+      ok test('-123'), '-123 passes <num>';
+
+      ok $m<num><whole> == '123', '123 is whole number portion';
+      ok $m<num><s> eq '-', 'Sign of last number is "-"';
+
+      ok test("3.14156"), '3.14156 passes <num>';
+      ok $m<num><whole> eq '3', '3 is whole number portion';
+      ok $m<num><dec> eq '14156', '14156 is decimal portion';
+      ok test('-867.5309'), '-867.5309 passes <num>';
+
+      nok test('3.14.156'), '3.14.156 FAILS <num>';
+    }
+
+    when 'number' {
+       ok '123456' ~~ /^<number>/, '123456 passes <number>';
+
+      #cw: Ideally this should FAIL number, but it is too generic for the
+      #    rule to parse. This is one situation where we must depend on
+      #    greater grammar to handle the failure.
+      #nok '123abc' ~~ /^<number>/, '123abc FAILS <number>';
     }
 
     when 'order_dir' {
@@ -193,6 +229,23 @@ for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
       ok  '+' ~~ /<plus_minus>/, '+ passes <plus_minus>';
       ok  '-' ~~ /<plus_minus>/, '- passes <plus_minus>';
       nok '*' ~~ /<plus_minus>/, '* FAILS <plus_minus>';
+    }
+
+    when 'signed_number' {
+      # cw: Better way is "signed integer"
+      ok "123" ~~ /^<signed_number>/, "123 passes <signed number>";
+      ok "+123" ~~ /^<signed_number>/, "+123 passes <signed_number>";
+      ok "-123" ~~ /^<signed_number>/, "-123 passes <signed_number>";
+      nok "*123" ~~ /^<signed_number>/, "*123 FAILS <signed_number>";
+    }
+
+    when 'text' {
+      ok '"this is text"' ~~ /^<text>/, '"this is text" passes <text>';
+      ok "'this is mo text'" ~~ /^<text>/, "'this is mo text' passes <text>";
+
+      nok "this is text" ~~ /^<text>/, "Unquoted 'this is text' FAILS <text>";
+      nok '"this is text\'' ~~ /^<text>/, "Mismatched quote FAILS <text>";
+      nok "'this is text\"" ~~ /^<text>/, "2nd mismatch quote FAILS <text>";
     }
 
   }
