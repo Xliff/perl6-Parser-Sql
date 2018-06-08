@@ -62,6 +62,6 @@ for <
   UPGRADE
 > -> $k {
   my $km = $k.substr(0, *-1);
-  ok    $k ~~ /<keyword>/, "$k passes <{$k}>";
-  nok  $km ~~ /<keyword>/, "'$km' fails <{$k}>";
-}
+  ok    $k ~~ /^<keyword>/, "$k passes <{$k}>";
+  nok  $km ~~ /^<keyword>/, "$km fails <{$k}>";
+};
