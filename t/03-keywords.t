@@ -1,67 +1,26 @@
 use v6.c;
 
+use lib '.';
+
 use Test;
 use Parser::SQL::Grammar::Tokens;
 
-for <
-  ACCOUNT
-  ASCII
-  ALWAYS
-  BACKUP
-  BEGIN
-  BYTE
-  CACHE
-  CHARSET
-  CHECKSUM
-  CLOSE
-  COMMENT
-  COMMIT
-  CONTAINS
-  DEALLOCATE
-  DO
-  END
-  EXECUTE
-  FLUSH
-  FOLLOWS
-  FORMAT
-  GROUP_REPLICATION
-  HANDLER
-  HELP
-  HOST
-  INSTALL
-  LANGUAGE
-  NO
-  OPEN
-  OPTIONS
-  OWNER
-  PARSER
-  PARSE_GCOL_EXPR
-  PORT
-  PRECEDES
-  PREPARE
-  REMOVE
-  REPAIR
-  RESET
-  RESTORE
-  ROLLBACK
-  SAVEPOINT
-  SECURITY
-  SERVER
-  SHUTDOWN
-  SIGNED
-  SOCKET
-  SLAVE
-  SONAME
-  START
-  STOP
-  TRUNCATE
-  UNICODE
-  UNINSTALL
-  WRAPPER
-  XA
-  UPGRADE
-> -> $k {
+use 03-keywords;
+
+for @keywords -> $k {
   my $km = $k.substr(0, *-1);
-  ok    $k ~~ /^<keyword>/, "$k passes <{$k}>";
-  nok  $km ~~ /^<keyword>/, "$km fails <{$k}>";
+
+  ok    $k ~~ /^<keyword>/, "$k passes <keyword>";
+  ok    $k eq $/<keyword>{$k}, "$k passes <$k> in <keywords>";
+  nok  $km ~~ /^<keyword>/, "$km fails <keyword>";
+  ok    $k ~~ /^<keywords_sp>/, "$k passes <keywords_sp>";
+  ok    $k eq $/<keywords>, "$k passes <$k> in <keywords_sp>"
+  nok  $km ~~ /^<keywords_sp>/, "$k failed <keywords_sp>";
 };
+
+for @keywords_sp -> $k {
+  my $km = $k.substr(0, *-1);
+
+   ok $k ~~ /^<keywords_sp>/, "$k passes <keywords_sp>";
+  nok $k ~~ /^<keywords_sp>/, "$km fails <keywords_sp>";
+}

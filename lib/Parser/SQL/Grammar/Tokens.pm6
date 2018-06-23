@@ -772,7 +772,7 @@ our token keyword is export {
 our token ident_sys is export {
   <keyword>
   |
-  $<o>=[ <:Letter + [ _ @ # ]> <:Letter + [ _ @ # $ ]>* ]
+  $<o>=[ <:Letter +[ _ @ # ]> <:Letter +[ _ @ # $ ]>* ]
   |
   # YYY: Verify that this is IDENT_QUOTED
   '"' [ <~~> ] '"'
@@ -802,7 +802,7 @@ our token query_spec_option is export {
 }
 
 our rule select_alias is export {
-  <AS>? $<a>=[ <ident> || <text> ]
+  <AS>? [ <ident> | <text> ]
 }
 
 our token simple_ident is export {

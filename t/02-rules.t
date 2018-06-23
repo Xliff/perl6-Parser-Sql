@@ -178,6 +178,28 @@ for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
       }
     }
 
+    when 'keyword' | 'keyword_sp' {
+      pass "Tested in 03-keywords.t";
+    }
+
+    when 'limit_options' {
+      my $m = "\@identifier" ~~ /<limit_options>/;
+
+      ok
+        $/<limit_options><_ident>.Str eq "\@identifier",
+        'Atypical identifier matches <limit_options>';
+
+      $m = '?' ~~ /<limit_options>/;
+      ok
+        $/<limit_options><PARAM_MARK>.Str eq '?',
+        'Parameter marker matches <limit_options>';
+
+      $m = '1' ~~ /<limit_options>/;
+      ok
+        $/<limit_options><num>.Str eq '1',
+        'Numeric value matches <limit_options>';
+    }
+
     when 'not' {
       ok  '<>' ~~ /<not>/, '<> passes <not>';
       nok '><' ~~ /<not>/, '>< FAILS <not>';
@@ -186,6 +208,62 @@ for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
     when 'or' {
       ok  '||' ~~ /<or>/, '|| passes <or>';
       nok '|' ~~ /<or>/,  '| FAILS <or>';
+    }
+
+    when 'query_spec_option' {
+      for <
+        ALL
+        STRAIGHT_JOIN
+        HIGH_PRIORITY
+        DISTINCT
+        SQL_SMALL_RESULT
+        SQL_BIG_RESULT
+        SQL_BUFFER_RESULT
+        SQL_CALC_FOUND_ROWS
+      > -> $w {
+        my $tw = $w.substr(0, *-1);
+
+        ok
+          $w ~~ /^<query_spec_option>/,
+          "$w matches <query_spec_option>";
+
+        nok
+          $tw ~~ /^<query_spec_option>/,
+          "$tw does not match <query_spec_option>";
+      }
+    }
+
+    when 'select_alias' {
+      my $m =  "AS table_alias" ~~ /^<select_alias>/;
+
+      ok
+        "AS" eq $m<select_alias><AS>.Str,
+        'AS token discovered by <select_alias>';
+
+      ok
+        "table_alias" eq $m<select_alias><ident>.Str,
+        'table_alias successfully detected';
+
+#No such method 'text' for invocant of type 'Match'. Did you mean any of these?
+#    Set
+#    exp
+#
+#      $m = 'AS \@identifier' ~~ /^<select_alias>/;
+#
+#diag $m;
+#
+#      nok
+#        $m<select_alias><AS>.Str,
+#        "no false positive on AS token";
+#
+#      ok
+#        "\@identifier" eq $m<select_alias><ident>.Str,
+#        "\@identifier properly detected in <select_alias><ident>";
+#
+#
+#      $m = '\"identifier\"' ~~ /^<select_alias>/;
+
+
     }
 
     when 'num' {
