@@ -639,11 +639,9 @@ our token hex_num is export {
   ] »
 }
 
-
-
 our token number is export        { \d+ }
 # cw: <item=.rule> should mean that .rule is non-capturing and the results should
-#     go to item, instead. Has there been a syntax change? Try and one-liner for
+#     go to item, instead. Has there been a syntax change? Try a one-liner for
 #     #perl6
 our token num is export           {
   $<s>=<[+-]>? <whole=number> [ '.' <dec=number> ]? <!before '.'>
@@ -818,7 +816,7 @@ our token text_string is export {
   <text> || <hex_num> || <bin_num>
 }
 
-our token underscore_charset {
+our token underscore_charset is export {
   '_' <_ident>
 }
 

@@ -325,5 +325,14 @@ for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
       nok "'this is text\"" ~~ /^<text>/, "2nd mismatch quote FAILS <text>";
     }
 
+    when 'union_opt' {
+      for <DISTINCT ALL> -> $m {
+        my $km = $m.substr(0, *-1);
+
+          ok $m ~~ /<union_opt>/, "$m matches <union_opt>";
+        nok $km ~~ /<union_opt>/, "$km fails <union_opt>";
+      }
+    }
+
   }
 }
