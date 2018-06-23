@@ -771,12 +771,12 @@ our token keyword is export {
 # Can Identifier consist of a sole _, @ or #?
 our token ident_sys is export {
   <keyword>
-  |
+  ||
   $<o>=[ <:Letter +[ _ @ # ]> <:Letter +[ _ @ # $ ]>* ]
-  |
+  ||
   # YYY: Verify that this is IDENT_QUOTED
   '"' [ <~~> ] '"'
-  |
+  ||
   "'" [ <~~> ] "'"
 }
 
@@ -801,16 +801,12 @@ our token query_spec_option is export {
   <SQL_CALC_FOUND_ROWS> | <ALL>
 }
 
-our rule select_alias is export {
-  <AS>? [ <ident> | <text> ]
-}
-
 our token simple_ident is export {
-  <ident> || <simple_ident_q>
+  <_ident> || <simple_ident_q>
 }
 
 our token simple_ident_q is export {
-  [ <ident>? '.' ]? <ident> '.' <ident>
+  [ <_ident>? '.' ]? <_ident> '.' <_ident>
 }
 
 our token text is export {
@@ -823,5 +819,9 @@ our token text_string is export {
 }
 
 our token underscore_charset {
-  '_' <ident>
+  '_' <_ident>
+}
+
+our rule select_alias is export {
+  <AS>?\s*$<o>=[ <_ident> || <text> ]
 }

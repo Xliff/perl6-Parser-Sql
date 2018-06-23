@@ -234,36 +234,35 @@ for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
     }
 
     when 'select_alias' {
-      my $m =  "AS table_alias" ~~ /^<select_alias>/;
+      my $m =  'AS table_alias' ~~ /^<select_alias>/;
 
       ok
-        "AS" eq $m<select_alias><AS>.Str,
+        'AS' eq $m<select_alias><AS>.Str,
         'AS token discovered by <select_alias>';
 
       ok
-        "table_alias" eq $m<select_alias><ident>.Str,
+        'table_alias' eq $m<select_alias><_ident>.Str,
         'table_alias successfully detected';
 
-#No such method 'text' for invocant of type 'Match'. Did you mean any of these?
-#    Set
-#    exp
-#
-#      $m = 'AS \@identifier' ~~ /^<select_alias>/;
-#
-#diag $m;
-#
-#      nok
-#        $m<select_alias><AS>.Str,
-#        "no false positive on AS token";
-#
-#      ok
-#        "\@identifier" eq $m<select_alias><ident>.Str,
-#        "\@identifier properly detected in <select_alias><ident>";
-#
-#
-#      $m = '\"identifier\"' ~~ /^<select_alias>/;
+     $m = '@identifier' ~~ /^<select_alias>/;
 
+     nok
+       $m<select_alias><AS>.defined,
+       'no false positive on AS token';
 
+     ok
+       '@identifier' eq $m<select_alias><_ident>,
+       '@identifier properly detected in <select_alias><_ident>';
+
+     $m = '"identifier"' ~~ /^<select_alias>/;
+     ok
+      $m ~~ /^<select_alias>/,
+      'Double quoted string detected in <select_alias>';
+
+     $m = "'identifier'" ~~ /^<select_alias>/;
+     ok
+      $m ~~ /^<select_alias>/,
+      'Single quoted string detected in <select_alias>';
     }
 
     when 'num' {
