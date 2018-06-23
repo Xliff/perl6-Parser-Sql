@@ -316,6 +316,25 @@ for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
       nok "*123" ~~ /^<signed_number>/, "*123 FAILS <signed_number>";
     }
 
+    when 'simple_ident_q' {
+      ok
+        'schema.table.field' ~~ /^<simple_ident_q>/,
+        '"schema.table.field" passes <simple_ident_q>';
+
+      ok
+        '.table.field' ~~ /^<simple_ident_q>/,
+        '".table.field" passes passes <simple_ident_q>';
+
+      # -- FAILED, PLEASE FIX -- #
+      ok
+        'table.field' ~~ /^<simple_ident_q>/,
+        '"table.field" passes passes <simple_ident_q>';
+
+      nok
+        'field' ~~ /^<simple_ident_q>/,
+        '"field" fails <simple_ident_q>';
+    }
+
     when 'text' {
       ok '"this is text"' ~~ /^<text>/, '"this is text" passes <text>';
       ok "'this is mo text'" ~~ /^<text>/, "'this is mo text' passes <text>";
