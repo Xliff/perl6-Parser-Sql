@@ -801,7 +801,7 @@ our token query_spec_option is export {
 }
 
 our token simple_ident is export {
-  <_ident> || <simple_ident_q>
+  <simple_ident_q>
 }
 
 our token simple_ident_q is export {

@@ -358,6 +358,10 @@ for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
       nok "*123" ~~ /^<signed_number>/, "*123 FAILS <signed_number>";
     }
 
+    when 'simple_ident' {
+      pass "Done in <simple_ident_q> tests";
+    }
+
     when 'simple_ident_q' {
       ok
         'schema.table.field' ~~ /^<simple_ident_q>/,
@@ -389,11 +393,41 @@ for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
 
       nok
         ',field' ~~ /^<simple_ident_q>/,
-        '",field" fails <simlpe_ident_q>';
+        '",field" fails <simple_ident_q>';
 
       ok
         'field' ~~ /^<simple_ident_q>/,
         '"field" fails <simple_ident_q>';
+    }
+
+    when 'table_ident' {
+      ok
+        '.table.field' ~~ /^<table_ident>/,
+        '".table.field" passes <table_ident>';
+
+      nok
+        ',table,field' ~~ /^<table_ident>/,
+        '",table.field" fails <table_ident>';
+
+      ok
+        'table.field' ~~ /^<table_ident>/,
+        '"table.field" passes <table_ident>';
+
+      nok
+        ',table.field' ~~ /^<table_ident>/,
+        '",table.field" fails <table_ident>';
+
+      ok
+        '.field' ~~ /^<table_ident>/,
+        '".field" passes <table_ident>';
+
+      nok
+        ',field' ~~ /^<table_ident>/,
+        '",field" fails <table_ident>';
+
+      ok
+        'field' ~~ /^<table_ident>/,
+        '"field" fails <table_ident>';
     }
 
     when 'text' {

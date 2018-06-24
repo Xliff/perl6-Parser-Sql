@@ -11,7 +11,6 @@ for @keywords -> $k {
   (my $kw = $k) ~~ s/^_//;
   my $bw = ('a'..'z').pick ~ $kw;
 
-
   ok   $kw ~~ /^<keyword>$/, "$kw passes <keyword>";
   ok   $kw eq $/<keyword>{$k}, "$kw passes <$kw> in <keywords>";
   nok  $bw ~~ /^<keyword>$/, "$bw fails <keyword>";
