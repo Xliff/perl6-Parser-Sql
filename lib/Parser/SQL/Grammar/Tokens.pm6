@@ -813,7 +813,7 @@ our token text is export {
 }
 
 our token text_string is export {
-  <text> || <hex_num> || <bin_num>
+  <text> | <hex_num> | <bin_num>
 }
 
 our token underscore_charset is export {

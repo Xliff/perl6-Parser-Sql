@@ -365,6 +365,20 @@ for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
       nok "'this is text\"" ~~ /^<text>/, "2nd mismatch quote FAILS <text>";
     }
 
+    when 'text_string' {
+      ok
+        '"Hello"' ~~ /^<text_string>/,
+        '"Hello" matches <text_string>';
+
+      ok
+        '0x48656c6c6f' ~~ /^<text_string>/,
+        '"Hello" in hex matches <text_string>';
+
+      ok
+        '0b0100100001100101011011000110110001101111' ~~ /^<text_string>/,
+        '"Hello" in binary matches <text_string>';
+    }
+
     when 'union_opt' {
       for <DISTINCT ALL> -> $m {
         my $km = $m.substr(0, *-1);
