@@ -1,11 +1,11 @@
 use v6.c;
 
-use lib '.';
+use lib 't';
 
 use Test;
 use Parser::SQL::Grammar::Tokens;
 
-use 03-keywords;
+use keywords;
 
 for @keywords -> $k {
   my $km = $k.substr(0, *-1);

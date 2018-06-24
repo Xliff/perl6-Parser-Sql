@@ -612,10 +612,10 @@ our token WITH_CUBE is export                   { 'WITH_CUBE' }
 our token WITH_ROLLUP is export                 { 'WITH_ROLLUP' }
 our token YEAR_SYMACTION is export              { 'YEAR_SYMACTION' }
 
-our token all_or_any is export  {  <ALL> | <ANY> }
-our token and is export         {  <AND> | <AND2> }
-our token not is export         {  <NOT> | <NOT2> }
-our token or is export          {   <OR> | <OR2> }
+our token all_or_any is export  {  <ALL> | <ANY>   }
+our token and is export         {  <AND> | <AND2>  }
+our token not is export         {  <NOT> | <NOT2>  }
+our token or is export          {   <OR> | <OR2>   }
 our token plus_minus is export  { <PLUS> | <MINUS> }
 
 our token bit_ops is export {
@@ -656,95 +656,96 @@ our token key_or_index is export  { <KEY> | <INDEX> }
 our token keyword_sp is export {
   <ACTION>      | <ADDDATE>   | <AFTER>   | <AGAINST>   | <AGGREGATE>  |
   <ALGORITHM>   | <ANALYSE>   | <ANY>     | <AT>        | <AUTO_INC>   |
-  <AUTOEXTEND_SIZE>            | <AVG_ROW_LENGTH>         | <AVG>        |
+  <AUTOEXTEND_SIZE>           | <AVG_ROW_LENGTH>        | <AVG>        |
   <BINLOG>      | <BIT>       | <BLOCK>   | <BOOL>      | <BOOLEAN>    |
-  <BTREE>       | <CASCADED>  | <CATALOG_NAME>           | <CHAIN>      |
+  <BTREE>       | <CASCADED>  | <CATALOG_NAME>          | <CHAIN>      |
   <CHANGED>     | <CHANNEL>   | <CIPHER>  |
-  <CLASS_ORIGIN>               | <CLIENT>  | <COALESCE>  | <CODE>       |
-  <COLLATION>   | <COLUMN_FORMAT>          | <COLUMN_NAME>               |
-  <COLUMNS>     | <COMMITTED> | <COMPACT> | <COMPLETION>                |
-  <COMPRESSED>  | <COMPRESSION>            | <CONCURRENT>                |
-  <CONNECTION>  | <CONSISTENT>             | <CONSTRAINT_CATALOG>        | <CONSTRAINT_NAME>            | <CONSTRAINT_SCHEMA>      | <CONTEXT>    |
-  <CPU>         | <CUBE>      | <CURRENT> | <CURSOR_NAME>               |
+  <CLASS_ORIGIN>              | <CLIENT>  | <COALESCE>  | <CODE>       |
+  <COLLATION>   | <COLUMN_FORMAT>         | <COLUMN_NAME>              |
+  <COLUMNS>     | <COMMITTED> | <COMPACT> | <COMPLETION>               |
+  <COMPRESSED>  | <COMPRESSION>           | <CONCURRENT>               |
+  <CONNECTION>  | <CONSISTENT>             | <CONSTRAINT_CATALOG>      |
+  <CONSTRAINT_NAME>           | <CONSTRAINT_SCHEMA>     | <CONTEXT>    |
+  <CPU>         | <CUBE>      | <CURRENT> | <CURSOR_NAME>              |
   <DATA>        | <DATAFILE>  | <DATE>    | <DATETIME>  | <DAY>        |
-  <DEFAULT_AUTH>               | <DEFINER> | <DELAY_KEY_WRITE>           |
-  <DES_KEY_FILE>               | <DIAGNOSTICS>            | <DIRECTORY>  |
+  <DEFAULT_AUTH>              | <DEFINER> | <DELAY_KEY_WRITE>          |
   <DISABLE>     | <DISCARD>   | <DISK>    | <DUMPFILE>  | <DUPLICATE>  |
-  <DYNAMIC>     | <ENABLE>    | <ENCRYPTION>             | <ENDS>       |
+  <DES_KEY_FILE>              | <DIAGNOSTICS>           | <DIRECTORY>  |
+  <DYNAMIC>     | <ENABLE>    | <ENCRYPTION>            | <ENDS>       |
   <ENGINE>      | <ENGINES>   | <ENUM>    | <ERROR>     | <ERRORS>     |
   <ESCAPE>      | <EVENT>     | <EVENTS>  | <EVERY>     | <EXCHANGE>   |
   <EXPANSION>   | <EXPIRE>    | <EXPORT_> | <EXTENDED>  |
-  <EXTENT_SIZE> | <FAST>      | <FAULTS>  | <FILE_BLOCK_SIZE>           |
+  <EXTENT_SIZE> | <FAST>      | <FAULTS>  | <FILE_BLOCK_SIZE>          |
   <FILE>        | <FILTER>    | <FIRST>   | <FIXED>     | <FOUND>      |
   <FULL>        | <FUNCTION>  | <GENERAL> | <GEOMETRY>  |
-  <GEOMETRYCOLLECTION>         | <GET_FORMAT>             | <GLOBAL>     |
+  <GEOMETRYCOLLECTION>        | <GET_FORMAT>            | <GLOBAL>     |
   <GRANTS>      | <HASH>      | <HOSTS>   | <HOUR>      | <IDENTIFIED> |
-  <IGNORE_SERVER_IDS>          | <IMPORT>  | <INDEXES>   |
-  <INITIAL_SIZE>               | <INSERT_METHOD>          | <INSTANCE>   |
+  <IGNORE_SERVER_IDS>         | <IMPORT>  | <INDEXES>   |
+  <INITIAL_SIZE>              | <INSERT_METHOD>         | <INSTANCE>   |
   <INVOKER>     | <IO>        | <IPC>     | <ISOLATION> | <ISSUER>     |
-  <JSON>        | <KEY_BLOCK_SIZE>         | <LAST>      | <LEAVES>     |
-  <LESS>        | <LEVEL>     | <LINESTRING>             | <LIST>       |
+  <JSON>        | <KEY_BLOCK_SIZE>        | <LAST>      | <LEAVES>     |
+  <LESS>        | <LEVEL>     | <LINESTRING>            | <LIST>       |
   <LOCAL>       | <LOCKS>     | <LOGFILE> | <LOGS>      |
-  <MASTER_AUTO_POSITION>       | <MASTER_CONNECT_RETRY>                   |
-  <MASTER_DELAY>               | <MASTER_HEARTBEAT_PERIOD>                |
-  <MASTER_HOST>                | <MASTER_LOG_FILE>                        |
-  <MASTER_LOG_POS>             | <MASTER_PASSWORD>                        |
-  <MASTER_PORT>                | <MASTER_RETRY_COUNT>                     |
-  <MASTER_SERVER_ID>           | <MASTER_SSL_CA>                          |
-  <MASTER_SSL_CAPATH>          | <MASTER_SSL_CERT>                        |
-  <MASTER_SSL_CIPHER>          | <MASTER_SSL_CRL>                         |
-  <MASTER_SSL_CRLPATH>         | <MASTER_SSL_KEY>                         |
-  <MASTER_SSL>                 | <MASTER_TLS_VERSION>                     |
-  <MASTER_USER>                |
-  <MASTER>                     | <MAX_CONNECTIONS_PER_HOUR>               |
-  <MAX_QUERIES_PER_HOUR>       | <MAX_ROWS>               | <MAX_SIZE>   |
-  <MAX_UPDATES_PER_HOUR>       | <MAX_USER_CONNECTIONS>   | <MEDIUM>     |
+  <MASTER_AUTO_POSITION>      | <MASTER_CONNECT_RETRY>                 |
+  <MASTER_DELAY>              | <MASTER_HEARTBEAT_PERIOD>              |
+  <MASTER_HOST>               | <MASTER_LOG_FILE>                      |
+  <MASTER_LOG_POS>            | <MASTER_PASSWORD>                      |
+  <MASTER_PORT>               | <MASTER_RETRY_COUNT>                   |
+  <MASTER_SERVER_ID>          | <MASTER_SSL_CA>                        |
+  <MASTER_SSL_CAPATH>         | <MASTER_SSL_CERT>                      |
+  <MASTER_SSL_CIPHER>         | <MASTER_SSL_CRL>                       |
+  <MASTER_SSL_CRLPATH>        | <MASTER_SSL_KEY>                       |
+  <MASTER_SSL>                | <MASTER_TLS_VERSION>                   |
+  <MASTER_USER>               |
+  <MASTER>                    | <MAX_CONNECTIONS_PER_HOUR>             |
+  <MAX_QUERIES_PER_HOUR>      | <MAX_ROWS>               | <MAX_SIZE>  |
+  <MAX_UPDATES_PER_HOUR>      | <MAX_USER_CONNECTIONS>   | <MEDIUM>    |
   <MEMORY>      | <MERGE>     | <MESSAGE_TEXT>           |
   <MICROSECOND> | <MIGRATE>   | <MIN_ROWS>               | <MINUTE>     |
   <MODE>        | <MODIFY>    | <MONTH>   | <MULTILINESTRING>           |
-  <MULTIPOINT>  | <MULTIPOLYGON>           | <MUTEX>    | <MYSQL_ERRNO> |
+  <MULTIPOINT>  | <MULTIPOLYGON>          | <MUTEX>     | <MYSQL_ERRNO> |
   <NAME>        | <NAMES>     | <NATIONAL>              | <NCHAR>       |
-  <NDBCLUSTER>  | <NEVER>     | <NEW>     | <NEXT>     | <NO_WAIT>     |
-  <NODEGROUP>   | <NONE>      | <NUMBER>  | <NVARCHAR> | <OFFSET>      |
+  <NDBCLUSTER>  | <NEVER>     | <NEW>     | <NEXT>      | <NO_WAIT>     |
+  <NODEGROUP>   | <NONE>      | <NUMBER>  | <NVARCHAR>  | <OFFSET>      |
   <ONE>         | <ONLY>      | <PACK_KEYS>             | <PAGE>        |
-  <PARTIAL>     | <PARTITIONING>           | <PARTITIONS>                |
+  <PARTIAL>     | <PARTITIONING>          | <PARTITIONS>                |
   <PASSWORD>    | <PHASE>     | <PLUGIN_DIR>            | <PLUGIN>      |
-  <PLUGINS>     | <POINT>     | <POLYGON> | <PRESERVE> | <PREV>        |
+  <PLUGINS>     | <POINT>     | <POLYGON> | <PRESERVE>  | <PREV>        |
   <PRIVILEGES>  | <PROCESS>   | <PROCESSLIST>           | <PROFILE>     |
-  <PROFILES>    | <PROXY>     | <QUARTER> | <QUERY>    | <QUICK>       |
+  <PROFILES>    | <PROXY>     | <QUARTER> | <QUERY>     | <QUICK>       |
   <READ_ONLY>   | <REBUILD>   | <RECOVER> | <REDO_BUFFER_SIZE>          |
   <REDOFILE>    | <REDUNDANT> | <RELAY_LOG_FILE>        |
-  <RELAY_LOG_POS>              | <RELAY_THREAD>          | <RELAY>       |
+  <RELAY_LOG_POS>             | <RELAY_THREAD>          | <RELAY>       |
   <RELAYLOG>    | <RELOAD>    | <REORGANIZE>            |
-  <REPEATABLE>  | <REPLICATE_DO_DB>        | <REPLICATE_DO_TABLE>        |
+  <REPEATABLE>  | <REPLICATE_DO_DB>       | <REPLICATE_DO_TABLE>        |
   <REPLICATE_IGNORE_DB>        |
-  <REPLICATE_IGNORE_TABLE>     | <REPLICATE_REWRITE_DB>                   |
-  <REPLICATE_WILD_DO_TABLE>    | <REPLICATE_WILD_IGNORE_TABLE>            |
-  <REPLICATION> | <RESOURCES> | <RESUME> | <RETURNED_SQLSTATE>          |
-  <RETURNS>     | <REVERSE>   | <ROLLUP> | <ROTATE>    | <ROUTINE>     |
+  <REPLICATE_IGNORE_TABLE>     | <REPLICATE_REWRITE_DB>                 |
+  <REPLICATE_WILD_DO_TABLE>    | <REPLICATE_WILD_IGNORE_TABLE>          |
+  <REPLICATION> | <RESOURCES>  | <RESUME> | <RETURNED_SQLSTATE>         |
+  <RETURNS>     | <REVERSE>    | <ROLLUP> | <ROTATE>    | <ROUTINE>     |
   <ROW_COUNT>   | <ROW_FORMAT>            | <ROW>       | <ROWS>        |
-  <RTREE>       | <SCHEDULE>  | <SCHEMA_NAME>           | <SECOND>      |
+  <RTREE>       | <SCHEDULE>   | <SCHEMA_NAME>          | <SECOND>      |
   <SERIAL>      | <SERIALIZABLE>          | <SESSION>   | <SHARE>       |
-  <SIMPLE>      | <SLOW>      | <SNAPSHOT>              | <SOUNDS>      |
-  <SOURCE>      | <SQL_AFTER_GTIDS>       | <SQL_AFTER_MTS_GAPS>         |
-  <SQL_BEFORE_GTIDS>           | <SQL_BUFFER_RESULT>     | <SQL_CACHE>   |
-  <SQL_NO_CACHE>               | <SQL_THREAD>            | <STACKED>     |
-  <STARTS>      | <STATS_AUTO_RECALC>     | <STATS_PERSISTENT>           |
+  <SIMPLE>      | <SLOW>       | <SNAPSHOT>             | <SOUNDS>      |
+  <SOURCE>      | <SQL_AFTER_GTIDS>       | <SQL_AFTER_MTS_GAPS>        |
+  <SQL_BEFORE_GTIDS>           | <SQL_BUFFER_RESULT>    | <SQL_CACHE>   |
+  <SQL_NO_CACHE>               | <SQL_THREAD>           | <STACKED>     |
+  <STARTS>      | <STATS_AUTO_RECALC>     | <STATS_PERSISTENT>          |
   <STATS_SAMPLE_PAGES>         | <STATUS> | <STORAGE>   | <STRING>      |
-  <SUBCLASS_ORIGIN>            | <SUBDATE>               | <SUBJECT>     |
-  <SUBPARTITION>               | <SUBPARTITIONS>         | <SUPER>       |
-  <SUSPEND>     | <SWAPS>     | <SWITCHES>              |
-  <TABLE_CHECKSUM>             | <TABLE_NAME>            | <TABLES>      |
-  <TABLESPACE>  | <TEMPORARY> | <TEMPTABLE>             | <TEXT>        |
-  <THAN>        | <TIME>      | <TIMESTAMP_ADD>         |
-  <TIMESTAMP_DIFF>             | <TIMESTAMP>             | <TRANSACTION> |
-  <TRIGGERS>    |  <TYPE>     | <TYPES>                 | <UDF_RETURNS> |
-  <UNCOMMITTED>                | <UNDEFINED>             |
-  <UNDO_BUFFER_SIZE>           | <UNDOFILE>              | <UNKNOWN>     |
-  <UNTIL>       | <USE_FRM>   | <USER>   | <VALIDATION>                 |
-  <VALUE>       | <VARIABLES> | <VIEW>   | <WAIT>      | <WARNINGS>    |
+  <SUBCLASS_ORIGIN>            | <SUBDATE>              | <SUBJECT>     |
+  <SUBPARTITION>               | <SUBPARTITIONS>        | <SUPER>       |
+  <SUSPEND>     | <SWAPS>      | <SWITCHES>             |
+  <TABLE_CHECKSUM>             | <TABLE_NAME>           | <TABLES>      |
+  <TABLESPACE>  | <TEMPORARY>  | <TEMPTABLE>            | <TEXT>        |
+  <THAN>        | <TIME>       | <TIMESTAMP_ADD>        |
+  <TIMESTAMP_DIFF>             | <TIMESTAMP>            | <TRANSACTION> |
+  <TRIGGERS>    |  <TYPE>      | <TYPES>                | <UDF_RETURNS> |
+  <UNCOMMITTED>                | <UNDEFINED>            |
+  <UNDO_BUFFER_SIZE>           | <UNDOFILE>             | <UNKNOWN>     |
+  <UNTIL>       | <USE_FRM>    | <USER>   | <VALIDATION>                |
+  <VALUE>       | <VARIABLES>  | <VIEW>   | <WAIT>      | <WARNINGS>    |
   <WEEK>        | <WEIGHT_STRING>         | <WITHOUT>   | <WORK>        |
-  <X509>        | <XID>       | <XML>    | <YEAR_SYMACTION>             |
+  <X509>        | <XID>        | <XML>    | <YEAR_SYMACTION>            |
   <YEAR>
 }
 
@@ -780,7 +781,7 @@ our token ident_sys is export {
 
 # Check to see if keyword is supposed to be in both ident_sys AND _ident.
 # That doesn't make much sense.
-our regex _ident is export   { <keyword> | <ident_sys> }
+our token _ident is export   { <ident_sys> }
 
 our regex table_ident is export {
   '.'? <_ident> ** 1..2 % '.'

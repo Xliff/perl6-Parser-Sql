@@ -1,7 +1,10 @@
 use v6.c;
 
+use lib 't';
 use Test;
 use Parser::SQL::Grammar::Tokens;
+
+use keywords;
 
 for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
   next unless $s ~~ ! /^\&_?<[A..Z0..9]>+/;
@@ -9,6 +12,43 @@ for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
   diag $s;
 
   given (S/^\&// given $s) {
+
+    when '_ident' {
+      my $kw = @keywords.pick;
+      my $bw = "5{ $kw }";
+
+      ok
+        $kw ~~ /^<_ident>$/,
+        "Random keyword '$kw' matches <_ident>";
+
+      nok
+        $bw ~~ /^<_ident>$/,
+        "Broken keyword '$bw' fails <_ident>";
+
+      ok
+       "\@identifier" ~~ /^<_ident>$/,
+       '"@identifier" matches <_ident>';
+
+      nok
+        "\%identifier" ~~ /^<_ident>$/,
+        '"%identifier" fails <_ident>';
+
+      ok
+        '"quoted_identifier"' ~~ /^<_ident>$/,
+        '"quoted_identifier" matches <ident_sys>';
+
+      nok
+          "'quoted_identifier\"" ~~ /^<_ident>$/,
+          "'quoted_identifier\" fails <ident_sys>";
+
+      ok
+        "'quoted_identifier'" ~~ /^<_ident>$/,
+        "'quoted_identifier' matches <ident_sys>";
+
+      nok
+        "\"quoted_identifier'" ~~ /^<_ident>$/,
+        "\"quoted_identifier' fails <ident_sys>";
+    }
 
     when 'all_or_any' {
       # ::("&<name>") allows for you to execute a rule called <name>.

@@ -1,17 +1,16 @@
 use v6.c;
 
-use Grammar::Tracer;
 use Parser::SQL::Grammar::Tokens;
 
 grammar Parser::SQL::Grammar::DDLGrammar {
   token TOP { <CREATE_ST> }
 
   rule alter_algo_option {
-    <ALGORITHM> <EQ>? $<o>=[ <DEFAULT> || <ident> ]
+    <ALGORITHM> <EQ>? $<o>=[ <DEFAULT> || <_ident> ]
   }
 
   rule alter_lock_option {
-    <LOCK> <EQ>? $<o>=[ <DEFAULT> || <ident> ]
+    <LOCK> <EQ>? $<o>=[ <DEFAULT> || <_ident> ]
   }
 
   rule attribute {
@@ -69,7 +68,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule charset_name_or_default {
-    <ident> || <text> || <BINARY> || <DEFAULT>
+    <_ident> || <text> || <BINARY> || <DEFAULT>
   }
 
   rule create_select {
@@ -77,7 +76,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule derived_table_list {
-    [ <table_ref> | '(' <ident> <table_ref> ')' ]* % ','
+    [ <table_ref> | '(' <_ident> <table_ref> ')' ]* % ','
   }
 
   rule escape {
@@ -240,7 +239,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule _into {
-    :my rule __select_var_ident { '@'? [ <ident> | <text> ] }
+    :my rule __select_var_ident { '@'? [ <_ident> | <text> ] }
     <INTO> [
       <OUTFILE> <text> <load_data_charset>? <field_term>? <line_term>?
       |
@@ -275,11 +274,11 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule simple_ident_nospvar {
-    <ident> | <simple_ident_q>
+    <_ident> | <simple_ident_q>
   }
 
   rule table_alias {
-    [ <AS> || <EQ> ] <ident>
+    [ <AS> || <EQ> ] <_ident>
   }
 
   rule table_expression {
@@ -329,7 +328,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule table_wild {
-    <ident> '.' [ <ident> '.' ]? '*'
+    <_ident> '.' [ <_ident> '.' ]? '*'
   }
 
   rule where_clause {
@@ -447,7 +446,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     [
       <ident_sys> '(' <udf_expr>+ % ','
       |
-      <ident> '.' <ident> '(' <expr_list>
+      <_ident> '.' <_ident> '(' <expr_list>
     ] ')'
   }
 
@@ -504,7 +503,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     <_con_function_call>
     |
     <simple_expr> [
-      <COLLATE> [ <ident> || <text> ]
+      <COLLATE> [ <_ident> || <text> ]
       ||
       <OR2> <simple_expr>
     ]
@@ -547,7 +546,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
       ]
     ] ')'
     |
-    '(' <ident> <expr> ')'
+    '(' <_ident> <expr> ')'
     |
     <CASE> <expr>?
     <_when_clause>+
@@ -591,15 +590,15 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule using_list {
-    <ident>+ % ','
+    <_ident>+ % ','
   }
 
   rule variable {
     '@' [
-      [ <ident> | <text> ] [ <SET> <expr> ]?
+      [ <_ident> | <text> ] [ <SET> <expr> ]?
       |
       '@' [ <GLOBAL> || <LOCAL> || <SESSION> ] '.'
-      [ <ident> | <text> ] [ '.' <ident> ]?
+      [ <_ident> | <text> ] [ '.' <_ident> ]?
     ]
   }
 
@@ -609,7 +608,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
 
   rule create_table_opt {
     [
-      <ENGINE> <EQ>? $<o>=[ <ident> | <text> ]
+      <ENGINE> <EQ>? $<o>=[ <_ident> | <text> ]
       ||
       [ <MAX_ROWS> || <MIN_ROWS>       || <AUTO_INC>        || <AVG_ROW_LENGTH> ||
         <CHECKSUM> || <TABLE_CHECKSUM> || <DELAY_KEY_WRITE> || <KEY_BLOCK_SIZE>
@@ -627,9 +626,9 @@ grammar Parser::SQL::Grammar::DDLGrammar {
       ||
       <UNION> <EQ>? '(' <table_list>? ')'
       ||
-      <DEFAULT>? <charset> <EQ>? $<o>=[ <ident> || <text> ]
+      <DEFAULT>? <charset> <EQ>? $<o>=[ <_ident> || <text> ]
       ||
-      <DEFAULT>? <COLLATE> <EQ>? $<o>=[ <ident> || <text> ]
+      <DEFAULT>? <COLLATE> <EQ>? $<o>=[ <_ident> || <text> ]
       ||
       <INSERT_METHOD> <EQ>? $<o>=[ <NO> || <FIRST> || <LAST> ]
       ||
@@ -644,7 +643,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule collate_explicit {
-    <COLLATE> $<o>=[ <ident> || <text> ]
+    <COLLATE> $<o>=[ <_ident> || <text> ]
   }
 
   rule constraint {
@@ -694,18 +693,18 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule key_def {
-    <key_or_index> <ident>? <key_alg> '(' <key_lists> ')' <normal_key_options>
+    <key_or_index> <_ident>? <key_alg> '(' <key_lists> ')' <normal_key_options>
     |
-    <FULLTEXT> <key_or_index>? <ident>? '(' <key_lists> ')'
+    <FULLTEXT> <key_or_index>? <_ident>? '(' <key_lists> ')'
     <fulltext_key_opt>
     |
-    <SPACIAL> <key_or_index>? <ident>? '(' <key_lists> ')'
+    <SPACIAL> <key_or_index>? <_ident>? '(' <key_lists> ')'
     <spacial_key_opt>
     |
     <constraint>? [
-      <constraint_key_type> <ident>? <key_alg> '(' <key_lists> ')' <normal_key_options>
+      <constraint_key_type> <_ident>? <key_alg> '(' <key_lists> ')' <normal_key_options>
       |
-      <FOREIGN> <KEY> <ident>? '(' <key_lists> ')' <references>
+      <FOREIGN> <KEY> <_ident>? '(' <key_lists> ')' <references>
       |
       <check_constraint>
     ]
@@ -768,9 +767,9 @@ grammar Parser::SQL::Grammar::DDLGrammar {
         |
         <t=BYTE>
         |
-        <charset> [ <ident> || <text> ] <BINARY>?
+        <charset> [ <_ident> || <text> ] <BINARY>?
         |
-        <BINARY>? <charset> [ <ident> || <text> ]
+        <BINARY>? <charset> [ <_ident> || <text> ]
       ]
     ]
     |
@@ -841,11 +840,11 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule default_charset {
-    <DEFAULT>? <charset> <EQ>? [ <ident> || <text> ]
+    <DEFAULT>? <charset> <EQ>? [ <_ident> || <text> ]
   }
 
   rule default_collation {
-    <DEFAULT>? <COLLATE> <EQ> [ <ident> || <text> ]
+    <DEFAULT>? <COLLATE> <EQ> [ <_ident> || <text> ]
   }
 
 rule delete_option {
@@ -871,7 +870,7 @@ rule delete_option {
   }
 
   rule key_list {
-    <ident> [ '(' <num> ')' ]?  <order_dir>
+    <_ident> [ '(' <num> ')' ]?  <order_dir>
   }
 
   rule key_lists {
@@ -968,7 +967,7 @@ rule delete_option {
   }
 
   rule ref_list {
-    [ '(' <ident>+ % ',' ')' ]?
+    [ '(' <_ident>+ % ',' ')' ]?
   }
 
   rule require_clause {
@@ -1016,7 +1015,7 @@ rule delete_option {
     [
       <HASH> '(' <bit_expr> ')'
       |
-      <KEY> <key_alg>? '(' <ident>+ % ',' ')'
+      <KEY> <key_alg>? '(' <_ident>+ % ',' ')'
     ] [ <SUBPARTITIONS> <number> ]?
   }
 
@@ -1113,7 +1112,7 @@ rule delete_option {
            <key_lists> ')' <spacial_key_opt>
         ] <index_lock_algo>?
         |
-        <DATABASE> <if_not_exists>? <ident> <create_database_opts>?
+        <DATABASE> <if_not_exists>? <_ident> <create_database_opts>?
         |
         <USER> <if not exists>?
           <grant_opts>

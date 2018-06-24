@@ -1,4 +1,8 @@
-my @keywords_sp is export = <
+use v6.c;
+
+unit package keywords;
+
+our @keywords_sp is export = <
   ACTION
   ADDDATE
   AFTER
@@ -322,7 +326,7 @@ my @keywords_sp is export = <
   YEAR
 >;
 
-my @keywords is export = <
+our @keywords is export = <
   ACCOUNT
   ASCII
   ALWAYS
