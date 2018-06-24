@@ -84,7 +84,7 @@ our @keywords_sp is export = <
   EXCHANGE
   EXPANSION
   EXPIRE
-  EXPORT_
+  _EXPORT
   EXTENDED
   EXTENT_SIZE
   FAST

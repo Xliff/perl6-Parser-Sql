@@ -8,19 +8,21 @@ use Parser::SQL::Grammar::Tokens;
 use keywords;
 
 for @keywords -> $k {
-  my $km = $k.substr(0, *-1);
+  (my $kw = $k) ~~ s/^_//;
+  my $bw = ('a'..'z').pick ~ $kw;
 
-  ok    $k ~~ /^<keyword>/, "$k passes <keyword>";
-  ok    $k eq $/<keyword>{$k}, "$k passes <$k> in <keywords>";
-  nok  $km ~~ /^<keyword>/, "$km fails <keyword>";
-  ok    $k ~~ /^<keywords_sp>/, "$k passes <keywords_sp>";
-  ok    $k eq $/<keywords>, "$k passes <$k> in <keywords_sp>"
-  nok  $km ~~ /^<keywords_sp>/, "$k failed <keywords_sp>";
+
+  ok   $kw ~~ /^<keyword>$/, "$kw passes <keyword>";
+  ok   $kw eq $/<keyword>{$k}, "$kw passes <$kw> in <keywords>";
+  nok  $bw ~~ /^<keyword>$/, "$bw fails <keyword>";
+  #ok    $k ~~ /^<keyword_sp>/, "$k passes <keywords_sp>";
+  #ok    $k eq $/<keyword_sp><keyword>, "$k passes <$k> in <keywords_sp>";
 };
 
 for @keywords_sp -> $k {
-  my $km = $k.substr(0, *-1);
+  (my $kw = $k) ~~ s/^_//;
+  my $bw = ('a'..'z').pick ~ $kw;
 
-   ok $k ~~ /^<keywords_sp>/, "$k passes <keywords_sp>";
-  nok $k ~~ /^<keywords_sp>/, "$km fails <keywords_sp>";
+   ok $kw ~~ /^<keyword_sp>$/, "$kw passes <keywords_sp>";
+  nok $bw ~~ /^<keyword_sp>$/, "$bw fails <keywords_sp>";
 }

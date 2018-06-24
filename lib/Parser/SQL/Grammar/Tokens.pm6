@@ -194,7 +194,7 @@ our token EXECUTE is export            { 'EXECUTE' }
 our token EXISTS is export             { 'EXISTS' }
 our token EXPANSION is export          { 'EXPANSION' }
 our token EXPIRE is export             { 'EXPIRE' }
-our token EXPORT_ is export            { 'EXPORT' }
+our token _EXPORT is export            { 'EXPORT' }
 our token EXPR is export               { 'EXPR' }
 our token EXTENDED is export           { 'EXTENDED' }
 our token EXTRACT is export            { 'EXTRACT' }
@@ -674,7 +674,7 @@ our token keyword_sp is export {
   <DYNAMIC>     | <ENABLE>    | <ENCRYPTION>            | <ENDS>       |
   <ENGINE>      | <ENGINES>   | <ENUM>    | <ERROR>     | <ERRORS>     |
   <ESCAPE>      | <EVENT>     | <EVENTS>  | <EVERY>     | <EXCHANGE>   |
-  <EXPANSION>   | <EXPIRE>    | <EXPORT_> | <EXTENDED>  |
+  <EXPANSION>   | <EXPIRE>    | <_EXPORT> | <EXTENDED>  |
   <EXTENT_SIZE> | <FAST>      | <FAULTS>  | <FILE_BLOCK_SIZE>          |
   <FILE>        | <FILTER>    | <FIRST>   | <FIXED>     | <FOUND>      |
   <FULL>        | <FUNCTION>  | <GENERAL> | <GEOMETRY>  |
