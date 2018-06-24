@@ -321,13 +321,33 @@ for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
         'schema.table.field' ~~ /^<simple_ident_q>/,
         '"schema.table.field" passes <simple_ident_q>';
 
+      nok
+        ',schema.table.field' ~~ /^<simple_ident_q>/,
+        '",schema.table.field" fails <simple_ident_q>';
+
       ok
         '.table.field' ~~ /^<simple_ident_q>/,
         '".table.field" passes <simple_ident_q>';
 
+      nok
+        ',table,field' ~~ /^<simple_ident_q>/,
+        '",table.field" fails <simple_ident_q>';
+
       ok
         'table.field' ~~ /^<simple_ident_q>/,
         '"table.field" passes <simple_ident_q>';
+
+      nok
+        ',table.field' ~~ /^<simple_ident_q>/,
+        '",table.field" fails <simple_ident_q>';
+
+      ok
+        '.field' ~~ /^<simple_ident_q>/,
+        '".field" passes <simlpe_ident_q>';
+
+      nok
+        ',field' ~~ /^<simple_ident_q>/,
+        '",field" fails <simlpe_ident_q>';
 
       ok
         'field' ~~ /^<simple_ident_q>/,
