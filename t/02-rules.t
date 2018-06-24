@@ -379,11 +379,40 @@ for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
         '"Hello" in binary matches <text_string>';
     }
 
+    when 'ulong_num' {
+      ok
+        '1234567890' ~~ /^<ulong_num>$/,
+        '1234567890 matches <ulong_num>';
+
+      nok
+        '1234z67890' ~~ /^<ulong_num>$/,
+        '1234z67890 fails <ulong_num>';
+
+      ok
+        '0x1234567890' ~~ /^<ulong_num>$/,
+        '0x1234567890 matches <ulong_num>';
+
+      nok
+        '0x1234z67890' ~~ /^<ulong_num>$/,
+        '0x1234z67890 fails <ulong_num>';
+
+    }
+
+    when 'underscore_charset' {
+      ok
+        '_latin1' ~~ /^<underscore_charset>/,
+        '"_latin1" matches <underscore_charset>';
+
+      nok
+        '=latin1' ~~ /^<underscore_charset>/,
+        '"=latin1" fails <underscore_charset>';
+    }
+
     when 'union_opt' {
       for <DISTINCT ALL> -> $m {
         my $km = $m.substr(0, *-1);
 
-          ok $m ~~ /^<union_opt>/, "$m matches <union_opt>";
+         ok  $m ~~ /^<union_opt>/, "$m matches <union_opt>";
         nok $km ~~ /^<union_opt>/, "$km fails <union_opt>";
       }
     }
