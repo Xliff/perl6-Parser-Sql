@@ -11,16 +11,20 @@ for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
   given (S/^\&// given $s) {
 
     when 'all_or_any' {
-      ok 'ALL' ~~ ::("&{$_}"), "ALL passes &$_";
-      ok 'ANY' ~~ ::("&{$_}"), "ANY passes &$_";
+      # ::("&<name>") allows for you to execute a rule called <name>.
+      #ok 'ALL' ~~ ::("&{$_}"), "ALL passes &$_";
+      #ok 'ANY' ~~ ::("&{$_}"), "ANY passes &$_";
+      ok 'ALL' ~~ /^<all_or_any>/, "ALL passes <all_or_any>";
+      ok 'ANY' ~~ /^<all_or_any>/, "ANY passes <all_or_any>";
     }
 
     when 'and' {
-      ok  '&&' ~~ /<and>/, '&& passes <and>';
-      nok '&+' ~~ /<and>/, '&+ FAILS <and>';
+      ok  '&&' ~~ /^<and>/, '&& passes <and>';
+      nok '&+' ~~ /^<and>/, '&+ FAILS <and>';
     }
 
     when 'bin_num' {
+      # Rules must be unanchored due to failures of unknown origin.
       ok "0b00110101" ~~ /<bin_num>/, "binary literal 0b00110101 passes";
       ok "0B10110" ~~ /<bin_num>/, "binary literal 0B10110 passes";
       my $qb = sprintf "0b\'%s\'", 101;
@@ -35,27 +39,27 @@ for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
       my @bo = <| & * / % ^ DIV MOD>;
       @bo.push: '<<', '>>';
       for @bo -> $o {
-       ok  $o ~~ /<bit_ops>/, "{$o} passes <bit_ops>";
-       my $fo = $o ~ ']';
-       nok '++' ~~ /<bit_ops>/, "{$fo} FAILS <bit_ops>";
-     }
+        ok  $o ~~ /^<bit_ops>/, "{$o} passes <bit_ops>";
+        my $fo = $o ~ ']';
+        nok '++' ~~ /^<bit_ops>/, "{$fo} FAILS <bit_ops>";
+      }
     }
 
     when 'comp_ops' {
       my @co = <EQ GE GT LE LT NE>;
       @co.push: '=', '>=', '>', '<=', '<', '<>';
       for @co -> $o {
-        ok $o ~~ /<comp_ops>/, "{$o} passes <comp_ops>";
+        ok $o ~~ /^<comp_ops>/, "{$o} passes <comp_ops>";
       }
     }
 
     when 'field_ident' {
-      ok "table.field" ~~ /<field_ident>/, "table.field passes <field_ident>";
-      ok "field" ~~ /<field_ident>/, "field passes <field_ident>";
-      ok ".field" ~~ /<field_ident>/, ".field passes <field_ident>";
+      ok "table.field" ~~ /^<field_ident>/, "table.field passes <field_ident>";
+      ok "field" ~~ /^<field_ident>/, "field passes <field_ident>";
+      ok ".field" ~~ /^<field_ident>/, ".field passes <field_ident>";
 
       ok
-        "namespace.table.field" ~~ /<field_ident>/,
+        "namespace.table.field" ~~ /^<field_ident>/,
         "namespace.table.field passes <field_ident>";
 
       # cw: These possibilities might fail in the greater grammar, but not in
@@ -70,20 +74,20 @@ for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
     }
 
     when 'hex_num' {
-      ok "0xdeadBEeF" ~~ /<hex_num>/, "0xdeadBEeF passes <hex_num>";
-      ok "0XbEeFDeAd" ~~ /<hex_num>/, "0XbEeFDeAd passes <hex_num>";
-      ok "x3af" ~~ /<hex_num>/, "x3af passes <hex_num>";
-      ok "XfA3" ~~ /<hex_num>/, "XfA3 passes <hex_num>";
+      ok "0xdeadBEeF" ~~ /^<hex_num>/, "0xdeadBEeF passes <hex_num>";
+      ok "0XbEeFDeAd" ~~ /^<hex_num>/, "0XbEeFDeAd passes <hex_num>";
+      ok "x3af" ~~ /^<hex_num>/, "x3af passes <hex_num>";
+      ok "XfA3" ~~ /^<hex_num>/, "XfA3 passes <hex_num>";
 
-      nok "fae" ~~ /<hex_num>/, "fae FAILS <hex_num>";
-      nok "123" ~~ /<hex_num>/, "123 FAILS <hex_num>";
-      nok "0x213efg" ~~ /<hex_num>/, "0x213efg FAILS <hex_num>";
+      nok "fae" ~~ /^<hex_num>/, "fae FAILS <hex_num>";
+      nok "123" ~~ /^<hex_num>/, "123 FAILS <hex_num>";
+      nok "0x213efg" ~~ /^<hex_num>/, "0x213efg FAILS <hex_num>";
     }
 
     when 'ident_sys' {
       my $m;
       sub test(Str $s) {
-       $m = $s ~~ /^<ident_sys>/;
+        $m = $s ~~ /^<ident_sys>/;
       }
 
       ok
@@ -183,31 +187,31 @@ for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
     }
 
     when 'limit_options' {
-      my $m = "\@identifier" ~~ /<limit_options>/;
+      my $m = "\@identifier" ~~ /^<limit_options>/;
 
       ok
         $/<limit_options><_ident>.Str eq "\@identifier",
         'Atypical identifier matches <limit_options>';
 
-      $m = '?' ~~ /<limit_options>/;
+      $m = '?' ~~ /^<limit_options>/;
       ok
         $/<limit_options><PARAM_MARK>.Str eq '?',
         'Parameter marker matches <limit_options>';
 
-      $m = '1' ~~ /<limit_options>/;
+      $m = '1' ~~ /^<limit_options>/;
       ok
         $/<limit_options><num>.Str eq '1',
         'Numeric value matches <limit_options>';
     }
 
     when 'not' {
-      ok  '<>' ~~ /<not>/, '<> passes <not>';
-      nok '><' ~~ /<not>/, '>< FAILS <not>';
+      ok  '<>' ~~ /^<not>/, '<> passes <not>';
+      nok '><' ~~ /^<not>/, '>< FAILS <not>';
     }
 
     when 'or' {
-      ok  '||' ~~ /<or>/, '|| passes <or>';
-      nok '|' ~~ /<or>/,  '| FAILS <or>';
+      ok  '||' ~~ /^<or>/, '|| passes <or>';
+      nok '|' ~~ /^<or>/,  '| FAILS <or>';
     }
 
     when 'query_spec_option' {
@@ -244,25 +248,24 @@ for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
         'table_alias' eq $m<select_alias><_ident>.Str,
         'table_alias successfully detected';
 
-     $m = '@identifier' ~~ /^<select_alias>/;
-
-     nok
+      $m = '@identifier' ~~ /^<select_alias>/;
+      nok
        $m<select_alias><AS>.defined,
        'no false positive on AS token';
 
-     ok
-       '@identifier' eq $m<select_alias><_ident>,
+      ok
+       '@identifier' eq $m<select_alias><_ident>.Str,
        '@identifier properly detected in <select_alias><_ident>';
 
-     $m = '"identifier"' ~~ /^<select_alias>/;
-     ok
-      $m ~~ /^<select_alias>/,
-      'Double quoted string detected in <select_alias>';
+      $m = '"identifier"' ~~ /^<select_alias>/;
+      ok
+        $m ~~ /^<select_alias>/,
+        'Double quoted string detected in <select_alias>';
 
-     $m = "'identifier'" ~~ /^<select_alias>/;
-     ok
-      $m ~~ /^<select_alias>/,
-      'Single quoted string detected in <select_alias>';
+      $m = "'identifier'" ~~ /^<select_alias>/;
+      ok
+        $m ~~ /^<select_alias>/,
+        'Single quoted string detected in <select_alias>';
     }
 
     when 'num' {
@@ -274,12 +277,12 @@ for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
       ok test('+123'), '+123 passes <num>';
       ok test('-123'), '-123 passes <num>';
 
-      ok $m<num><whole> == '123', '123 is whole number portion';
-      ok $m<num><s> eq '-', 'Sign of last number is "-"';
+      ok $m<num><whole>.Str eq '123', '123 is whole number portion';
+      ok $m<num><s>.Str eq '-', 'Sign of last number is "-"';
 
       ok test("3.14156"), '3.14156 passes <num>';
-      ok $m<num><whole> eq '3', '3 is whole number portion';
-      ok $m<num><dec> eq '14156', '14156 is decimal portion';
+      ok $m<num><whole>.Str eq '3', '3 is whole number portion';
+      ok $m<num><dec>.Str eq '14156', '14156 is decimal portion';
       ok test('-867.5309'), '-867.5309 passes <num>';
 
       nok test('3.14.156'), '3.14.156 FAILS <num>';
@@ -295,21 +298,20 @@ for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
     }
 
     when 'order_dir' {
-      ok  'ASC' ~~ /<order_dir>/, 'ASC passes <order_dir>';
-      nok 'ARC' ~~ /<order_dir>/, 'ARC FAILS <order_dir>';
+      ok  'ASC' ~~ /^<order_dir>/, 'ASC passes <order_dir>';
+      nok 'ARC' ~~ /^<order_dir>/, 'ARC FAILS <order_dir>';
 
-      ok  'DESC' ~~ /<order_dir>/, 'DESC passes <order_dir>';
-      nok 'DISC' ~~ /<order_dir>/, 'DISC FAILS <order_dir>';
+      ok  'DESC' ~~ /^<order_dir>/, 'DESC passes <order_dir>';
+      nok 'DISC' ~~ /^<order_dir>/, 'DISC FAILS <order_dir>';
     }
 
     when 'plus_minus' {
-      ok  '+' ~~ /<plus_minus>/, '+ passes <plus_minus>';
-      ok  '-' ~~ /<plus_minus>/, '- passes <plus_minus>';
-      nok '*' ~~ /<plus_minus>/, '* FAILS <plus_minus>';
+      ok  '+' ~~ /^<plus_minus>/, '+ passes <plus_minus>';
+      ok  '-' ~~ /^<plus_minus>/, '- passes <plus_minus>';
+      nok '*' ~~ /^<plus_minus>/, '* FAILS <plus_minus>';
     }
 
     when 'signed_number' {
-      # cw: Better way is "signed integer"
       ok "123" ~~ /^<signed_number>/, "123 passes <signed number>";
       ok "+123" ~~ /^<signed_number>/, "+123 passes <signed_number>";
       ok "-123" ~~ /^<signed_number>/, "-123 passes <signed_number>";
@@ -367,8 +369,8 @@ for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
       for <DISTINCT ALL> -> $m {
         my $km = $m.substr(0, *-1);
 
-          ok $m ~~ /<union_opt>/, "$m matches <union_opt>";
-        nok $km ~~ /<union_opt>/, "$km fails <union_opt>";
+          ok $m ~~ /^<union_opt>/, "$m matches <union_opt>";
+        nok $km ~~ /^<union_opt>/, "$km fails <union_opt>";
       }
     }
 
