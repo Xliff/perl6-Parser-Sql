@@ -323,14 +323,13 @@ for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
 
       ok
         '.table.field' ~~ /^<simple_ident_q>/,
-        '".table.field" passes passes <simple_ident_q>';
+        '".table.field" passes <simple_ident_q>';
 
-      # -- FAILED, PLEASE FIX -- #
       ok
         'table.field' ~~ /^<simple_ident_q>/,
-        '"table.field" passes passes <simple_ident_q>';
+        '"table.field" passes <simple_ident_q>';
 
-      nok
+      ok
         'field' ~~ /^<simple_ident_q>/,
         '"field" fails <simple_ident_q>';
     }

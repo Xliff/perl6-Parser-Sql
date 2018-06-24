@@ -804,7 +804,7 @@ our token simple_ident is export {
 }
 
 our token simple_ident_q is export {
-  [ <_ident>? '.' ]? <_ident> '.' <_ident>
+  '.'? <_ident> ** 1..3 % '.'
 }
 
 our token text is export {
