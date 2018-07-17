@@ -126,7 +126,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     <alter_algo_option> <alter_lock_option>?
   }
 
-  rule if_not_exists    {
+  rule if_not_exists {
     <IF> <NOT> <EXISTS>
   }
 
@@ -336,7 +336,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   token row_types {
-    <DEFAULT> || <FIXED> || <DYNAMIC> || <COMPRESSED> || <REDUNDANT> || <COMPACT>
+    <DEFAULT> | <FIXED> | <DYNAMIC> | <COMPRESSED> | <REDUNDANT> | <COMPACT>
   }
 
   rule _cast_type {
@@ -741,7 +741,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
         [ <m=number> ',' <d=number> ]
       ')' ]
     ]? $<o>=[ <SIGNED> || <UNSIGNED> || <ZEROFILL> ]*
-    |
+    ||
     [
       $<t>=[ <BIT> || <BINARY> ] '(' <num> ')'
       |
@@ -772,7 +772,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
         <BINARY>? <charset> [ <_ident> || <text> ]
       ]
     ]
-    |
+    ||
     [
       $<t>=[ <NCHAR> | <NATIONAL> <CHAR> ] [ '(' <num> ')' ]?
       |
@@ -784,36 +784,36 @@ grammar Parser::SQL::Grammar::DDLGrammar {
         $<t>=[ <NCHAR> [ <VARCHAR> || <VARYING> ] ]
       ]
     ] <BINARY>?
-    |
+    ||
     <t=DATE>
-    |
+    ||
     $<t>=[ <TIME> || <TIMESTAMP> || <DATETIME> ] [ '(' <num> ')' ]?
-    |
+    ||
     <t=TINYBLOB>
-    |
+    ||
     <t=BLOB> [ '(' <num> ')' ]?
-    |
+    ||
     $<t>=[
-      <GEOMETRY>           ||
-      <GEOMETRYCOLLECTION> ||
-      <POINT>              ||
-      <MULTIPOINT>         ||
-      <LINESTRING>         ||
-      <MULTILINESTRING>    ||
-      <POLYGON>            ||
+      <GEOMETRY>           |
+      <GEOMETRYCOLLECTION> |
+      <POINT>              |
+      <MULTIPOINT>         |
+      <LINESTRING>         |
+      <MULTILINESTRING>    |
+      <POLYGON>            |
       <MULTIPOLYGON>
     ]
-    |
+    ||
     $<t>=[ <MEDIUMBLOB> || <LONGBLOB> ]
-    |
+    ||
     <t=LONG> $<o>=[
       <VARBINARY>
-      ||
-      [ <CHAR> <VARYING> || <VARCHAR> ]? <b=BINARY>?
+      |
+      [ <CHAR> <VARYING> | <VARCHAR> ]? <b=BINARY>?
     ]
-    |
+    ||
     <t=SERIAL>
-    |
+    ||
     <t=JSON>
   }
 
