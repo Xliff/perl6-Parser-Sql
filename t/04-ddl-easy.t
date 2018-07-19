@@ -9,6 +9,7 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   when <
     _con_function_call
     _gen_function_call
+    _gorder_clause
     _join_table
     _key_function_call
     _nonkey_function_call
@@ -209,7 +210,7 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
         "'$t' passes <$_> without the number specification";
 
       # Test only the DECIMAL portion of the string.
-      ($t = $t0).substr-rw( (^'DECIMAL'.chars).pick, 1) = ('a'..'z').pick;
+      ($t = $t0).substr-rw( (^'DECIMAL'.chars).pick, 1 ) = ('a'..'z').pick;
       nok
         Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
         "Mutated '$t' fails <$_>";
@@ -217,13 +218,51 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
 
   }
 
-  when '_gorder_clause' {
+  when '__ws_list_item' {
+
+    # <number> <order_dir>? <REVERSE>?
+    for <ASC DESC> -> $term {
+      my $t = "7 $term REVERSE";
+
+      # Test REVERSE
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> with REVERSE";
+
+      # Remove REVERSE and test match
+      $t ~~ s/ 'REVERSE' //;
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> without REVERSE";
+
+      # Remove $term and test.
+      $t ~~ s/ $term //;
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> without $term";
+
+      # Mutate number and test failure.
+      $t.substr-rw(0, 1) = ('a'..'z').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated '$t' fails <$_>";
+    }
+
   }
 
-  when '__ws_list_item' {
-  }
 
   when '__ws_nweights' {
+
+    my $t = '(8)';
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+      "'$t' passes <$_>";
+
+    $t.substr-rw( (^$t.chars).pick, 1 ) = ('a'..'z').pick;
+    nok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+      "Mutated '$t' fails <$_>";
+      
   }
 
   when '__ws_levels' {
