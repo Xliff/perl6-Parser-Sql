@@ -352,9 +352,10 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     |
     <DECIMAL> [
       '(' [
+
         <number>
         ||
-        <m=.number> [ ',' <d=.number> ]?
+        <m=number> [ ',' <d=number> ]?
       ] ')'
     ]?
     |
