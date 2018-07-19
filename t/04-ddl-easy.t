@@ -4,6 +4,7 @@ use Test;
 
 use Parser::SQL::Grammar::DDLGrammar;
 
+my $count;
 for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   when <
     _con_function_call
@@ -49,6 +50,164 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   }
 
   when '_cast_type' {
+
+    # [ <BINARY> | <NCHAR> ] [ '(' <number> ')' ]?
+    for <BINARY(2) NCHAR(2)> -> $t {
+      ok
+        Parser::SQL::DDLGrammar.subparse( $t, rule($_) ),
+        "'$t' passes <$_> with number and no space";
+
+      $t ~~ s/('(2)')/ $0/;
+      ok
+        Parser::SQL::DDLGrammar.subparse( $t, rule($_) ),
+        "'$t' passes <$_> with number and a space";
+
+      $t ~~ s/('(2)'//;
+      ok
+        Parser::SQL::DDLGrammar.subparse( $t, rule($_) ),
+        "'$t' passes <$_> without a number";
+
+      $t.substr-rw( (^$t.chars).pick, 1 ) = ('a'..'z').pick;
+      nok
+      Parser::SQL::DDLGrammar.subparse( $t, rule($_) ),
+        "Mutated string '$t' fails <$_>";
+    }
+
+    # <CHAR> [ '(' <number> ')' ]? <BINARY>?
+    {
+      my $t0 = "CHAR (3) BINARY";
+      my $t = $t0;
+
+      ok
+        Parser::SQL::DDLGrammar.subparse( $t, rule($_) ),
+        "'$t' passes <$_> with full syntax";
+
+      $t ~~ s/ ' ' <?before '('>//;
+      ok
+        Parser::SQL::DDLGrammar.subparse( $t, rule($_) ),
+        "'$t' passes <$_> without a space before the number";
+
+      $t ~~ s/'(3)'//;
+      ok
+        Parser::SQL::DDLGrammar.subparse( $t, rule($_) ),
+        "'$t' passes <$_> without a number";
+
+      ($t = $t0) ~~ s/' BINARY'/;
+      ok
+        Parser::SQL::DDLGrammar.subparse( $t, rule($_) ),
+        "'$t' passes <$_> without 'BINARY'";
+
+      $t = 'CHAR';
+      ok
+        Parser::SQL::DDLGrammar.subparse( $t, rule($_) ),
+        "'$t' passes <$_> without optional tokens";
+
+      ($t = $t0).substr-rw( (^$t.chars).pick, 1 ) = ('a'..'z').pick;
+      nok
+        Parser::SQL::DDLGrammar.subparse( $t, rule($_) ),
+        "Mutated string '$t' fails <$_>";
+    }
+
+    # <SIGNED> | <UNSIGNED> ] <INT>?
+    for <SIGNED UNSIGNED> -> $term {
+      # PAUSE
+      my $t0 = "$term INT";
+      my $t  = $t0;
+
+      ok
+        Parser::SQL::DDLGrammar.subparse( $t, rule($_) ),
+        "'$t' passes <$_> with full syntax";
+
+      $t ~~ s/' INT'//;
+      ok
+        Parser::SQL::DDLGrammar.subparse( $t, rule($_) ),
+        "'$t' passes <$_> without 'INT' token";
+
+      ($t = $t0).substr-rw( (^$t.chars).pick, 1 ) = ('a'..'z').pick;
+      nok
+        Parser::SQL::DDLGrammar.subparse( $t, rule($_) ),
+        "Mutated string '$t' fails <$_>";
+    }
+
+    # <DATE>
+    # <JSON>
+    for <DATE JSON> -> %t {
+      ok
+        Parser::SQL::DDLGrammar.subparse( $t, rule($_) ),
+        "DATE passes <$_>";
+
+      $t.substr-rw( (^$t.chars).pick, 1) = ('a'..'z').pick;
+      nok
+        Parser::SQL::DDLGrammar.subparse( $t, rule($_) ),
+        "Mutated string '$t' fails <$_>";
+    }
+
+    # [ <TIME> | <DATETIME> ] [ '(' <number> ')' ]?
+    for <TIME DATETIME> -> $term {
+      my $t0 = "$term (4)";
+      my $t = $t0;
+
+      ok
+        Parser::SQL::DDLGrammar.subparse( $t, rule($_) ),
+        "'$t' passes <$_> with full syntax";
+
+      $t ~~ s/ ' ' <?before '('>//;
+      ok
+        Parser::SQL::DDLGrammar.subparse( $t, rule($_) ),
+        "'$t' passes <$_> without a space before the number";
+
+      $t ~~ s/ '(4)'//;
+      ok
+        Parser::SQL::DDLGrammar.subparse( $t, rule($_) ),
+        "'$t' passes <$_> without the number specification";
+
+      ($t = $t0).substr-rw( (^$t.chars).pick, 1) = ('a'..'z').pick;
+      nok
+        Parser::SQL::DDLGrammar.subparse( $t, rule($_) ),
+        "Mutated '$t' fails <$_>";
+    }
+
+    # <DECIMAL> [
+    #   '(' [
+    #     <number>
+    #     ||
+    #     <m=.number> [ ',' <d=.number> ]?
+    #   ] ')'
+    # ]?
+    $count = 0;
+    for ('DECIMAL (5)', 'DECIMAL (5, 6)') -> $term {
+      my $t0 = $term;
+
+      ok
+        Parser::SQL::DDLGrammar.subparse( $t, rule($_) ),
+        "'$t' passes <$_> with full syntax";
+
+      $t ~~ s/ ' ' <?before '('>//;
+      ok
+        Parser::SQL::DDLGrammar.subparse( $t, rule($_) ),
+        "'$t' passes <$_> without space before number specification";
+
+      $t ~~ s/ '(5' ',6'? ')' //;
+      ok
+        Parser::SQL::DDLGrammar.subparse( $t, rule($_) ),
+        "'$t' passes <$_> without the number specification";
+
+      if ($count++ == 1) {
+        ok
+          $/{$_}<m>.Str eq '5',
+          "'5' detected in numerical specication by subrule <m>";
+      } else {
+        ok
+          $/{$_}<m>.Str eq '5' && $/{$_}<d>
+          "'5' and '6' detected in numerical specication by subrules <m> and <d>";
+      }
+
+      ($t = $t0).substr-rw( (^$t.chars).pick, 1) = ('a'..'z').pick;
+      nok
+        Parser::SQL::DDLGrammar.subparse( $t, rule($_) ),
+        "Mutated '$t' fails <$_>";
+    }
+    
   }
 
   when '_gorder_clause' {

@@ -340,17 +340,23 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule _cast_type {
-    [ <BINARY> || <NCHAR> ] [ '(' <number> ')' ]?
+    [ <BINARY> | <NCHAR> ] [ '(' <number> ')' ]?
     |
     <CHAR> [ '(' <number> ')' ]? <BINARY>?
     |
-    [ <SIGNED> || <UNSIGNED> ] <INT>?
+    [ <SIGNED> | <UNSIGNED> ] <INT>?
     |
     <DATE>
     |
-    [ <TIME> || <DATETIME> ] [ '(' <number> ')' ]?
+    [ <TIME> | <DATETIME> ] [ '(' <number> ')' ]?
     |
-    <DECIMAL> [ '(' <number> ')' || [ <m=.number> ',' <d=.number> ] ]?
+    <DECIMAL> [
+      '(' [
+        <number>
+        ||
+        <m=.number> [ ',' <d=.number> ]?
+      ] ')'
+    ]?
     |
     <JSON>
   }
