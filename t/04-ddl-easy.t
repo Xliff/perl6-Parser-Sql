@@ -46,7 +46,7 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     udf_expr
     variable
   >.any {
-    pass 'Evaluated in a separate test.';
+    pass "<$_> evaluated in a separate test.";
   }
 
   when '_cast_type' {
@@ -71,7 +71,7 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
 
       $t.substr-rw( (^$t.chars).pick, 1 ) = ('a'..'z').pick;
       nok
-      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
         "Mutated string '$t' fails <$_>";
     }
 
@@ -104,7 +104,8 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
         Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
         "'$t' passes <$_> without optional tokens";
 
-      ($t = $t0).substr-rw( (^$t.chars).pick, 1 ) = ('a'..'z').pick;
+      # Only mutate the first 4 characters.
+      ($t = $t0).substr-rw( (^4).pick, 1 ) = ('a'..'z').pick;
       nok
         Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
         "Mutated string '$t' fails <$_>";
@@ -125,7 +126,8 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
         Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
         "'$t' passes <$_> without 'INT' token";
 
-      ($t = $t0).substr-rw( (^$t.chars).pick, 1 ) = ('a'..'z').pick;
+      # Mutate only the $term portion of the string.
+      ($t = $t0).substr-rw( (^$term.chars).pick, 1 ) = ('a'..'z').pick;
       nok
         Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
         "Mutated string '$t' fails <$_>";
@@ -165,7 +167,8 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
         Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
         "'$t' passes <$_> without the number specification";
 
-      ($t = $t0).substr-rw( (^$t.chars).pick, 1) = ('a'..'z').pick;
+      # Mutate only the $term part of the string.
+      ($t = $t0).substr-rw( (^$term.chars).pick, 1) = ('a'..'z').pick;
       nok
         Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
         "Mutated '$t' fails <$_>";
@@ -173,9 +176,7 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
 
     # <DECIMAL> [
     #   '(' [
-    #     <number>
-    #     ||
-    #     <m=.number> [ ',' <d=.number> ]?
+    #     <m=number> [ ',' <d=number> ]?
     #   ] ')'
     # ]?
     $count = 0;
@@ -189,25 +190,26 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
 
       $t ~~ s/ ' ' <?before '('>//;
       ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        ( my $s = Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ) ),
         "'$t' passes <$_> without space before number specification";
+
+      if (++$count == 1) {
+        ok
+          $s.defined && $s<m>.Str eq '5',
+          "'5' detected in numerical specication by subrule <m>";
+      } else {
+        ok
+          $s<m>.Str eq '5' && $s<d>.Str eq '6',
+          "'5' and '6' detected in numerical specication by subrules <m> and <d>";
+      }
 
       $t ~~ s/ '(5' ',6'? ')' //;
       ok
         Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
         "'$t' passes <$_> without the number specification";
 
-      if ($count++ == 1) {
-        ok
-          $/{$_}<m>.Str eq '5',
-          "'5' detected in numerical specication by subrule <m>";
-      } else {
-        ok
-          $/{$_}<m>.Str eq '5' && $/{$_}<d>,
-          "'5' and '6' detected in numerical specication by subrules <m> and <d>";
-      }
-
-      ($t = $t0).substr-rw( (^$t.chars).pick, 1) = ('a'..'z').pick;
+      # Test only the DECIMAL portion of the string.
+      ($t = $t0).substr-rw( (^'DECIMAL'.chars).pick, 1) = ('a'..'z').pick;
       nok
         Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
         "Mutated '$t' fails <$_>";
