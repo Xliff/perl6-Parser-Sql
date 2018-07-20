@@ -368,7 +368,7 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
         Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
         "'$t' passes <$_> without 'EQ'";
 
-      $t ~~ / ( 'ALGORITHM' \s+ $term ) /;
+      $t ~~ / ( 'ALGORITHM' ) /;
       my $tm := $t.substr-rw(0, $0.to);
       $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
       nok
@@ -434,6 +434,22 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   }
 
   when 'collate_explicit' {
+    for ('@identifier', "'text string'") -> $term {
+      my $t = "COLLATE $term";
+
+      ok
+        ( my $s = Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ) ),
+        "'$term' passes <$_>";
+
+      ok $s<o> eq $term, "Match<o> equals '$term'";
+
+      $t ~~ / ( 'COLLATE' ) /;
+      my $tm := $t.substr-rw(0, $0.to);
+      $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated '$t' fails <$_>";
+    }
   }
 
   when 'constraint_key_type' {
