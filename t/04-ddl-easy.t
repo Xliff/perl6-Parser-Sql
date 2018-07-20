@@ -661,8 +661,7 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   when 'lock_expire_opts' {
   }
 
-  when 'now' {
-  }
+  
 
   when 'part_field_list' {
   }

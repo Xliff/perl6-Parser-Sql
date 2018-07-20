@@ -689,7 +689,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule now {
-    <NOW> '(' <number> ')'
+    <NOW> || <signed_literal>
   }
 
   rule col_def {
