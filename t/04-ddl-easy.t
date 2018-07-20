@@ -395,7 +395,7 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
         Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
         "'$t' passes <$_> without 'EQ'";
 
-      $t ~~ / ( 'LOCK' \s+ $term ) /;
+      $t ~~ / ( 'LOCK' ) /;
       my $tm := $t.substr-rw(0, $0.to);
       $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
       nok
@@ -661,7 +661,7 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   when 'lock_expire_opts' {
   }
 
-  
+
 
   when 'part_field_list' {
   }
