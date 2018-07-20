@@ -328,12 +328,14 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   #   <__select_var_ident>+ % ','
   # ]
   when '_into' {
-    {
+    if 0 {
       for ('CHAR SET', 'CHARSET') -> $term-o {
-        for <@ident 'text' BINARY, DEFAULT> -> $term-i {
-          my $t0 = "OUTFILE 'sample' $term-o $term-i";
+        for <@ident 'text' BINARY, DEFAULT> -> $term-m {
+          for ('TERMINATED', 'OPTIONALLY ENCLOSED', 'ESCAPED') -> $term-i {
+            my $t0 = "OUTFILE 'sample' $term-o charset? $term-m COLUMNS $term-i BY 'text string'";
 
-          # WORK HERE.
+            # WORK HERE.
+          }
         }
       }
     }
@@ -399,7 +401,10 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
         ok $s<s>.trim eq "'text string'", "Match<s> equals \"'test string'\"";
       }
 
-      $t.substr-rw( (^$t.chars).pick, 1 ) = ('a'..'z').pick;
+      # So far, this is the best way to write this.
+      $t ~~ / ('COLUMNS ' [ 'TERMINATED' | 'ENCLOSED' | 'ESCAPED' ] ' BY') /;
+      my $tm := $t.substr-rw(0, $0.to);
+      $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('a'..'z').pick;
       nok
         ( $s = Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ) ),
         "Mutated '$t' fails <$_>";
@@ -426,16 +431,31 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
       Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
       "'$t' passes <$_>";
 
-    $t.substr-rw( (^$t.chars).pick, 1 ) = ('a'..'z').pick;
+    $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
     nok
-      ( $s = Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ) ),
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
       "Mutated '$t' fails <$_>";
   }
 
   when 'limit_clause' {
   }
 
+  # <LINES> [ $<t>=[ <TERMINATED> || <STARTING> ] <BY> $<s>=<text_string> ]+
   when 'line_term' {
+    for <TERMINATED STARTING> -> $term {
+      my $t = "LINES $term BY 'text string'";
+
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_>";
+
+      $t ~~ / ('LINES' \s+ $term \s+ 'BY') /;
+      my $tm := $t.substr-rw(0, $0.to);
+      $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('a'..'z').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated '$t' fails <$_>";
+    }
   }
 
   when 'load_data_charset' {
