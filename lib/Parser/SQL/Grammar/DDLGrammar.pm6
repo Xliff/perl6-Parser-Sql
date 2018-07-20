@@ -14,7 +14,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule attribute {
-    <not>? <NULL>
+    <not2>? <NULL>
     ||
     <DEFAULT> $<o>=[ <now> || <num> || <literal> ]
     ||
@@ -53,7 +53,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
 
   rule bool_pri {
     <predicate> [
-      <IS> <not>? <NULL>
+      <IS> <not2>? <NULL>
       |
       <comp_ops> [
         <predicate>
@@ -90,7 +90,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
       <NOT>
     ] <expr>
     |
-    <bool_pri> [ <IS> <not>? [ <TRUE> | <FALSE> | <UNKNOWN> ] ]?
+    <bool_pri> [ <IS> <not2>? [ <TRUE> | <FALSE> | <UNKNOWN> ] ]?
   }
 
   rule expr_list {
@@ -183,14 +183,14 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   rule predicate {
     :my rule _in_expr { <IN> '(' [ <subselect> || <expr_list> ] ')' }
     [
-      <AND> <bit_expr> <BETWEEN> <not>?
+      <AND> <bit_expr> <BETWEEN> <not2>?
       |
       <bit_expr>
     ]
     [
       <_in_expr>
       |
-      <not> [
+      <not2> [
         <_in_expr>
         |
         <LIKE> <simple_expr> <escape>?
@@ -683,7 +683,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     |
     <COMMENT> <text>
     |
-    <not>? <NULL>
+    <not2>? <NULL>
     |
     <PRIMARY>? <KEY>
   }

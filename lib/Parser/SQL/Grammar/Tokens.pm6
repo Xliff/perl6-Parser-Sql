@@ -614,7 +614,7 @@ our token YEAR_SYMACTION is export              { 'YEAR_SYMACTION' }
 
 our token all_or_any is export  {  <ALL> | <ANY>   }
 our token and is export         {  <AND> | <AND2>  }
-our token not is export         {  <NOT> | <NOT2>  }
+our token not2 is export        {  <NOT> | <NOT2>  }
 our token or is export          {   <OR> | <OR2>   }
 our token plus_minus is export  { <PLUS> | <MINUS> }
 

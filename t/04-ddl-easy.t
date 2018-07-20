@@ -508,6 +508,68 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   }
 
   when 'gcol_attr' {
+    for ('UNIQUE KEY', "COMMENT 'text comment'", 'NOT NULL', 'PRIMARY KEY') -> $t0 {
+      my $t = $t0;
+
+      # Why does given when not work here. Is it because we are in one already?
+      # That shouldn't be.
+      if $t0 eq 'UNIQUE KEY' {
+        ok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+          "'$t' passes <$_>";
+
+        $t ~~ s/ ' KEY' //;
+        ok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+          "'$t' passes <$_> without the KEY";
+
+        # Odd failure if the Y in KEY is replace with a number. PLEASE
+        # circle back and check this.
+        $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
+        nok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+          "Mutated '$t' fails <$_>";
+      } elsif $t0 ~~ /^ 'COMMENT' / {
+        ok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+          "'$t' passes <$_>";
+
+        $t ~~ / ( 'COMMENT' ) /;
+        my $tm := $t.substr-rw(0, $0.to);
+        $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+        nok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+          "Mutated '$t' fails <$_>";
+      } elsif $t0 eq 'NOT NULL' {
+        ok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+          "'$t' passes <$_>";
+
+        $t ~~ s/ 'NOT '//;
+        ok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+          "'$t' passes <$_> without the NOT";
+
+        $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
+        nok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+          "Mutated '$t' fails <$_>";
+      } elsif $t0 eq 'PRIMARY KEY' {
+        ok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+          "'$t' passes <$_>";
+
+        $t ~~ s/ 'PRIMARY ' //;
+        ok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+          "'$t' passes <$_>without the PRIMARY";
+
+        $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
+        nok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+          "Mutated '$t' fails <$_>";
+      }
+    }
   }
 
   # Considfer moving to tokens as a rule.
