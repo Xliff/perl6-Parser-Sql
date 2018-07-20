@@ -31,6 +31,9 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     having_clause
     key_def
     literal
+    order_clause
+    order_expr
+    order_or_limit
     part_type_def
     predicate
     query_spec
@@ -577,6 +580,28 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   }
 
   when 'index_lock_algo' {
+    my $t = 'ALGORITHM EQ DEFAULT LOCK EQ DEFAULT';
+
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_>";
+
+    $t ~~ s:g/ 'EQ '//;
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_> without EQ";
+
+    $t = 'LOCK EQ DEFAULT ALGORITHM EQ DEFAULT';
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_>";
+
+    $t ~~ s:g/ 'EQ '//;
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_> without EQ";
+
+    # Compound test. No negatives necessary... yet.
   }
 
   when 'if_not_exists' {
@@ -614,15 +639,29 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   }
 
   when 'load_data_charset' {
+    for ('CHAR SET', 'CHARSET') -> $term-o {
+      for ('@identifier', "'text string'", 'BINARY', 'DEFAULT') -> $term-i {
+        my $t = "$term-o $term-i";
+
+        ok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+          "'$t' passes <$_>";
+
+        if / ( 'BINARY' | 'DEFAULT' ) / {
+          my $tm := $t.substr-rw($0.from, $0.to - $0.from);
+          $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+          nok
+            Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+            "Mutated '$t' fails <$_>";
+        }
+      }
+    }
   }
 
   when 'lock_expire_opts' {
   }
 
   when 'now' {
-  }
-
-  when 'order_expr' {
   }
 
   when 'part_field_list' {
