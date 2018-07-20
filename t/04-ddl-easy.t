@@ -276,32 +276,42 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     $count = 1;
     for (
       'LEVEL 9 ASC, 10 ASC REVERSE',
-      'LEVEL 2-4 ASC',
+      'LEVEL 9-10 ASC REVERSE',
     ) -> $term {
       my $t = (my $t0 = $term);
 
       # test full $term
       ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        ( my $s = Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ) ),
         "'$t' passes <$_> with full variant syntax";
 
-      if $count++ == 1 {
-        # test multiple items with no reverse ($count == 1)
-        $t ~~ s/ ' ASC REVERSE' / ASC/;
-        ok
-          Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-          "'$t' passes <$_> with full variant syntax";
+      ok
+        $s<ws_list>.trim eq ($count == 1) ??
+          '9 ASC, 10 ASC REVERSE' !! '9-10 ASC REVERSE',
+        "Match<ws_list> contains proper items: '$s<ws_list>'";
 
-        # test multiple list items (MUTATED)
-        # -- REMOVED-- until there is a way to force an option to match,
-        #              the negative case will never properly evaluate.
-        # $t.substr-rw( (^$t.chars).pick, 1) = ('a'..'z').pick;
-        # nok
-        #   Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        #   "Mutated '$t' fails <$_>";
-      } else {
+      # test multiple items with no reverse ($count == 1)
+      $t ~~ s/ ' ASC REVERSE' / ASC/;
+      ok
+        ($s = Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ) ),
+        "'$t' passes <$_> without REVERSE";
+
+      ok
+        $s<ws_list>.trim eq ($count == 1) ??
+          '9 ASC, 10 ASC' !! '9-10 ASC',
+        "Match<ws_list> contains proper items: '$s<ws_list>'";
+
+      if $count++ == 2 {
+        # ws_list_item cannot be tested with a mutation becuase it will
+        # still match if subsequent list items do not match.
+        #
+        # Could test the first match, or mutate LEVEL. Should put that
+        # to a vote if anyone else gets involved.
+
         # Test mutated range
-        $t.substr-rw( (^$t.chars).pick, 1) = ('a'..'z').pick;
+        $t ~~ / ('LEVEL 9-10') /;
+        my $tm := $t.substr-rw($0.from, $0.to - $0.from);
+        $tm.substr-rw( (^$tm.chars).pick, 1) = ('a'..'z').pick;
         nok
           Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
           "Mutated '$t' fails <$_>";

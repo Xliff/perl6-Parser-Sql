@@ -359,13 +359,13 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     <JSON>
   }
 
-  rule __ws_list_item { <number> <order_dir>? <REVERSE>? };
+  rule __ws_list_item { <number> <!before '-'> <order_dir>? <REVERSE>? };
   rule __ws_nweights  { '(' <number> ')' };
 
   rule __ws_levels {
-    <LEVEL> $<ws_list> = [
-      <__ws_list_item>+ %  ','
-      |
+    <LEVEL> $<ws_list>=[
+      <__ws_list_item>+ % ','
+      ||
       <number> '-' <number>
     ]
   }
