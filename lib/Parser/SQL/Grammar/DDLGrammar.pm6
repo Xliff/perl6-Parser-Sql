@@ -99,7 +99,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
 
   rule field_term {
     <COLUMNS> [
-      $<t>=[ <TERMINATED> || <OPTIONALLY>? <ENCLOSED> || <ESCAPED> ]
+      $<t>=[ <TERMINATED> | <OPTIONALLY>? <ENCLOSED> | <ESCAPED> ]
       <BY> $<s>=<text_string>
     ]+
   }

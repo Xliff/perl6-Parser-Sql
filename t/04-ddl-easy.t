@@ -320,7 +320,23 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
 
   }
 
+  # <INTO> [
+  #   <OUTFILE> <text> <load_data_charset>? <field_term>? <line_term>?
+  #   |
+  #   <DUMPFILE> <text>
+  #   |
+  #   <__select_var_ident>+ % ','
+  # ]
   when '_into' {
+    {
+      for ('CHAR SET', 'CHARSET') -> $term-o {
+        for <@ident 'text' BINARY, DEFAULT> -> $term-i {
+          my $t0 = "OUTFILE 'sample' $term-o $term-i";
+
+          # WORK HERE.
+        }
+      }
+    }
   }
 
   when 'all_key_opt' {
@@ -356,7 +372,38 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   when 'field_list_item' {
   }
 
+  # <COLUMNS> [
+  #   $<t>=[ <TERMINATED> || <OPTIONALLY>? <ENCLOSED> || <ESCAPED> ]
+  #   <BY> $<s>=<text_string>
+  # ]+
   when 'field_term' {
+    for ('TERMINATED', 'OPTIONALLY ENCLOSED', 'ESCAPED') -> $term {
+      my $t = "COLUMNS $term BY 'text string'";
+      my $s;
+
+      ok
+        ( $s = Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ) ),
+        "'$t' passes <$_>";
+
+      ok $s<t>.trim eq $term, "Match<t> equals $term";
+      ok $s<s>.trim eq "'text string'", "Match<s> equals \"'test string'\"";
+
+      if $t ~~ /OPTIONALLY/ {
+        $t ~~ s/ 'OPTIONALLY ' //;
+
+        ok
+          ( $s = Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ) ),
+          "'$t' passes <$_> without OPTIONALLY";
+
+        ok $s<t>.trim eq 'ENCLOSED', "Match<t> equals $term";
+        ok $s<s>.trim eq "'text string'", "Match<s> equals \"'test string'\"";
+      }
+
+      $t.substr-rw( (^$t.chars).pick, 1 ) = ('a'..'z').pick;
+      nok
+        ( $s = Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ) ),
+        "Mutated '$t' fails <$_>";
+    }
   }
 
   when 'from_clause' {
