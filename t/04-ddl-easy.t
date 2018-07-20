@@ -420,6 +420,16 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   }
 
   when 'if_not_exists' {
+    my $t = 'IF NOT EXISTS';
+
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+      "'$t' passes <$_>";
+
+    $t.substr-rw( (^$t.chars).pick, 1 ) = ('a'..'z').pick;
+    nok
+      ( $s = Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ) ),
+      "Mutated '$t' fails <$_>";
   }
 
   when 'limit_clause' {
