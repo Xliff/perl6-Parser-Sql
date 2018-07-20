@@ -363,7 +363,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   rule __ws_nweights  { '(' <number> ')' };
 
   rule __ws_levels {
-    <LEVEL> ? $<ws_list> = [
+    <LEVEL> $<ws_list> = [
       <__ws_list_item>+ %  ','
       |
       <number> '-' <number>

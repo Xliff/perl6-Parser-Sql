@@ -262,10 +262,52 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     nok
       Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
       "Mutated '$t' fails <$_>";
-      
+
   }
 
+  # <LEVEL> $<ws_list> = [
+  #   <__ws_list_item>+ %  ','
+  #   |
+  #   <number> '-' <number>
+  # ]
   when '__ws_levels' {
+
+    # Test multiple list items
+    $count = 1;
+    for (
+      'LEVEL 9 ASC, 10 ASC REVERSE',
+      'LEVEL 2-4 ASC',
+    ) -> $term {
+      my $t = (my $t0 = $term);
+
+      # test full $term
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> with full variant syntax";
+
+      if $count++ == 1 {
+        # test multiple items with no reverse ($count == 1)
+        $t ~~ s/ ' ASC REVERSE' / ASC/;
+        ok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+          "'$t' passes <$_> with full variant syntax";
+
+        # test multiple list items (MUTATED)
+        # -- REMOVED-- until there is a way to force an option to match,
+        #              the negative case will never properly evaluate.
+        # $t.substr-rw( (^$t.chars).pick, 1) = ('a'..'z').pick;
+        # nok
+        #   Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        #   "Mutated '$t' fails <$_>";
+      } else {
+        # Test mutated range
+        $t.substr-rw( (^$t.chars).pick, 1) = ('a'..'z').pick;
+        nok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+          "Mutated '$t' fails <$_>";
+      }
+    }
+
   }
 
   when '_into' {
