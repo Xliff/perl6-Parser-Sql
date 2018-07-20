@@ -658,10 +658,56 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     }
   }
 
+  # <ACCOUNT> [ <UNLOCK> || <LOCK> ]
+  # |
+  # <PASSWORD> <EXPIRE> [
+  #   <INTERVAL> <num> <DAY>
+  #   |
+  #   [ <NEVER> || <DEFAULT> ]
+  # ]
   when 'lock_expire_opts' {
+    
+    for <UNLOCK LOCK> -> $term {
+      my $t = "ACCOUNT $term";
+
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+        "'$t' passes <$_>";
+
+      $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated '$t' fails <$_>";
+    }
+
+    {
+      my $t0 = 'PASSWORD EXPIRE';
+
+      my $t = "$t0 INTERVAL 12 DAY";
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+        "'$t' passes <$_>";
+
+      $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated '$t' fails <$_>";
+
+      for <NEVER DEFAULT> -> $term {
+        $t = "$t0 $term";
+
+        ok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+          "'$t' passes <$_>";
+
+        $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
+        nok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+          "Mutated '$t' fails <$_>";
+      }
+    }
+
   }
-
-
 
   when 'part_field_list' {
   }
