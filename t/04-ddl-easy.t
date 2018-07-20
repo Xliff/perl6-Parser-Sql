@@ -10,6 +10,7 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     _con_function_call
     _gen_function_call
     _gorder_clause
+    _into
     _join_table
     _key_function_call
     _nonkey_function_call
@@ -320,40 +321,116 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
 
   }
 
-  # <INTO> [
-  #   <OUTFILE> <text> <load_data_charset>? <field_term>? <line_term>?
-  #   |
-  #   <DUMPFILE> <text>
-  #   |
-  #   <__select_var_ident>+ % ','
-  # ]
-  when '_into' {
-    if 0 {
-      for ('CHAR SET', 'CHARSET') -> $term-o {
-        for <@ident 'text' BINARY, DEFAULT> -> $term-m {
-          for ('TERMINATED', 'OPTIONALLY ENCLOSED', 'ESCAPED') -> $term-i {
-            my $t0 = "OUTFILE 'sample' $term-o charset? $term-m COLUMNS $term-i BY 'text string'";
+  # <KEY_BLOCK_SIZE> <EQ>? <num> | <COMMENT> <text>
+  when 'all_key_opt' {
+    my $t = 'KEY_BLOCK_SIZE EQ 11';
 
-            # WORK HERE.
-          }
-        }
-      }
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+      "'$t' passes <$_> with full syntax";
+
+    $t ~~ s / 'EQ ' //;
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+      "'$t' passes <$_> without 'EQ'";
+
+    $t.substr-rw( (^$t.chars).pick, 1 ) = ('a'..'z').pick;
+    nok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+      "Mutated '$t' fails <$_>";
+
+    $t = "COMMENT 'text_comment'";
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+      "'$t' passes <$_> without 'EQ'";
+
+    $t ~~ / ( 'COMMENT' ) /;
+    my $tm := $t.substr-rw(0, $0.to);
+    $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+    nok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+      "Mutated '$t' fails <$_>";
+  }
+
+  # <ALGORITHM> <EQ>? $<o>=[ <DEFAULT> || <_ident> ]
+  when 'alter_algo_option' {
+    for <DEFAULT @identifier> -> $term {
+      my $t = "ALGORITHM EQ $term";
+
+      ok
+        ( my $s = Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ) ),
+        "'$t' passes <$_> with full syntax";
+
+      ok $s<o> eq $term, "Match<o> equals '$term'.";
+
+      $t ~~ s / 'EQ ' //;
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> without 'EQ'";
+
+      $t ~~ / ( 'ALGORITHM' \s+ $term ) /;
+      my $tm := $t.substr-rw(0, $0.to);
+      $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated '$t' fails <$_>";
     }
   }
 
-  when 'all_key_opt' {
-  }
-
-  when 'alter_algo_option' {
-  }
-
   when 'alter_lock_option' {
+    for <DEFAULT @identifier> -> $term {
+      my $t = "LOCK EQ $term";
+
+      ok
+        ( my $s = Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ) ),
+        "'$t' passes <$_> with full syntax";
+
+      ok $s<o> eq $term, "Match<o> equals '$term'.";
+
+      $t ~~ s / 'EQ ' //;
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> without 'EQ'";
+
+      $t ~~ / ( 'LOCK' \s+ $term ) /;
+      my $tm := $t.substr-rw(0, $0.to);
+      $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated '$t' fails <$_>";
+    }
   }
 
   when 'charset' {
+    for ('CHAR SET', 'CHARSET') -> $term {
+      my $t = $term;
+
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+        "'$term' passes <$_>";
+
+      $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated '$t' fails <$_>";
+    }
   }
 
   when 'charset_name_or_default' {
+    for ('@identifier', "'text string'", 'BINARY', 'DEFAULT') -> $term {
+      my $t = $term;
+
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+        "'$term' passes <$_>";
+
+      if / 'BINARY' | 'DEFAULT' / {
+        $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
+        nok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+          "Mutated '$t' fails <$_>";
+      }
+    }
   }
 
   when 'collate_explicit' {
