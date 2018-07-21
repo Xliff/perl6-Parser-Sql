@@ -787,17 +787,20 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
 
     {
       my $t0 = 'PASSWORD EXPIRE';
+      my $t1 = (my $t = "$t0 INTERVAL 12 DAY");
 
-      my $t = "$t0 INTERVAL 12 DAY";
       ok
         Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
         "'$t' passes <$_>";
 
-      $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
+      $t ~~ / ( ' 12' ) /;
+      my $tm := $t.substr-rw(0, $0.from - 1);
+      $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
       nok
         Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
         "Mutated '$t' fails <$_>";
 
+      $t = $t1;
       for <NEVER DEFAULT> -> $term {
         $t = "$t0 $term";
 
@@ -805,8 +808,6 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
           Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
           "'$t' passes <$_>";
 
-        $t ~~ / ( 'PASSWORD EXPIRE' ) /;
-        my $tm := $t.substr-rw(0, $0.to);
         $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
         nok
           Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
@@ -817,28 +818,26 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   }
 
   when 'part_field_list' {
-    my $t = "\@ident,\@ident2";
+    my $t = "'text string', BEGIN, \@ident";
     ok
       ( my $s = Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ) ),
       "'$t' passes <$_>";
 
-    diag $s.gist;
-
     ok
-      $s<part_field> ~~ Array && +$s<part_field> == 3,
+      $s<_ident> ~~ Array && +$s<_ident> == 3,
       "'$t' contains three elements";
 
     ok
-      $s<part_field>[0] eq '@ident',
-      "First element matched by <$_><part_field> is '\@ident'";
+      $s<_ident>[0] eq "'text string'",
+      "First element matched by <$_><part_field> is 'text string'";
 
     ok
-      $s<part_field>[1] eq "'text string'",
-      "Second element matched by <$_><part_field> is 'text string'";
+      $s<_ident>[1] eq 'BEGIN',
+      "Second element matched by <$_><part_field> is 'BEGIN'";
 
     ok
-      $s<part_field>[2] eq 'field',
-      "Third element matched by <$_><part_field> is 'field'";
+      $s<_ident>[2] eq '@ident',
+      "Third element matched by <$_><part_field> is '\@ident'";
 
     # No failure mode for this item.
   }

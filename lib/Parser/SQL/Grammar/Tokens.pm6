@@ -767,16 +767,23 @@ our token keyword is export {
 }
 
 # cw: Note the circular ref and how it needed to be avoided.
-# Can Identifier consist of a sole _, @ or #?
+# Can Identifier consist of a sole _, @ or #? - Going with NO at this point.
+# Must have a condition where a variable cannot contain all digits.
 our token ident_sys is export {
   <keyword>
   ||
-  $<o>=[ <:Letter +[ _ @ # ]> <:Letter +[ _ @ # $ ]>* ]
+  <:Letter> <:Letter + :Number>+
+  ||
+  $<i>=[ '@' <:Letter + :Number +[ @ _ ]> <:Letter + :Number +[ _ $ ]>* ]
+  ||
+  $<i>=[ "@'" <:Letter + :Number +[ @ _ ]> <:Letter + :Number +[ _ $ ]>* \' ]
+  ||
+  $<i>=[ '@"' <:Letter + :Number +[ @ _ ]> <:Letter + :Number +[ _ $ ]>* \" ]
   ||
   # YYY: Verify that this is IDENT_QUOTED
-  '"' [ <~~> ] '"'
+  '"' <-[\"]>+ '"'
   ||
-  "'" [ <~~> ] "'"
+  "'" <-[\']>+ "'"
 }
 
 # Check to see if keyword is supposed to be in both ident_sys AND _ident.

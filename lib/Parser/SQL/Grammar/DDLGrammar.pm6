@@ -28,9 +28,9 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     ||
     <UNIQUE> <KEY>?
     ||
-    <COMMENT> <comment_txt=.text>
+    <COMMENT> <comment_txt=text>
     ||
-    <COLLATE> [ <collate_id=.ident> || <collate_txt=.text> ]
+    <COLLATE> [ <collate_id=ident> || <collate_txt=text> ]
     ||
     <COLUMN_FORMAT> $<o>=[ <DEFAULT> || <FIXED> || <DYNAMIC> ]
     ||
