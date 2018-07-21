@@ -715,7 +715,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule part_field_list {
-    <part_field=.ident> ')' [ ',' <part_field=.ident> ]?
+    <_ident>+ % ','
   }
 
   rule part_type_def {

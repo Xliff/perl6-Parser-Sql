@@ -464,6 +464,51 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   when 'create_field_list' {
   }
 
+  when 'delete_option' {
+    for <RESTRICT CASCADE SET NO> -> $term {
+      when $term eq <RESTRICT CASCADE>.any {
+        my $t = $term;
+
+        ok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+          "'$t' passes <$_>";
+
+        $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
+        nok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+          "Mutated '$t' fails <$_>";
+      }
+
+      when $term eq 'SET' {
+        for <NULL DEFAULT> -> $term-i {
+          my $t = "$term $term-i";
+
+          ok
+            Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+            "'$t' passes <$_>";
+
+          $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
+          nok
+            Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+            "Mutated '$t' fails <$_>";
+        }
+      }
+
+      when $term eq 'NO' {
+        my $t = "$term ACTION'";
+
+        ok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+          "'$t' passes <$_>";
+
+        $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
+        nok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+          "Mutated '$t' fails <$_>";
+      }
+    }
+  }
+
   when 'derived_table_list' {
   }
 
@@ -666,7 +711,7 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   #   [ <NEVER> || <DEFAULT> ]
   # ]
   when 'lock_expire_opts' {
-    
+
     for <UNLOCK LOCK> -> $term {
       my $t = "ACCOUNT $term";
 
@@ -700,7 +745,9 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
           Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
           "'$t' passes <$_>";
 
-        $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
+        $t ~~ / ( 'PASSWORD EXPIRE' ) /;
+        my $tm := $t.substr-rw(0, $0.to);
+        $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
         nok
           Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
           "Mutated '$t' fails <$_>";
@@ -710,6 +757,30 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   }
 
   when 'part_field_list' {
+    my $t = "\@ident,\@ident2";
+    ok
+      ( my $s = Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ) ),
+      "'$t' passes <$_>";
+
+    diag $s.gist;
+
+    ok
+      $s<part_field> ~~ Array && +$s<part_field> == 3,
+      "'$t' contains three elements";
+
+    ok
+      $s<part_field>[0] eq '@ident',
+      "First element matched by <$_><part_field> is '\@ident'";
+
+    ok
+      $s<part_field>[1] eq "'text string'",
+      "Second element matched by <$_><part_field> is 'text string'";
+
+    ok
+      $s<part_field>[2] eq 'field',
+      "Third element matched by <$_><part_field> is 'field'";
+
+    # No failure mode for this item.
   }
 
   when 'procedure_analyse_clause' {
