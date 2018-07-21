@@ -455,10 +455,60 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     }
   }
 
+  # <PRIMARY> <KEY> | <UNIQUE> <key_or_index>
   when 'constraint_key_type' {
+    my $t = 'PRIMARY KEY';
+
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_>";
+
+    $t ~~ s/ ' KEY' //;
+    nok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+      "'$t' fails <$_> without KEY";
+
+    for <KEY INDEX> -> $term {
+      $t = "UNIQUE $term";
+
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+        "'$term' passes <$_>";
+
+      $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated '$t' fails <$_>";
+    }
   }
 
   when 'constraint' {
+    # An evil way to initialize and set two variables. I LIKE IT!
+    my $t = (my $t0 = 'CONSTRAINT ns.table.field');
+
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_>";
+
+    $t ~~ s/ 'ns' //;
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_>";
+
+    $t ~~ s/ '.table' / table /;
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_>";
+
+    $t ~~ s/ '.field' / field /;
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_>";
+
+    ($t = $t0) ~~ s/ 'field' //;
+    nok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "Trailing '.' fails <$_>";
   }
 
   when 'create_field_list' {
@@ -622,6 +672,16 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
 
   # Considfer moving to tokens as a rule.
   when 'generated_always' {
+    my $t = 'GENERATED ALWAYS';
+
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_>";
+
+    $t ~~ s/ $( ('GENERATED ', ' ALWAYS').pick ) //;
+    nok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' fails <$_>";
   }
 
   when 'index_lock_algo' {
