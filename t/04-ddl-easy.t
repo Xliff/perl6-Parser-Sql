@@ -43,6 +43,7 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     row_types
     select_item
     select_item_list
+    select_option
     select_paren_derived
     select_part2
     select_part2_derived
@@ -59,7 +60,6 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   }
 
   when '_cast_type' {
-
     # [ <BINARY> | <NCHAR> ] [ '(' <number> ')' ]?
     for <BINARY(2) NCHAR(2)> -> $t0 {
       my $t = $t0;
@@ -223,11 +223,9 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
         Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
         "Mutated '$t' fails <$_>";
     }
-
   }
 
   when '__ws_list_item' {
-
     # <number> <order_dir>? <REVERSE>?
     for <ASC DESC> -> $term {
       my $t = "7 $term REVERSE";
@@ -255,12 +253,10 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
         Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
         "Mutated '$t' fails <$_>";
     }
-
   }
 
 
   when '__ws_nweights' {
-
     my $t = '(8)';
     ok
       Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
@@ -270,7 +266,6 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     nok
       Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
       "Mutated '$t' fails <$_>";
-
   }
 
   # <LEVEL> $<ws_list> = [
@@ -279,7 +274,6 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   #   <number> '-' <number>
   # ]
   when '__ws_levels' {
-
     # Test multiple list items
     $count = 1;
     for (
@@ -325,7 +319,6 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
           "Mutated '$t' fails <$_>";
       }
     }
-
   }
 
   # <KEY_BLOCK_SIZE> <EQ>? <num> | <COMMENT> <text>
@@ -500,6 +493,11 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
       "'$t' passes <$_>";
 
     $t ~~ s/ '.table' / table /;
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_>";
+
+    $t ~~ s/ 'table' //;
     ok
       Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
       "'$t' passes <$_>";
@@ -772,7 +770,6 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   #   [ <NEVER> || <DEFAULT> ]
   # ]
   when 'lock_expire_opts' {
-
     for <UNLOCK LOCK> -> $term {
       my $t = "ACCOUNT $term";
 
@@ -815,7 +812,6 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
           "Mutated '$t' fails <$_>";
       }
     }
-
   }
 
   when 'part_field_list' {
@@ -870,15 +866,66 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   }
 
   when 'select_lock_type' {
-  }
+    for ('FOR UPDATE', 'LOCK IN SHARE MODE') -> $term {
+      my $t = $term;
 
-  when 'select_option' {
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+        "'$t' passes <$_> without number spec";
+
+      $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated '$t' fails <$_>";
+    }
   }
 
   when 'simple_ident_nospvar' {
+    my $t = 'ns.table.field';
+
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_>";
+
+    $t ~~ s/ 'ns' //;
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_>";
+
+    $t ~~ s/ '.table' /table/;
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_>";
+
+    $t ~~ s/ 'table' //;
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_>";
+
+    $t ~~ s/ '.field' /field/;
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_>";
+
+    # Leading dot in namespace and trailing dot on match will need to be caught
+    # in the action class.
   }
 
   when 'table_alias' {
+    for <AS EQ> -> $term {
+      my $t = "$term newtable";
+
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+        "'$t' passes <$_>";
+
+      $t ~~ / ($term) /;
+      my $tm := $t.substr-rw(0, $0.to);
+      $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated '$t' fails <$_>";
+    }
   }
 
   when 'table_list' {
