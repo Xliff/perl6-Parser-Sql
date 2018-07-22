@@ -20,14 +20,17 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     bool_pri
     check_constraint
     col_def
+    create_field_list
     create_select
-    create_table_opt
-    create_table_opts
+    create_table_opt2
+    derived_table_list
     escape
     expr
     expr_list
     field_def
+    field_list_item
     field_spec
+    from_clause
     having_clause
     key_def
     literal
@@ -514,9 +517,6 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     #  "Trailing '.' fails <$_>";
   }
 
-  when 'create_field_list' {
-  }
-
   when 'delete_option' {
     for <RESTRICT CASCADE SET NO> -> $term {
       when $term eq <RESTRICT CASCADE>.any {
@@ -560,12 +560,6 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
           "Mutated '$t' fails <$_>";
       }
     }
-  }
-
-  when 'derived_table_list' {
-  }
-
-  when 'field_list_item' {
   }
 
   # <COLUMNS> [
@@ -675,13 +669,17 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
 
   # Considfer moving to tokens as a rule.
   when 'generated_always' {
-    my $t = 'GENERATED ALWAYS';
+    my $t = (my $t0 = 'GENERATED ALWAYS');
 
     ok
       Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
       "'$t' passes <$_>";
 
-    $t ~~ s/ $( ('GENERATED ', ' ALWAYS').pick ) //;
+    # This defeats the unlikely case where neither string results in any
+    # change.
+    while $t eq $t0 {
+      $t ~~ s/ $( ('GENERATED ', ' ALWAYS').pick ) //;
+    }
     nok
       Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
       "'$t' fails <$_>";
@@ -845,7 +843,30 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     # No failure mode for this item.
   }
 
+  # <PROCEDURE> <ANALYSE> '(' [ <num> [ ',' <num> ]? ]? ')'
   when 'procedure_analyse_clause' {
+    my $t = 'PROCEDURE ANALYSE (13, 14)';
+
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_>";
+
+    # Since number spec is optional, not capable of testing this without
+    # an Action class.
+    $t ~~ s/ ', 14' //;
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_>";
+
+    $t ~~ s/ '13' //;
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_> without number spec";
+
+    $t ~~ s / <[( )]> //;
+    nok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' fails <$_> without parens";
   }
 
   when 'select_lock_type' {
