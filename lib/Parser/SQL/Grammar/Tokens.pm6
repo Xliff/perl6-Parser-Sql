@@ -796,7 +796,12 @@ our regex table_ident is export {
 
 # Needs positive look beind.
 our regex field_ident is export   {
-  [ <table_ident>? '.' ]? <?after '.'>? <_ident>
+  [
+    [ <table_ident>? '.' ]? <?after '.'> <_ident>
+    ||
+    '.'? <_ident>
+  ]
+  #&& <!after '.'> $
 }
 
 our token limit_options is export { <_ident> || <PARAM_MARK> || <num> }

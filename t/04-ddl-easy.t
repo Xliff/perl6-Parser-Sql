@@ -46,6 +46,7 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     simple_expr
     sum_expr
     table_expression
+    table_factor
     table_ref
     type
     udf_expr
@@ -505,10 +506,12 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
       Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
       "'$t' passes <$_>";
 
-    ($t = $t0) ~~ s/ 'field' //;
-    nok
-      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
-      "Trailing '.' fails <$_>";
+    # This will not work via parsing. It must be caught and thrown in the action
+    # class
+    #($t = $t0) ~~ s/ 'field' //;
+    #nok
+    #  Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+    #  "Trailing '.' fails <$_>";
   }
 
   when 'create_field_list' {
@@ -861,6 +864,17 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   }
 
   when 'table_wild' {
+    # Test
+    my $t = 'table.*';
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_>";
+
+    # Failure
+    $t = 'table.';
+    nok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' fails <$_>";
   }
 
   when 'row_types' {
