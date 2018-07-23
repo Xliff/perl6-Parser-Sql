@@ -416,7 +416,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
 
   rule _key_function_call {
     [
-      <CHAR> '(' <expr_list> [ USING <charset_name=.ident> ]? ')'
+      <CHAR> '(' <expr_list> [ USING <charset_name=ident> ]? ')'
       |
       [
         [ <DATE> || <DAY> || <HOUR> || <MINUTE> || <MONTH> || <SECOND> ||
@@ -848,7 +848,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule default_collation {
-    <DEFAULT>? <COLLATE> <EQ> [ <_ident> || <text> ]
+    <DEFAULT>? <COLLATE> <EQ>? [ <_ident> || <text> ]
   }
 
 rule delete_option {

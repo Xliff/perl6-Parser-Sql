@@ -338,7 +338,7 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
         Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
         "'$t' passes <$_> without 'EQ'";
 
-      $t ~~ / ( $term ) /;
+      $t ~~ /^ ( $term ) /;
       my $tm := $t.substr-rw(0, $0.to);
       $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
       nok
@@ -528,6 +528,10 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     }
   }
 
+  # Description has been expanded.
+  # <DEFAULT>? <COLLATE> <EQ> [ <_ident> || <text> ]
+  # |
+  # <DEFAULT>? <charset> <EQ>? [ <_ident> || <text> ]
   when 'create_database_opts' {
   }
 
@@ -567,10 +571,72 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     #  "Trailing '.' fails <$_>";
   }
 
+  # <DEFAULT>? <charset> <EQ>? [ <_ident> || <text> ]
   when 'default_charset' {
+    for ('@ident1', "'text string'") -> $term-o {
+      for ('CHAR SET', 'CHARSET') -> $term-i {
+        my $t = (my $t0 = "DEFAULT $term-i EQ $term-o");
+
+        ok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+          "'$t' passes <$_>";
+
+        $t ~~ s/ 'DEFAULT ' //;
+        ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> without DEFAULT";
+
+        ($t = $t0) ~~ s/ 'EQ ' //;
+        ok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+          "'$t' passes <$_> without EQ";
+
+        ($t = $t0) ~~ s/ [ 'DEFAULT' | 'EQ' ] //;
+        ok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+          "'$t' passes <$_> without DEFAULT and EQ";
+
+        $t ~~ /( 'CHAR SET' || 'CHARSET' )/;
+        my $tm := $t.substr-rw($0.from, $0.to - $0.from);
+        $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+        nok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+          "Mutated '$t' fails <$_>";
+      }
+    }
   }
 
+  # <DEFAULT>? <charset> <EQ>? [ <_ident> || <text> ]
   when 'default_collation' {
+    for ('@ident1', "'text string'") -> $term {
+      my $t = (my $t0 = "DEFAULT COLLATE EQ $term");
+
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_>";
+
+      $t ~~ s/ 'DEFAULT ' //;
+      ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+      "'$t' passes <$_> without DEFAULT";
+
+      ($t = $t0) ~~ s/ 'EQ ' //;
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> without EQ";
+
+      ($t = $t0) ~~ s/ [ 'DEFAULT' | 'EQ' ] //;
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> without DEFAULT and EQ";
+
+      $t ~~ /( 'COLLATE' )/;
+      my $tm := $t.substr-rw($0.from, $0.to - $0.from);
+      $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated '$t' fails <$_>";
+    }
   }
 
   when 'delete_option' {
