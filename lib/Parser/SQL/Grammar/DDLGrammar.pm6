@@ -869,8 +869,9 @@ rule delete_option {
     <GRANT> <OPTION> | <_limits>?
   }
 
-  token key_alg {
-    [ <USING> || <TYPE> ] [ <BTREE> || <RTREE> || <HASH> ]
+  rule key_alg {
+    [ <USING> | <TYPE> ]
+    [ <BTREE> | <RTREE> | <HASH> ]
   }
 
   rule key_list {
@@ -883,19 +884,19 @@ rule delete_option {
 
   rule _limits {
     [
-      <MAX_QUERIES_PER_HOUR>    ||
-      <MAX_UPDATES_PER_HOUR>    ||
-      <MAX_CONNECTIONS_PER_HOUR ||
-      MAX_USER_CONNECTIONS>
+      <MAX_QUERIES_PER_HOUR>     |
+      <MAX_UPDATES_PER_HOUR>     |
+      <MAX_CONNECTIONS_PER_HOUR> |
+      <MAX_USER_CONNECTIONS>
     ] <num>
   }
 
   rule logfile_group_info {
-    <lf_group_id=.ident>
+    <lf_group_id=ident>
     <ADD> [
-      <UNDOFILE> <file_txt=.text>
+      <UNDOFILE> <file_txt=text>
       |
-      <REDOFILE> <file_text=.text>
+      <REDOFILE> <file_text=text>
     ]
     # Not using % here because of optional delimiter.
     [ <logfile_group_option> [ ','? <logfile_group_option> ]* ]?
@@ -914,11 +915,11 @@ rule delete_option {
     |
     <NODEGROUP> <EQ>? <num>
     |
-    <STORAGE>? <ENGINE> <EQ>? [ <storage_id=.ident> || <storage_txt=.text> ]
+    <STORAGE>? <ENGINE> <EQ>? [ <storage_id=ident> || <storage_txt=text> ]
     |
     [ <WAIT> || <NO_WAIT> ]
     |
-    <COMMENT> <EQ>? <comment_txt=.text>
+    <COMMENT> <EQ>? <comment_txt=text>
   }
 
   rule match_clause {

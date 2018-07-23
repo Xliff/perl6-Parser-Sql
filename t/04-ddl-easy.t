@@ -6,6 +6,7 @@ use Parser::SQL::Grammar::DDLGrammar;
 
 my $count;
 for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
+  diag $_;
   when <
     _con_function_call
     _gen_function_call
@@ -23,6 +24,7 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     create_field_list
     create_select
     create_table_opt2
+    create3
     derived_table_list
     escape
     expr
@@ -31,9 +33,11 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     field_list_item
     field_spec
     from_clause
+    group_clause
     having_clause
     key_def
     literal
+    now
     order_clause
     order_expr
     order_or_limit
@@ -321,6 +325,28 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     }
   }
 
+  when '_limits' {
+    for <
+      MAX_QUERIES_PER_HOUR
+      MAX_UPDATES_PER_HOUR
+      MAX_CONNECTIONS_PER_HOUR
+      MAX_USER_CONNECTIONS
+    > -> $term {
+      my $t = "$term 17";
+
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> without 'EQ'";
+
+      $t ~~ / ( $term ) /;
+      my $tm := $t.substr-rw(0, $0.to);
+      $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated '$t' fails <$_>";
+    }
+  }
+
   # <KEY_BLOCK_SIZE> <EQ>? <num> | <COMMENT> <text>
   when 'all_key_opt' {
     my $t = 'KEY_BLOCK_SIZE EQ 11';
@@ -479,6 +505,32 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     }
   }
 
+  when 'connect_opts' {
+    # from _limits
+    for <
+      MAX_QUERIES_PER_HOUR
+      MAX_UPDATES_PER_HOUR
+      MAX_CONNECTIONS_PER_HOUR
+      MAX_USER_CONNECTIONS
+    > -> $term {
+      my $t = "WITH $term 17";
+
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> without 'EQ'";
+
+      $t ~~ / ( 'WITH ' $term ) /;
+      my $tm := $t.substr-rw(0, $0.to);
+      $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated '$t' fails <$_>";
+    }
+  }
+
+  when 'create_database_opts' {
+  }
+
   when 'constraint' {
     # An evil way to initialize and set two variables. I LIKE IT!
     my $t = (my $t0 = 'CONSTRAINT ns.table.field');
@@ -513,6 +565,12 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     #nok
     #  Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
     #  "Trailing '.' fails <$_>";
+  }
+
+  when 'default_charset' {
+  }
+
+  when 'default_collation' {
   }
 
   when 'delete_option' {
@@ -595,6 +653,10 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
         ( $s = Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ) ),
         "Mutated '$t' fails <$_>";
     }
+  }
+
+  # [ <all_key_opt> | <WITH> <PARSER> <ident_sys> ]?
+  when 'fulltext_key_opt' {
   }
 
   when 'gcol_attr' {
@@ -705,6 +767,9 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     # Compound test. No negatives necessary... yet.
   }
 
+  when 'grant_opts' {
+  }
+
   when 'if_not_exists' {
     my $t = 'IF NOT EXISTS';
 
@@ -716,6 +781,29 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     nok
       Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
       "Mutated '$t' fails <$_>";
+  }
+
+  when 'key_alg' {
+    for <USING TYPE> -> $term-o {
+      for <BTREE RTREE HASH> -> $term-i {
+        my $t = "$term-o $term-i";
+
+        ok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+          "'$t' passes <$_>";
+
+        $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
+        nok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+          "Mutated '$t' fails <$_>";
+      }
+    }
+  }
+
+  when 'key_list' {
+  }
+
+  when 'key_lists' {
   }
 
   # <LIMIT> <limit_options> [ [ ',' || <OFFSET> ] <limit_options> ]?
@@ -730,7 +818,7 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
             "'$t' passes <$_>";
 
           if $t ~~ /\,/ {
-            $t ~~ s/ ' ,' /,/; 
+            $t ~~ s/ ' ,' /,/;
             ok
               Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
               "'$t' passes <$_>";
@@ -751,9 +839,6 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
         Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
         "Mutated '$t' fails <$_>";
     }
-
-
-
   }
 
   # <LINES> [ $<t>=[ <TERMINATED> || <STARTING> ] <BY> $<s>=<text_string> ]+
@@ -792,6 +877,27 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
         }
       }
     }
+  }
+
+
+  # <INITIAL_SIZE> <EQ>? [ <num> || <ident_sys> ]
+  # |
+  # <MAX_SIZE> <EQ>? [ <num> || <ident_sys> ]
+  # |
+  # <EXTENT_SIZE> <EQ>? [ <num> || <ident_sys> ]
+  # |
+  # <UNDO_BUFFER_SIZE> <EQ>? [ <num> || <ident_sys> ]
+  # |
+  # <REDO_BUFFER_SIZE> <EQ>? [ <num> || <ident_sys> ]
+  # |
+  # <NODEGROUP> <EQ>? <num>
+  # |
+  # <STORAGE>? <ENGINE> <EQ>? [ <storage_id=ident> || <storage_txt=text> ]
+  # |
+  # [ <WAIT> || <NO_WAIT> ]
+  # |
+  # <COMMENT> <EQ>? <comment_txt=text>
+  when 'logfile_group_option' {
   }
 
   # <ACCOUNT> [ <UNLOCK> || <LOCK> ]
@@ -843,6 +949,21 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
           Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
           "Mutated '$t' fails <$_>";
       }
+    }
+  }
+
+  when 'match_clause' {
+    for <FULL PARTIAL SIMPLE> -> $term {
+      my $t = "MATCH $term";
+
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+        "'$t' passes <$_>";
+
+      $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated '$t' fails <$_>";
     }
   }
 
