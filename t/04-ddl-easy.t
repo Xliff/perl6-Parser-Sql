@@ -597,9 +597,6 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     }
   }
 
-  when 'from_clause' {
-  }
-
   when 'gcol_attr' {
     for ('UNIQUE KEY', "COMMENT 'text comment'", 'NOT NULL', 'PRIMARY KEY') -> $t0 {
       my $t = $t0;
@@ -721,7 +718,42 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
       "Mutated '$t' fails <$_>";
   }
 
+  # <LIMIT> <limit_options> [ [ ',' || <OFFSET> ] <limit_options> ]?
   when 'limit_clause' {
+    for <@ident ? 15> -> $term-o {
+      for <, OFFSET> -> $term-m {
+        for <@ident2 ? 16> -> $term-i {
+          my $t = "LIMIT $term-o $term-m $term-i";
+
+          ok
+            Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+            "'$t' passes <$_>";
+
+          if $t ~~ /\,/ {
+            $t ~~ s/ ' ,' /,/; 
+            ok
+              Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+              "'$t' passes <$_>";
+          }
+
+        }
+      }
+
+      my $t = "LIMIT $term-o";
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_>";
+
+      $t ~~ / ( 'LIMIT' )/;
+      my $tm := $t.substr-rw(0, $0.to);
+      $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated '$t' fails <$_>";
+    }
+
+
+
   }
 
   # <LINES> [ $<t>=[ <TERMINATED> || <STARTING> ] <BY> $<s>=<text_string> ]+
