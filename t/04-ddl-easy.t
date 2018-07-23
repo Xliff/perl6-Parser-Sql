@@ -326,21 +326,21 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   }
 
   when '_limits' {
-    for <
-      MAX_QUERIES_PER_HOUR
-      MAX_UPDATES_PER_HOUR
-      MAX_CONNECTIONS_PER_HOUR
-      MAX_USER_CONNECTIONS
-    > -> $term {
+    for (
+      'MAX_QUERIES_PER_HOUR',
+      'MAX_UPDATES_PER_HOUR',
+      'MAX_CONNECTIONS_PER_HOUR',
+      'MAX_USER_CONNECTIONS'
+    ) -> $term {
       my $t = "$term 17";
 
       ok
         Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_> without 'EQ'";
+        "'$t' passes <$_>";
 
-      $t ~~ /^ ( $term ) /;
+      $t ~~ /( $( $term ) )/;
       my $tm := $t.substr-rw(0, $0.to);
-      $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
+      $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
       nok
         Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
         "Mutated '$t' fails <$_>";
@@ -528,11 +528,78 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     }
   }
 
-  # Description has been expanded.
-  # <DEFAULT>? <COLLATE> <EQ> [ <_ident> || <text> ]
-  # |
-  # <DEFAULT>? <charset> <EQ>? [ <_ident> || <text> ]
+  # <default_collation> | <default_charset>
   when 'create_database_opts' {
+    for ('@ident1', "'text string'") -> $term-o {
+      for ('CHAR SET', 'CHARSET') -> $term-i {
+        my $t = (my $t0 = "DEFAULT $term-i EQ $term-o");
+
+        my $s;
+        ok
+          $s = Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+          "'$t' passes <$_>";
+        ok $s<default_charset>, "Match<default_charset> is defined";
+
+        $t ~~ s/ 'DEFAULT ' //;
+        ok
+          $s = Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+          "'$t' passes <$_> without DEFAULT";
+        ok $s<default_charset>, "Match<default_charset> is defined";
+
+        ($t = $t0) ~~ s/ 'EQ ' //;
+        ok
+          $s = Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+          "'$t' passes <$_> without EQ";
+        ok $s<default_charset>, "Match<default_charset> is defined";
+
+        ($t = $t0) ~~ s/ [ 'DEFAULT' | 'EQ' ] //;
+        ok
+          $s = Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+          "'$t' passes <$_> without DEFAULT and EQ";
+        ok $s<default_charset>, "Match<default_charset> is defined";
+
+        $t ~~ /( 'CHAR SET' || 'CHARSET' )/;
+        my $tm := $t.substr-rw($0.from, $0.to - $0.from);
+        $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+        nok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+          "Mutated '$t' fails <$_>";
+      }
+    }
+
+    for ('@ident1', "'text string'") -> $term {
+      my $t = (my $t0 = "DEFAULT COLLATE EQ $term");
+
+      ok
+        (my $s = Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ) ),
+        "'$t' passes <$_>";
+      ok $s<default_collation>, "Match<default_collation> is defined";
+
+      $t ~~ s/ 'DEFAULT ' //;
+      ok
+        $s = Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> without DEFAULT";
+      ok $s<default_collation>, "Match<default_collation> is defined";
+
+      ($t = $t0) ~~ s/ 'EQ ' //;
+      ok
+        $s = Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> without EQ";
+      ok $s<default_collation>, "Match<default_collation> is defined";
+
+      ($t = $t0) ~~ s/ [ 'DEFAULT' | 'EQ' ] //;
+      ok
+        $s = Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> without DEFAULT and EQ";
+      ok $s<default_collation>, "Match<default_collation> is defined";
+
+      $t ~~ /( 'COLLATE' )/;
+      my $tm := $t.substr-rw($0.from, $0.to - $0.from);
+      $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated '$t' fails <$_>";
+    }
   }
 
   when 'constraint' {
@@ -723,6 +790,23 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
 
   # [ <all_key_opt> | <WITH> <PARSER> <ident_sys> ]?
   when 'fulltext_key_opt' {
+    # <all_key_opt>
+
+    for ('@ident', '"text string"', 'field') -> $term {
+      my $t = "WITH PARSER $term";
+
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_>";
+
+      my $r = $(<WITH PARSER>.pick);
+      $t ~~ / ( $r ) /;
+      my $tm := $t.substr-rw($0.from, $0.to - $0.from);
+      $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+      nok
+        (my $s = Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ) ),
+        "Mutated '$t' fails <$_>";
+    }
   }
 
   when 'gcol_attr' {
@@ -808,6 +892,40 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
       "'$t' fails <$_>";
   }
 
+  when 'grant_opts' {
+    my $t = 'GRANT OPTION';
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_>";
+
+
+    $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
+    nok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+      "Mutated '$t' fails <$_>";
+
+    # from <_limits>
+    for (
+      'MAX_QUERIES_PER_HOUR',
+      'MAX_UPDATES_PER_HOUR',
+      'MAX_CONNECTIONS_PER_HOUR',
+      'MAX_USER_CONNECTIONS'
+    ) -> $term {
+      my $t = "$term 17";
+
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_>";
+
+      $t ~~ /( $( $term ) )/;
+      my $tm := $t.substr-rw(0, $0.to);
+      $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated '$t' fails <$_>";
+    }
+  }
+
   when 'index_lock_algo' {
     my $t = 'ALGORITHM EQ DEFAULT LOCK EQ DEFAULT';
 
@@ -831,9 +949,6 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
       "'$t' passes <$_> without EQ";
 
     # Compound test. No negatives necessary... yet.
-  }
-
-  when 'grant_opts' {
   }
 
   when 'if_not_exists' {
@@ -866,10 +981,44 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     }
   }
 
+  # <_ident> [ '(' <num> ')' ]?  <order_dir>
   when 'key_list' {
+    for <ASC DESC> -> $term {
+      my $t = "\@identifier (18) $term";
+
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_>";
+
+      $t ~~ s/ '(18) ' //;
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> without number specification";
+
+      $t ~~ /( $term )/;
+      my $tm := $t.substr-rw($0.from, $0.to - $0.from);
+      $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated '$t' fails <$_>";
+    }
   }
 
+  # <key_list>+ % ','
   when 'key_lists' {
+    for <ASC DESC> -> $term-o {
+      for <DESC ASC> -> $term-i {
+        my $t = "\@ident1 (19) $term-o, \@ident2 (20) $term-i";
+
+        ok
+          (my $s = Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ) ),
+          "'$t' passes <$_>";
+
+        ok $s<key_list>.elems == 2, "Match<key_list> contains 2 items";
+
+        # No negative test required.
+      }
+    }
   }
 
   # <LIMIT> <limit_options> [ [ ',' || <OFFSET> ] <limit_options> ]?

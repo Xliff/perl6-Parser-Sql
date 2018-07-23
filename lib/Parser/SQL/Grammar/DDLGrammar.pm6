@@ -700,7 +700,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     <key_or_index> <_ident>? <key_alg> '(' <key_lists> ')' <normal_key_options>
     |
     <FULLTEXT> <key_or_index>? <_ident>? '(' <key_lists> ')'
-    <fulltext_key_opt>
+    <fulltext_key_opt>?
     |
     <SPACIAL> <key_or_index>? <_ident>? '(' <key_lists> ')'
     <spacial_key_opt>
@@ -862,11 +862,11 @@ rule delete_option {
   }
 
   rule fulltext_key_opt {
-    [ <all_key_opt> | <WITH> <PARSER> <ident_sys> ]?
+    [ <all_key_opt> || <WITH> <PARSER> <ident_sys> ]
   }
 
   rule grant_opts {
-    <GRANT> <OPTION> | <_limits>?
+    <GRANT> <OPTION> | <_limits>
   }
 
   rule key_alg {
@@ -884,9 +884,9 @@ rule delete_option {
 
   rule _limits {
     [
-      <MAX_QUERIES_PER_HOUR>     |
-      <MAX_UPDATES_PER_HOUR>     |
-      <MAX_CONNECTIONS_PER_HOUR> |
+      <MAX_QUERIES_PER_HOUR>     ||
+      <MAX_UPDATES_PER_HOUR>     ||
+      <MAX_CONNECTIONS_PER_HOUR> ||
       <MAX_USER_CONNECTIONS>
     ] <num>
   }
@@ -939,7 +939,7 @@ rule delete_option {
   }
 
   rule part_definition {
-    <PARTITION> <part_name=.ident>
+    <PARTITION> <part_name=ident>
     [ <VALUES>
       [
         <LESS> <THAN> <part_func_max>
@@ -1025,8 +1025,8 @@ rule delete_option {
   }
 
   rule tablespace_info {
-    <ts_name=.ident> <ADD> <DATAFILE> <df_name=.text>
-    [ <USE> <LOGFILE> <GROUP> <grp_name=.ident> ]?
+    <ts_name=ident> <ADD> <DATAFILE> <df_name=text>
+    [ <USE> <LOGFILE> <GROUP> <grp_name=ident> ]?
     <tablespace_option_list>
   }
 
@@ -1055,7 +1055,7 @@ rule delete_option {
   }
 
   rule ts_engine {
-    <STORAGE>? <ENGINE> <EQ>? [ <engine=.ident> | <engine=.text> ]
+    <STORAGE>? <ENGINE> <EQ>? [ <engine=ident> | <engine=text> ]
   }
 
   rule ts_file_block_size {
@@ -1108,19 +1108,19 @@ rule delete_option {
         ]
         |
         [
-          <UNIQUE>? <INDEX> <idx_ident=.ident> <key_alg> 'ON' <table_ident> '(' <key_lists> ')' <normal_key_options>
+          <UNIQUE>? <INDEX> <idx_ident=ident> <key_alg> 'ON' <table_ident> '(' <key_lists> ')' <normal_key_options>
           |
-          <FULLTEXT> <INDEX> <idx_ident=.ident> 'ON' <table_ident> '('
-           <key_lists> ')' <fulltext_key_opt>
+          <FULLTEXT> <INDEX> <idx_ident=ident> 'ON' <table_ident> '('
+           <key_lists> ')' <fulltext_key_opt>?
           |
-          <SPACIAL> <INDEX> <idx_ident=.ident> 'ON'  <table_ident> '('
+          <SPACIAL> <INDEX> <idx_ident=ident> 'ON'  <table_ident> '('
            <key_lists> ')' <spacial_key_opt>
         ] <index_lock_algo>?
         |
         <DATABASE> <if_not_exists>? <_ident> <create_database_opts>?
         |
         <USER> <if not exists>?
-          <grant_opts>
+          <grant_opts>?
           <require_clause>
           <connect_opts>
           <lock_expire_opts>?
@@ -1130,9 +1130,9 @@ rule delete_option {
         <TABLESPACE> <tablespace_info>
         |
         <SERVER>
-          [ <server_ident=.ident> || <server_text=.text> ]
+          [ <server_ident=ident> || <server_text=text> ]
           <FOREIGN> <DATA> <WRAPPER>
-          [ <fdw_ident=.ident> || <fdw_text=.text> ]
+          [ <fdw_ident=ident> || <fdw_text=text> ]
           <OPTIONS>
           '(' <server_opts> ')'
     ]
