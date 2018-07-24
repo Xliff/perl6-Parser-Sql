@@ -617,7 +617,6 @@ our token and is export         {  <AND> | <AND2>    }
 our token not2 is export        {  <NOT> | <NOT2>    }
 our token or is export          {   <OR> | <OR2>     }
 our token plus_minus is export  { <PLUS> | <MINUS>   }
-our token equal                 {   <EQ> | <SET_VAR> }
 
 our token bit_ops is export {
   '|' || '&' || '*' || '/' || '%' || '^' ||
