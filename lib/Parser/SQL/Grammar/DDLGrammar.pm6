@@ -140,15 +140,15 @@ grammar Parser::SQL::Grammar::DDLGrammar {
 
   rule literal {
     <underscore_charset>? <text>
-    |
+    ||
     'N'<text>
-    |
+    ||
     <num>
-    |
-    [ <DATE> || <TIME> || <TIMESTAMP> ] <text>
-    |
-    [ <NULL> || <FALSE> || <TRUE> ]
-    |
+    ||
+    [ <DATE> | <TIME>  | <TIMESTAMP> ] <text>
+    ||
+    [ <NULL> | <FALSE> | <TRUE> ]
+    ||
     <underscore_charset>? [ <hex_num> || <bin_num> ]
   }
 
@@ -611,35 +611,47 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule create_table_opt {
+    <ENGINE> <EQ>? $<o>=[ <_ident> || <text> ]
+    ||
     [
-      <ENGINE> <EQ>? $<o>=[ <_ident> | <text> ]
-      ||
-      [ <MAX_ROWS> || <MIN_ROWS>       || <AUTO_INC>        || <AVG_ROW_LENGTH> ||
-        <CHECKSUM> || <TABLE_CHECKSUM> || <DELAY_KEY_WRITE> || <KEY_BLOCK_SIZE>
-      ] <EQ>? <num>
-      ||
-      $<t>=[ <PASSWORD> || <COMMENT> || <COMPRESSION> || <ENCRYPTION> ||
-                    [ <DATA> || <INDEX> ] <DIRECTORY> || <CONNECTION>
-      ] <EQ>? <text>
-      ||
-      $<t>=[ <PACK_KEYS> || <STATS_AUTO_RECALC> || <STATS_PERSISTENT> |
-             <STATS_SAMPLE_PAGES>
-      ] <EQ>? $<o>=[ <number> || <DEFAULT> ]
-      ||
-      <ROW_FORMAT> <EQ>? <row_types>
-      ||
-      <UNION> <EQ>? '(' <table_list>? ')'
-      ||
-      <DEFAULT>? <charset> <EQ>? $<o>=[ <_ident> || <text> ]
-      ||
-      <DEFAULT>? <COLLATE> <EQ>? $<o>=[ <_ident> || <text> ]
-      ||
-      <INSERT_METHOD> <EQ>? $<o>=[ <NO> || <FIRST> || <LAST> ]
-      ||
-      <TABLESPACE> <EQ>? <ts_ident=.ident>
-      ||
-      <STORAGE> $<o>=[ <DISK> || <MEMORY> ]
-    ]
+      <MAX_ROWS>        |
+      <MIN_ROWS>        |
+      <AUTO_INC>        |
+      <AVG_ROW_LENGTH>  |
+      <CHECKSUM>        |
+      <TABLE_CHECKSUM>  |
+      <DELAY_KEY_WRITE> |
+      <KEY_BLOCK_SIZE>
+    ] <EQ>? <num>
+    ||
+    $<t>=[
+      <PASSWORD>    |
+      <COMMENT>     |
+      <COMPRESSION> |
+      <ENCRYPTION>  |
+      [ <DATA> | <INDEX> ] <DIRECTORY> 
+    ] <EQ>? <text>
+    ||
+    $<t>=[
+      <PACK_KEYS>         |
+      <STATS_AUTO_RECALC> |
+      <STATS_PERSISTENT>  |
+      <STATS_SAMPLE_PAGES>
+    ] <EQ>? $<o>=[ <number> || <DEFAULT> ]
+    ||
+    <ROW_FORMAT> <EQ>? <row_types>
+    ||
+    <UNION> <EQ>? '(' <table_list>? ')'
+    ||
+    <DEFAULT>? <charset> <EQ>? $<o>=[ <text> || <_ident> ]
+    ||
+    <DEFAULT>? <COLLATE> <EQ>? $<o>=[ <text> || <_ident> ]
+    ||
+    <INSERT_METHOD> <EQ>? $<o>=[ <NO> | <FIRST> | <LAST> ]
+    ||
+    <TABLESPACE> <EQ>? <ts_ident=ident>
+    ||
+    <STORAGE> $<o>=[ <DISK> | <MEMORY> ]
   }
 
   rule check_constraint {

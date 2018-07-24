@@ -4,6 +4,9 @@ use Test;
 
 use Parser::SQL::Grammar::DDLGrammar;
 
+# WHEN REFACTORING, ALL TESTS THAT INCLUDE THE <EQ> TOKEN MUST ADD A test
+# REPLACING EQ WITH = FOR COMPLETENESS!!!
+
 my $count;
 for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   diag $_;
@@ -22,6 +25,7 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     check_constraint
     col_def
     create_field_list
+    create_partitioning
     create_select
     create_table_opt2
     create3
@@ -36,7 +40,6 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     group_clause
     having_clause
     key_def
-    literal
     now
     order_clause
     order_expr
@@ -637,6 +640,9 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     #  "Trailing '.' fails <$_>";
   }
 
+  when 'create_table_opt' {
+  }
+
   # <DEFAULT>? <charset> <EQ>? [ <_ident> || <text> ]
   when 'default_charset' {
     for ('@ident1', "'text string'") -> $term-o {
@@ -1049,6 +1055,110 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
       $t ~~ / ( 'LIMIT' )/;
       my $tm := $t.substr-rw(0, $0.to);
       $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated '$t' fails <$_>";
+    }
+  }
+
+  # <underscore_charset>? <text>
+  # ||
+  # 'N'<text>
+  # ||
+  # <num>
+  # ||
+  # [ <DATE> | <TIME>  | <TIMESTAMP> ] <text>
+  # ||
+  # [ <NULL> | <FALSE> | <TRUE> ]
+  # ||
+  # <underscore_charset>? [ <hex_num> || <bin_num> ]
+  when 'literal' {
+    # <underscore_charset>? <text>
+    {
+      my $t = "_latin1 'text string'";
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_>";
+
+      $t ~~ s/ '_latin1' //;
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> without charset";
+
+      # No negative test written - Possible to replace quotes? Revisit.
+    }
+
+    # 'N'<text>
+    {
+      my $t = 'N"text String"';
+
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_>";
+
+      # No negative test possible without replacing the quotes. Revisit.
+    }
+
+    # <num>
+    {
+      my $t = '22';
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_>";
+
+      $t.substr-rw( (^$t.chars).pick, 1) = ('a'..'z').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated '$t' fails <$_>";
+    }
+
+    # [ <DATE> | <TIME>  | <TIMESTAMP> ] <text>
+    for <DATE TIME TIMESTAMP> -> $term {
+      my $t = "$term 'date string'";
+
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_>";
+      ok $/<text> eq "'date string'", 'Match<text> matches "date string"';
+
+      $t ~~ /( $( $term ) )/;
+      my $tm := $t.substr-rw(0, $0.to);
+      $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated '$t' fails <$_>";
+    }
+
+    # [ <NULL> | <FALSE> | <TRUE> ]
+    for <NULL FALSE TRUE> -> $term {
+      my $t = $term;
+
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_>";
+
+      $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated '$t' fails <$_>";
+    }
+
+
+    # <underscore_charset>? [ <hex_num> || <bin_num> ]
+    for <0xdeadbeef 0b10010101> -> $term {
+      my $t = "_latin1 $term";
+
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_>";
+
+      $t ~~ s/ '_latin1' //;
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> without charset";
+
+      # Mutate outside hexidecimal or binary
+      $t.substr-rw( (^$t.chars).pick, 1 ) = ('g'..'z').pick;
       nok
         Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
         "Mutated '$t' fails <$_>";
