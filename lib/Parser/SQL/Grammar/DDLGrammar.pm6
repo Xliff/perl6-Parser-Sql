@@ -629,7 +629,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
       <COMMENT>     |
       <COMPRESSION> |
       <ENCRYPTION>  |
-      [ <DATA> | <INDEX> ] <DIRECTORY> 
+      [ <DATA> | <INDEX> ] <DIRECTORY>
     ] <EQ>? <text>
     ||
     $<t>=[
@@ -709,16 +709,16 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule key_def {
-    <key_or_index> <_ident>? <key_alg> '(' <key_lists> ')' <normal_key_options>
+    <key_or_index> <_ident>? <key_alg> '(' <key_lists> ')' <normal_key_options>?
     |
     <FULLTEXT> <key_or_index>? <_ident>? '(' <key_lists> ')'
     <fulltext_key_opt>?
     |
     <SPACIAL> <key_or_index>? <_ident>? '(' <key_lists> ')'
-    <spacial_key_opt>
+    <spacial_key_opt>?
     |
     <constraint>? [
-      <constraint_key_type> <_ident>? <key_alg> '(' <key_lists> ')' <normal_key_options>
+      <constraint_key_type> <_ident>? <key_alg> '(' <key_lists> ')' <normal_key_options>?
       |
       <FOREIGN> <KEY> <_ident>? '(' <key_lists> ')' <references>
       |
@@ -833,6 +833,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     <t=JSON>
   }
 
+  # XXX - Check this for completeness
   rule all_key_opt {
     <KEY_BLOCK_SIZE> <EQ>? <num> | <COMMENT> <text>
   }
@@ -904,12 +905,7 @@ rule delete_option {
   }
 
   rule logfile_group_info {
-    <lf_group_id=ident>
-    <ADD> [
-      <UNDOFILE> <file_txt=text>
-      |
-      <REDOFILE> <file_text=text>
-    ]
+    <lf_group_id=_ident> <ADD> [ <UNDOFILE> | <REDOFILE> ] <file_text=text>
     # Not using % here because of optional delimiter.
     [ <logfile_group_option> [ ','? <logfile_group_option> ]* ]?
   }
@@ -939,7 +935,7 @@ rule delete_option {
   }
 
   rule normal_key_options {
-    [ <all_key_opt> || <key_alg> ]?
+    <all_key_opt> || <key_alg>
   }
 
   rule on_update_delete {
@@ -951,11 +947,12 @@ rule delete_option {
   }
 
   rule part_definition {
-    <PARTITION> <part_name=ident>
-    [ <VALUES>
+    <PARTITION> <part_name=_ident>
+    [
+      <VALUES>
       [
         <LESS> <THAN> <part_func_max>
-        |
+        ||
         <IN> <part_values_in>
       ]
     ]?
@@ -984,7 +981,7 @@ rule delete_option {
   }
 
   rule ref_list {
-    [ '(' <_ident>+ % ',' ')' ]?
+    '(' <_ident>+ % ',' ')'
   }
 
   rule require_clause {
@@ -997,7 +994,7 @@ rule delete_option {
   }
 
   rule require_list_element {
-    [ <SUBJECT> || <ISSUER> || <CIPHER> ] <text>
+    [ <SUBJECT> | <ISSUER> | <CIPHER> ] <text>
   }
 
   rule select_init {
@@ -1013,9 +1010,9 @@ rule delete_option {
   }
 
   rule server_option {
-    [ <USER> || <HOST> || <DATABASE> || <OWNER> || <PASSWORD> || <SOCKET> ]
+    [ <USER> | <HOST> | <DATABASE> | <OWNER> | <PASSWORD> | <SOCKET> ]
     <text>
-    |
+    ||
     <PORT> <num>
   }
 
@@ -1024,7 +1021,7 @@ rule delete_option {
   }
 
   rule spacial_key_opt {
-    <all_key_opt>?
+    <all_key_opt>
   }
 
   rule sub_part {
@@ -1037,8 +1034,8 @@ rule delete_option {
   }
 
   rule tablespace_info {
-    <ts_name=ident> <ADD> <DATAFILE> <df_name=text>
-    [ <USE> <LOGFILE> <GROUP> <grp_name=ident> ]?
+    <ts_name=_ident> <ADD> <DATAFILE> <df_name=text>
+    [ <USE> <LOGFILE> <GROUP> <grp_name=_ident> ]?
     <tablespace_option_list>
   }
 
@@ -1067,7 +1064,7 @@ rule delete_option {
   }
 
   rule ts_engine {
-    <STORAGE>? <ENGINE> <EQ>? [ <engine=ident> | <engine=text> ]
+    <STORAGE>? <ENGINE> <EQ>? $<engine>=[ <_ident> || <text> ]
   }
 
   rule ts_file_block_size {
@@ -1080,17 +1077,15 @@ rule delete_option {
 
   rule tablespace_option_list {
     :my rule _ts_option {
-      [
-        <ts_initial_size>     |
-        <ts_autoextend_size>  |
-        <ts_max_size>         |
-        <ts_extent_size>      |
-        <ts_nodegroup>        |
-        <ts_engine>           |
-        <ts_wait>             |
-        <ts_comment>          |
-        <ts_file_block_size>
-      ]
+      <ts_initial_size>     |
+      <ts_autoextend_size>  |
+      <ts_max_size>         |
+      <ts_extent_size>      |
+      <ts_nodegroup>        |
+      <ts_engine>           |
+      <ts_wait>             |
+      <ts_comment>          |
+      <ts_file_block_size>
     };
     <_ts_option>* % ','
   }
@@ -1120,13 +1115,13 @@ rule delete_option {
         ]
         |
         [
-          <UNIQUE>? <INDEX> <idx_ident=ident> <key_alg> 'ON' <table_ident> '(' <key_lists> ')' <normal_key_options>
+          <UNIQUE>? <INDEX> <idx_ident=ident> <key_alg> 'ON' <table_ident> '(' <key_lists> ')' <normal_key_options>?
           |
           <FULLTEXT> <INDEX> <idx_ident=ident> 'ON' <table_ident> '('
            <key_lists> ')' <fulltext_key_opt>?
           |
           <SPACIAL> <INDEX> <idx_ident=ident> 'ON'  <table_ident> '('
-           <key_lists> ')' <spacial_key_opt>
+           <key_lists> ')' <spacial_key_opt>?
         ] <index_lock_algo>?
         |
         <DATABASE> <if_not_exists>? <_ident> <create_database_opts>?

@@ -44,23 +44,36 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     order_clause
     order_expr
     order_or_limit
+    part_definition
+    part_func_max
     part_type_def
+    part_value_expr_item
+    part_value_item
+    part_values_in
     predicate
     query_spec
+    references
+    select_init
     select_item
     select_item_list
     select_option
+    select_paren
     select_paren_derived
     select_part2
     select_part2_derived
     simple_expr
     sum_expr
+    sub_part
+    subselect
     table_expression
     table_factor
     table_ref
     type
     udf_expr
+    union_list
     variable
+    where_clause
+    where_expr
   >.any {
     pass "<$_> evaluated in a separate test.";
   }
@@ -643,6 +656,9 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   when 'create_table_opt' {
   }
 
+  when 'create_table_opts' {
+  }
+
   # <DEFAULT>? <charset> <EQ>? [ <_ident> || <text> ]
   when 'default_charset' {
     for ('@ident1', "'text string'") -> $term-o {
@@ -1203,6 +1219,46 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     }
   }
 
+  # <lf_group_id=ident>
+  # <ADD> [
+  #   <UNDOFILE> <file_txt=text>
+  #   |
+  #   <REDOFILE> <file_text=text>
+  # ]
+  # [ <logfile_group_option> [ ','? <logfile_group_option> ]* ]?
+  when 'logfile_group_info' {
+    for <@logfile @logf1le> -> $term-o {
+      for <UNDOFILE REDOFILE> -> $term-i {
+        my $t = (my $t0 = "$term-o ADD $term-i 'file text'");
+
+        ok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+          "'$t' passes <$_>";
+
+        $t ~~ /( $term-i )/;
+        my $tm := $t.substr-rw($0.from, $0.to - $0.from);
+        $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+        nok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+          "Mutated '$t' fails <$_>";
+
+        ($t = $t0) ~~ /( 'ADD' )/;
+        $tm := $t.substr-rw($0.from, $0.to - $0.from);
+        $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+        nok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+          "Mutated '$t' fails <$_>";
+
+        $t = "$t0 INITIAL_SIZE = 23, MAX_SIZE EQ 24 UNDO_BUFFER_SIZE 25";
+        ok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+          "'$t' passes <$_>";
+        ok
+          $/<logfile_group_option>.elems == 3,
+          'Match<logfile_group_option> has 3 elements';
+      }
+    }
+  }
 
   # <INITIAL_SIZE> <EQ>? [ <num> || <ident_sys> ]
   # |
@@ -1412,6 +1468,13 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     }
   }
 
+
+  when 'normal_key_options' {
+  }
+
+  when 'on_update_delete' {
+  }
+
   when 'part_field_list' {
     my $t = "'text string', BEGIN, \@ident";
     ok
@@ -1463,6 +1526,15 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
       "'$t' fails <$_> without parens";
   }
 
+  when 'ref_list' {
+  }
+
+  when 'require_clause' {
+  }
+
+  when 'require_list_element' {
+  }
+
   when 'select_lock_type' {
     for ('FOR UPDATE', 'LOCK IN SHARE MODE') -> $term {
       my $t = $term;
@@ -1476,6 +1548,12 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
         Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
         "Mutated '$t' fails <$_>";
     }
+  }
+
+  when 'server_option' {
+  }
+
+  when 'server_opts' {
   }
 
   when 'simple_ident_nospvar' {
@@ -1548,6 +1626,39 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     nok
       Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
       "'$t' fails <$_>";
+  }
+
+  when 'tablespace_info' {
+  }
+
+  when 'tablespace_option_list' {
+  }
+
+  when 'ts_autoextend_size' {
+  }
+
+  when 'ts_comment' {
+  }
+
+  when 'ts_engine' {
+  }
+
+  when 'ts_extent_size' {
+  }
+
+  when 'ts_file_block_size' {
+  }
+
+  when 'ts_initial_size' {
+  }
+
+  when 'ts_max_size' {
+  }
+
+  when 'ts_nodegroup' {
+  }
+
+  when 'ts_wait' {
   }
 
   when 'row_types' {
