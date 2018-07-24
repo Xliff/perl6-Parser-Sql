@@ -1067,7 +1067,7 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
 
       $t ~~ / ('LINES' \s+ $term \s+ 'BY') /;
       my $tm := $t.substr-rw(0, $0.to);
-      $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('a'..'z').pick;
+      $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
       nok
         Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
         "Mutated '$t' fails <$_>";
@@ -1107,12 +1107,134 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   # |
   # <NODEGROUP> <EQ>? <num>
   # |
-  # <STORAGE>? <ENGINE> <EQ>? [ <storage_id=ident> || <storage_txt=text> ]
+  # <STORAGE>? <ENGINE> <EQ>? [ <storage_txt=text> || <storage_id=ident> ]  ]
   # |
   # [ <WAIT> || <NO_WAIT> ]
   # |
   # <COMMENT> <EQ>? <comment_txt=text>
   when 'logfile_group_option' {
+    for <
+      INITIAL_SIZE
+      MAX_SIZE
+      EXTENT_SIZE
+      UNDO_BUFFER_SIZE
+      REDO_BUFFER_SIZE
+      NODEGROUP
+      ENGINE
+      WAIT
+      NO_WAIT
+      COMMENT
+    > -> $term-o {
+      my $rule = $_;
+
+      given $term-o {
+        when 'ENGINE' {
+          my $t = (my $t0 = "STORAGE $term-o EQ \@ident, 'text'");
+
+          ok
+            Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($rule) ),
+            "'$t' passes <$_>";
+          ok $/<STORAGE>, 'Match<STORAGE> is set';
+          ok $/<EQ>, 'Match<EQ> is set';
+
+          $t ~~ s/STORAGE//;
+          ok
+            Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($rule) ),
+            "'$t' passes <$_> without STORAGE";
+
+          $t ~~ s/EQ//;
+          ok
+            Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($rule) ),
+            "'$t' passes <$_> without STORAGE and EQ";
+
+          ($t = $t0) ~~ s/EQ//;
+          ok
+            Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($rule) ),
+            "'$t' passes <$_> with STORAGE and without EQ";
+        }
+
+        when <WAIT NO_WAIT>.any {
+          my $t = $term-o;
+
+          ok
+            Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($rule) ),
+            "'$t' passes <$_>";
+
+          $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
+          nok
+            Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($rule) ),
+            "Mutated '$t' fails <$_>";
+        }
+
+        when 'NODEGROUP' {
+          my $t = "$term-o EQ 20";
+
+          # Refactor below for reuse for the remaining rule tests in this block.
+          ok
+            Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($rule) ),
+            "'$t' passes <$_>";
+
+          $t ~~ s/EQ//;
+          ok
+            Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($rule) ),
+            "'$t' passes <$_> without EQ";
+
+          $t ~~ / ( $term-o ) /;
+          my $tm := $t.substr-rw(0, $0.to);
+          $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+          nok
+            Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($rule) ),
+            "Mutated '$t' fails <$_>";
+        }
+
+        when 'COMMENT' {
+          my $t = "$term-o EQ 'text string'";
+
+          # See comment for NODEGROUP
+          ok
+            Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($rule) ),
+            "'$t' passes <$_>";
+
+          $t ~~ s/EQ//;
+          ok
+            Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($rule) ),
+            "'$t' passes <$_> without EQ";
+
+          $t ~~ / ( $term-o ) /;
+          my $tm := $t.substr-rw(0, $0.to);
+          $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+          nok
+            Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($rule) ),
+            "Mutated '$t' fails <$_>";
+        }
+
+        default {
+          my @p = <21 @ident>;
+
+          for @p -> $term-i {
+            my $t = "$term-o EQ $term-i";
+
+            # See comment for NODEGROUP
+            ok
+              Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($rule) ),
+              "'$t' passes <$_>";
+
+            $t ~~ s/EQ//;
+            ok
+              Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($rule) ),
+              "'$t' passes <$_> without EQ";
+
+            $t ~~ / ( $term-o ) /;
+            my $tm := $t.substr-rw(0, $0.to);
+            $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+            nok
+              Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($rule) ),
+              "Mutated '$t' fails <$_>";
+          }
+        }
+      }
+    }
+    exit;
   }
 
   # <ACCOUNT> [ <UNLOCK> || <LOCK> ]

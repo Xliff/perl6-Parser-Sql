@@ -915,7 +915,7 @@ rule delete_option {
     |
     <NODEGROUP> <EQ>? <num>
     |
-    <STORAGE>? <ENGINE> <EQ>? [ <storage_id=ident> || <storage_txt=text> ]
+    <STORAGE>? <ENGINE> <EQ>? [ <storage_txt=text> || <storage_id=_ident> ]
     |
     [ <WAIT> || <NO_WAIT> ]
     |
