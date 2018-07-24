@@ -791,7 +791,7 @@ our token ident_sys is export {
 our token _ident is export   { <ident_sys> }
 
 our regex table_ident is export {
-  '.'? <_ident> ** 1..2 % '.'
+  '.'? <_ident> ** 1..2 % '.' <!before '.'>
 }
 
 # Needs positive look beind.

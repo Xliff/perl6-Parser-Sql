@@ -44,7 +44,6 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     part_type_def
     predicate
     query_spec
-    row_types
     select_item
     select_item_list
     select_option
@@ -1234,7 +1233,6 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
         }
       }
     }
-    exit;
   }
 
   # <ACCOUNT> [ <UNLOCK> || <LOCK> ]
@@ -1419,6 +1417,13 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   }
 
   when 'table_list' {
+    my $t = 'ns1.table1, ns2.table2, .table3';
+
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_>";
+
+    ok $/<table_ident>.elems == 3, "There are 3 tables referenced";
   }
 
   when 'table_wild' {
@@ -1436,14 +1441,45 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   }
 
   when 'row_types' {
+    for <DEFAULT FIXED DYNAMIC COMPRESSED REDUNDANT COMPACT> -> $term {
+      my $t = $term;
+
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+        "'$t' passes <$_>";
+
+      $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+        "'$t' fails <$_>";
+    }
   }
 
   when 'use_partition' {
+    my $t = 'PARTITION (@identifier, "text string", field)';
+
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_>";
+
+    ok $/<using_list><_ident> == 3, 'Match<using_list><ident> has 3 items';
+
+    $t ~~ / ('PARTITION') /;
+    my $tm := $t.substr-rw(0, $0.to);
+    $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+    nok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' fails <$_>";
   }
 
   when 'using_list' {
-  }
+    my $t = '@identifier, "text string", field';
 
-  # Connect Opts in DDLGrammar
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_>";
+
+    ok $/<_ident> == 3, 'Match<ident> has 3 items';
+  }
 
 }
