@@ -986,7 +986,7 @@ rule delete_option {
 
   rule require_clause {
     <REQUIRE> [
-      # Not using # because of optional delimiter
+      # Not using % because of optional delimiter
       <require_list_element> [ <AND>? <require_list_element> ]*
       |
       [ <SSL> || <X509> || <NONE> ]
@@ -1115,12 +1115,12 @@ rule delete_option {
         ]
         |
         [
-          <UNIQUE>? <INDEX> <idx_ident=ident> <key_alg> 'ON' <table_ident> '(' <key_lists> ')' <normal_key_options>?
+          <UNIQUE>? <INDEX> <idx_ident=_ident> <key_alg> 'ON' <table_ident> '(' <key_lists> ')' <normal_key_options>?
           |
-          <FULLTEXT> <INDEX> <idx_ident=ident> 'ON' <table_ident> '('
+          <FULLTEXT> <INDEX> <idx_ident=_ident> 'ON' <table_ident> '('
            <key_lists> ')' <fulltext_key_opt>?
           |
-          <SPACIAL> <INDEX> <idx_ident=ident> 'ON'  <table_ident> '('
+          <SPACIAL> <INDEX> <idx_ident=_ident> 'ON'  <table_ident> '('
            <key_lists> ')' <spacial_key_opt>?
         ] <index_lock_algo>?
         |
@@ -1137,9 +1137,9 @@ rule delete_option {
         <TABLESPACE> <tablespace_info>
         |
         <SERVER>
-          [ <server_ident=ident> || <server_text=text> ]
+          [ <server_ident=_ident> || <server_text=text> ]
           <FOREIGN> <DATA> <WRAPPER>
-          [ <fdw_ident=ident> || <fdw_text=text> ]
+          [ <fdw_ident=_ident> || <fdw_text=text> ]
           <OPTIONS>
           '(' <server_opts> ')'
     ]
