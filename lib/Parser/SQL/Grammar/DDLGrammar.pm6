@@ -491,7 +491,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule _when_clause {
-    <WHEN> <when_expr=.expr> <THEN> <then_expr=.expr>
+    <WHEN> <when_expr=expr> <THEN> <then_expr=expr>
   }
 
   rule simple_expr {
@@ -1064,7 +1064,7 @@ rule delete_option {
   }
 
   rule ts_engine {
-    <STORAGE>? <ENGINE> <EQ>? $<engine>=[ <_ident> || <text> ]
+    <STORAGE>? <ENGINE> <EQ>? $<engine>=[ <text> || <_ident> ]
   }
 
   rule ts_file_block_size {

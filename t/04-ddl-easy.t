@@ -1469,6 +1469,7 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   }
 
 
+  # <all_key_opt> || <key_alg>
   when 'normal_key_options' {
   }
 
@@ -1526,12 +1527,20 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
       "'$t' fails <$_> without parens";
   }
 
+  # '(' <_ident>+ % ',' ')'
   when 'ref_list' {
+
   }
 
+  # <REQUIRE> [
+  #   <require_list_element> [ <AND>? <require_list_element> ]*
+  #   |
+  #   [ <SSL> || <X509> || <NONE> ]
+  # ]
   when 'require_clause' {
   }
 
+  # [ <SUBJECT> | <ISSUER> | <CIPHER> ] <text>
   when 'require_list_element' {
   }
 
@@ -1628,37 +1637,243 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
       "'$t' fails <$_>";
   }
 
+  # <ts_name=_ident> <ADD> <DATAFILE> <df_name=text>
+  # [ <USE> <LOGFILE> <GROUP> <grp_name=_ident> ]?
+  # <tablespace_option_list>
   when 'tablespace_info' {
   }
 
   when 'tablespace_option_list' {
   }
 
+  # <AUTOEXTEND_SIZE> <EQ>? <number>
   when 'ts_autoextend_size' {
+    my $t = 'AUTOEXTEND_SIZE EQ 26';
+
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_>";
+
+    $t ~~ s/EQ/=/;
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_> without EQ";
+
+    $t ~~ s/\=//;
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_> without = or EQ";
+
+    $t ~~ / ('AUTOEXTEND_SIZE') /;
+    my $tm := $t.substr-rw(0, $0.to);
+    $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+    nok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+      "Mutated '$t' fails <$_>";
   }
 
+  # <COMMENT> <EQ>? <text_string>
   when 'ts_comment' {
+    my $t = 'COMMENT EQ "text string"';
+
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_>";
+
+    $t ~~ s/EQ/=/;
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_> without EQ";
+
+    $t ~~ s/\=//;
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_> without EQ";
+
+    $t ~~ / ('COMMENT') /;
+    my $tm := $t.substr-rw(0, $0.to);
+    $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+    nok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+      "Mutated '$t' fails <$_>";
   }
 
+  # <STORAGE>? <ENGINE> <EQ>? $<engine>=[ <text> || <_ident> ]
   when 'ts_engine' {
+    for ('"this is text"', '@identifier') -> $term {
+      my $t = "STORAGE ENGINE EQ $term";
+
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+        "'$t' passes <$_>";
+
+      ok $/<engine> eq $term, "Match<engine> matches '$term'";
+
+      $t ~~ s/EQ/=/;
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+        "'$t' passes <$_> with '=' instead of 'EQ'";
+
+      $t ~~ s/\=//;
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+        "'$t' passes <$_> without '=' or 'EQ'";
+
+      $t ~~ s/'STORAGE '//;
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+        "'$t' passes <$_> without STORAGE";
+
+      $t ~~ / ('ENGINE') /;
+      my $tm := $t.substr-rw(0, $0.to);
+      $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated '$t' fails <$_>";
+    }
   }
 
+  # <EXTENT_SIZE> <EQ>? <number>
   when 'ts_extent_size' {
+    my $t = "EXTENT_SIZE EQ 27";
+
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_>";
+
+    $t ~~ s/EQ/=/;
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_> with '=' instead of 'EQ'";
+
+    $t ~~ s/\=//;
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_> without '=' or 'EQ'";
+
+    $t ~~ / ('EXTENT_SIZE') /;
+    my $tm := $t.substr-rw(0, $0.to);
+    $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+    nok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+      "Mutated '$t' fails <$_>";
   }
 
+  # <FILE_BLOCK_SIZE> <EQ>? <number>
   when 'ts_file_block_size' {
+    my $t = 'FILE_BLOCK_SIZE EQ 28';
+
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_>";
+
+    $t ~~ s/EQ/=/;
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_> with '=' instead of 'EQ'";
+
+    $t ~~ s/\=//;
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_> without '=' or 'EQ'";
+
+    $t ~~ / ('FILE_BLOCK_SIZE') /;
+    my $tm := $t.substr-rw(0, $0.to);
+    $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+    nok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+      "Mutated '$t' fails <$_>";
   }
 
+  # <INITIAL_SIZE> <EQ>? <number>
   when 'ts_initial_size' {
+    my $t = 'INITIAL_SIZE EQ 29';
+
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_>";
+
+    $t ~~ s/EQ/=/;
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_> with '=' instead of 'EQ'";
+
+    $t ~~ s/\=//;
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_> without '=' or 'EQ'";
+
+    $t ~~ / ('INITIAL_SIZE') /;
+    my $tm := $t.substr-rw(0, $0.to);
+    $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+    nok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+      "Mutated '$t' fails <$_>";
   }
 
   when 'ts_max_size' {
+    my $t = 'MAX_SIZE EQ 30';
+
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_>";
+
+    $t ~~ s/EQ/=/;
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_> with '=' instead of 'EQ'";
+
+    $t ~~ s/\=//;
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_> without '=' or 'EQ'";
+
+    $t ~~ / ('MAX_SIZE') /;
+    my $tm := $t.substr-rw(0, $0.to);
+    $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+    nok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+      "Mutated '$t' fails <$_>";
   }
 
   when 'ts_nodegroup' {
+    my $t = 'NODEGROUP EQ 30';
+
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_>";
+
+    $t ~~ s/EQ/=/;
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_> with '=' instead of 'EQ'";
+
+    $t ~~ s/\=//;
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_> without '=' or 'EQ'";
+
+    $t ~~ / ('NODEGROUP') /;
+    my $tm := $t.substr-rw(0, $0.to);
+    $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+    nok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+      "Mutated '$t' fails <$_>";
   }
 
   when 'ts_wait' {
+    for <WAIT NO_WAIT> -> $term {
+      my $t =  $term;
+
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+        "'$t' passes <$_>";
+
+      $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated '$t' fails <$_>";
+    }
   }
 
   when 'row_types' {
