@@ -78,290 +78,6 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     pass "<$_> evaluated in a separate test.";
   }
 
-  when '_cast_type' {
-    # [ <BINARY> | <NCHAR> ] [ '(' <number> ')' ]?
-    for <BINARY(2) NCHAR(2)> -> $t0 {
-      my $t = $t0;
-
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_> with number and no space";
-
-      $t ~~ s/('(2)')/ $0/;
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_> with number and a space";
-
-      $t ~~ s/'(2)'//;
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_> without a number";
-
-      $t.substr-rw( (^$t.chars).pick, 1 ) = ('a'..'z').pick;
-      nok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "Mutated string '$t' fails <$_>";
-    }
-
-    # <CHAR> [ '(' <number> ')' ]? <BINARY>?
-    {
-      my $t0 = "CHAR (3) BINARY";
-      my $t = $t0;
-
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_> with full syntax";
-
-      $t ~~ s/ ' ' <?before '('>//;
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_> without a space before the number";
-
-      $t ~~ s/'(3)'//;
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_> without a number";
-
-      ($t = $t0) ~~ s/' BINARY'//;
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_> without 'BINARY'";
-
-      $t = 'CHAR';
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_> without optional tokens";
-
-      # Only mutate the first 4 characters.
-      ($t = $t0).substr-rw( (^4).pick, 1 ) = ('a'..'z').pick;
-      nok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "Mutated string '$t' fails <$_>";
-    }
-
-    # <SIGNED> | <UNSIGNED> ] <INT>?
-    for <SIGNED UNSIGNED> -> $term {
-      # PAUSE
-      my $t0 = "$term INT";
-      my $t  = $t0;
-
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_> with full syntax";
-
-      $t ~~ s/' INT'//;
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_> without 'INT' token";
-
-      # Mutate only the $term portion of the string.
-      ($t = $t0).substr-rw( (^$term.chars).pick, 1 ) = ('a'..'z').pick;
-      nok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "Mutated string '$t' fails <$_>";
-    }
-
-    # <DATE>
-    # <JSON>
-    for <DATE JSON> -> $t0 {
-      my $t = $t0;
-
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "DATE passes <$_>";
-
-      $t.substr-rw( (^$t.chars).pick, 1) = ('a'..'z').pick;
-      nok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "Mutated string '$t' fails <$_>";
-    }
-
-    # [ <TIME> | <DATETIME> ] [ '(' <number> ')' ]?
-    for <TIME DATETIME> -> $term {
-      my $t0 = "$term (4)";
-      my $t = $t0;
-
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_> with full syntax";
-
-      $t ~~ s/ ' ' <?before '('>//;
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_> without a space before the number";
-
-      $t ~~ s/ '(4)'//;
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_> without the number specification";
-
-      # Mutate only the $term part of the string.
-      ($t = $t0).substr-rw( (^$term.chars).pick, 1) = ('a'..'z').pick;
-      nok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "Mutated '$t' fails <$_>";
-    }
-
-    # <DECIMAL> [
-    #   '(' [
-    #     <m=number> [ ',' <d=number> ]?
-    #   ] ')'
-    # ]?
-    $count = 0;
-    for ('DECIMAL (5)', 'DECIMAL (5, 6)') -> $term {
-      my $t0 = $term;
-      my $t = $t0;
-
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_> with full syntax";
-
-      $t ~~ s/ ' ' <?before '('>//;
-      ok
-        ( my $s = Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ) ),
-        "'$t' passes <$_> without space before number specification";
-
-      if (++$count == 1) {
-        ok
-          $s.defined && $s<m>.Str eq '5',
-          "'5' detected in numerical specication by subrule <m>";
-      } else {
-        ok
-          $s<m>.Str eq '5' && $s<d>.Str eq '6',
-          "'5' and '6' detected in numerical specication by subrules <m> and <d>";
-      }
-
-      $t ~~ s/ '(5' ',6'? ')' //;
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_> without the number specification";
-
-      # Test only the DECIMAL portion of the string.
-      ($t = $t0).substr-rw( (^'DECIMAL'.chars).pick, 1 ) = ('a'..'z').pick;
-      nok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "Mutated '$t' fails <$_>";
-    }
-  }
-
-  when '__ws_list_item' {
-    # <number> <order_dir>? <REVERSE>?
-    for <ASC DESC> -> $term {
-      my $t = "7 $term REVERSE";
-
-      # Test REVERSE
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_> with REVERSE";
-
-      # Remove REVERSE and test match
-      $t ~~ s/ 'REVERSE' //;
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_> without REVERSE";
-
-      # Remove $term and test.
-      $t ~~ s/ $term //;
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_> without $term";
-
-      # Mutate number and test failure.
-      $t.substr-rw(0, 1) = ('a'..'z').pick;
-      nok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "Mutated '$t' fails <$_>";
-    }
-  }
-
-
-  when '__ws_nweights' {
-    my $t = '(8)';
-    ok
-      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-      "'$t' passes <$_>";
-
-    $t.substr-rw( (^$t.chars).pick, 1 ) = ('a'..'z').pick;
-    nok
-      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-      "Mutated '$t' fails <$_>";
-  }
-
-  # <LEVEL> $<ws_list> = [
-  #   <__ws_list_item>+ %  ','
-  #   |
-  #   <number> '-' <number>
-  # ]
-  when '__ws_levels' {
-    # Test multiple list items
-    $count = 1;
-    for (
-      'LEVEL 9 ASC, 10 ASC REVERSE',
-      'LEVEL 9-10 ASC REVERSE',
-    ) -> $term {
-      my $t = (my $t0 = $term);
-
-      # test full $term
-      ok
-        ( my $s = Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ) ),
-        "'$t' passes <$_> with full variant syntax";
-
-      ok
-        $s<ws_list>.trim eq ($count == 1) ??
-          '9 ASC, 10 ASC REVERSE' !! '9-10 ASC REVERSE',
-        "Match<ws_list> contains proper items: '$s<ws_list>'";
-
-      # test multiple items with no reverse ($count == 1)
-      $t ~~ s/ ' ASC REVERSE' / ASC/;
-      ok
-        ($s = Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ) ),
-        "'$t' passes <$_> without REVERSE";
-
-      ok
-        $s<ws_list>.trim eq ($count == 1) ??
-          '9 ASC, 10 ASC' !! '9-10 ASC',
-        "Match<ws_list> contains proper items: '$s<ws_list>'";
-
-      if $count++ == 2 {
-        # ws_list_item cannot be tested with a mutation becuase it will
-        # still match if subsequent list items do not match.
-        #
-        # Could test the first match, or mutate LEVEL. Should put that
-        # to a vote if anyone else gets involved.
-
-        # Test mutated range
-        $t ~~ / ('LEVEL 9-10') /;
-        my $tm := $t.substr-rw($0.from, $0.to - $0.from);
-        $tm.substr-rw( (^$tm.chars).pick, 1) = ('a'..'z').pick;
-        nok
-          Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-          "Mutated '$t' fails <$_>";
-      }
-    }
-  }
-
-  when '_limits' {
-    for (
-      'MAX_QUERIES_PER_HOUR',
-      'MAX_UPDATES_PER_HOUR',
-      'MAX_CONNECTIONS_PER_HOUR',
-      'MAX_USER_CONNECTIONS'
-    ) -> $term {
-      my $t = "$term 17";
-
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_>";
-
-      $t ~~ /( $( $term ) )/;
-      my $tm := $t.substr-rw(0, $0.to);
-      $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
-      nok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "Mutated '$t' fails <$_>";
-    }
-  }
-
   # <KEY_BLOCK_SIZE> <EQ>? <num> | <COMMENT> <text>
   when 'all_key_opt' {
     my $t = 'KEY_BLOCK_SIZE EQ 11';
@@ -370,10 +86,15 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
       Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
       "'$t' passes <$_> with full syntax";
 
-    $t ~~ s / 'EQ ' //;
+    $t ~~ s /EQ/=/;
     ok
       Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
       "'$t' passes <$_> without 'EQ'";
+
+    $t ~~ s /\=//;
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+      "'$t' passes <$_> without '=' or 'EQ'";
 
     $t.substr-rw( (^$t.chars).pick, 1 ) = ('a'..'z').pick;
     nok
@@ -1471,6 +1192,55 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
 
   # <all_key_opt> || <key_alg>
   when 'normal_key_options' {
+    # From <all_key_opt>
+    my $t = 'KEY_BLOCK_SIZE EQ 29';
+
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+      "'$t' passes <$_> with full syntax";
+
+    $t ~~ s /EQ/=/;
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+      "'$t' passes <$_> without 'EQ'";
+
+    $t ~~ s /\=//;
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+      "'$t' passes <$_> without '=' or 'EQ'";
+
+    $t.substr-rw( (^$t.chars).pick, 1 ) = ('a'..'z').pick;
+    nok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+      "Mutated '$t' fails <$_>";
+
+    $t = "COMMENT 'text_comment'";
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+      "'$t' passes <$_> without 'EQ'";
+
+    $t ~~ / ( 'COMMENT' ) /;
+    my $tm := $t.substr-rw(0, $0.to);
+    $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+    nok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+      "Mutated '$t' fails <$_>";
+
+    # From <key_alg>
+    for <USING TYPE> -> $term-o {
+      for <BTREE RTREE HASH> -> $term-i {
+        my $t = "$term-o $term-i";
+
+        ok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+          "'$t' passes <$_>";
+
+        $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
+        nok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+          "Mutated '$t' fails <$_>";
+      }
+    }
   }
 
   when 'on_update_delete' {
@@ -1643,7 +1413,48 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   when 'tablespace_info' {
   }
 
+  # local <_ts_option> = [
+  #   <ts_initial_size>     |
+  #   <ts_autoextend_size>  |
+  #   <ts_max_size>         |
+  #   <ts_extent_size>      |
+  #   <ts_nodegroup>        |
+  #   <ts_engine>           |
+  #   <ts_wait>             |
+  #   <ts_comment>          |
+  #   <ts_file_block_size>
+  # ]
+  # <_ts_option>* % ','
   when 'tablespace_option_list' {
+    my $t = qq:to/TEST/;
+AUTOEXTEND_SIZE EQ 27,
+COMMENT EQ "text string",
+EXTENT_SIZE EQ 28,
+FILE_BLOCK_SIZE EQ 29
+TEST
+
+    # First test of multiline string, but this should work due the default
+    # behavior of any rule.
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+      "Multi-line tablespace option string passes <$_>";
+
+    ok
+      $/<_ts_option>.elems == 4,
+      'Match<_ts_option> has 4 elements';
+    ok
+      $/<_ts_option>[0] eq 'AUTOEXTEND_SIZE EQ 27',
+      "First Match<...><_ts_option> matches 'AUTOEXTEND_SIZE EQ 27'";
+    ok
+      $/<_ts_option>[1] eq 'COMMENT EQ "text string"',
+      'Second Match<...><_ts_option> matches "COMMENT EQ \'text string\'"';
+    ok
+      $/<_ts_option>[2] eq 'EXTENT_SIZE EQ 28',
+      'Third Match<...><_ts_option> matches \'EXTENT_SIZE EQ 28\'';
+    # Eliminate embeddded newline.
+    ok
+      $/<_ts_option>[3].chomp eq 'FILE_BLOCK_SIZE EQ 29',
+      'Fourth Match<...><_ts_option> matches \'FILE_BLOCK_SIZE EQ 29\'';
   }
 
   # <AUTOEXTEND_SIZE> <EQ>? <number>
@@ -1898,7 +1709,18 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
       Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
       "'$t' passes <$_>";
 
-    ok $/<using_list><_ident> == 3, 'Match<using_list><ident> has 3 items';
+    ok
+      $/<using_list><_ident> == 3,
+      'Match<using_list><ident> has 3 items';
+    ok
+      $/<using_list><_ident>[0] eq '@identifier',
+      "First item in Match...<_ident> matches '\@identifier'";
+    ok
+      $/<using_list><_ident>[1] eq '"text string"',
+      "Second item in Match...<_ident> matches '\"text string\"'";
+    ok
+      $/<using_list><_ident>[2] eq 'field',
+      "Third item in Match...<_ident> matches 'field'";
 
     $t ~~ / ('PARTITION') /;
     my $tm := $t.substr-rw(0, $0.to);
@@ -1908,6 +1730,7 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
       "'$t' fails <$_>";
   }
 
+  # <_ident>+ % ','
   when 'using_list' {
     my $t = '@identifier, "text string", field';
 
@@ -1916,6 +1739,299 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
       "'$t' passes <$_>";
 
     ok $/<_ident> == 3, 'Match<ident> has 3 items';
+    ok
+      $/<_ident>[0] eq '@identifier',
+      "First item in Match...<_ident> matches '\@identifier'";
+    ok
+      $/<_ident>[1] eq '"text string"',
+      "Second item in Match...<_ident> matches '\"text string\"'";
+    ok
+      $/<_ident>[2] eq 'field',
+      "Third item in Match...<_ident> matches 'field'";
+  }
+
+  when '__ws_list_item' {
+    # <number> <order_dir>? <REVERSE>?
+    for <ASC DESC> -> $term {
+      my $t = "7 $term REVERSE";
+
+      # Test REVERSE
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> with REVERSE";
+
+      # Remove REVERSE and test match
+      $t ~~ s/ 'REVERSE' //;
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> without REVERSE";
+
+      # Remove $term and test.
+      $t ~~ s/ $term //;
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> without $term";
+
+      # Mutate number and test failure.
+      $t.substr-rw(0, 1) = ('a'..'z').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated '$t' fails <$_>";
+    }
+  }
+
+
+  when '__ws_nweights' {
+    my $t = '(8)';
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+      "'$t' passes <$_>";
+
+    $t.substr-rw( (^$t.chars).pick, 1 ) = ('a'..'z').pick;
+    nok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+      "Mutated '$t' fails <$_>";
+  }
+
+  # <LEVEL> $<ws_list> = [
+  #   <__ws_list_item>+ %  ','
+  #   |
+  #   <number> '-' <number>
+  # ]
+  when '__ws_levels' {
+    # Test multiple list items
+    $count = 1;
+    for (
+      'LEVEL 9 ASC, 10 ASC REVERSE',
+      'LEVEL 9-10 ASC REVERSE',
+    ) -> $term {
+      my $t = (my $t0 = $term);
+
+      # test full $term
+      ok
+        ( my $s = Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ) ),
+        "'$t' passes <$_> with full variant syntax";
+
+      ok
+        $s<ws_list>.trim eq ($count == 1) ??
+          '9 ASC, 10 ASC REVERSE' !! '9-10 ASC REVERSE',
+        "Match<ws_list> contains proper items: '$s<ws_list>'";
+
+      # test multiple items with no reverse ($count == 1)
+      $t ~~ s/ ' ASC REVERSE' / ASC/;
+      ok
+        ($s = Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ) ),
+        "'$t' passes <$_> without REVERSE";
+
+      ok
+        $s<ws_list>.trim eq ($count == 1) ??
+          '9 ASC, 10 ASC' !! '9-10 ASC',
+        "Match<ws_list> contains proper items: '$s<ws_list>'";
+
+      if $count++ == 2 {
+        # ws_list_item cannot be tested with a mutation becuase it will
+        # still match if subsequent list items do not match.
+        #
+        # Could test the first match, or mutate LEVEL. Should put that
+        # to a vote if anyone else gets involved.
+
+        # Test mutated range
+        $t ~~ / ('LEVEL 9-10') /;
+        my $tm := $t.substr-rw($0.from, $0.to - $0.from);
+        $tm.substr-rw( (^$tm.chars).pick, 1) = ('a'..'z').pick;
+        nok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+          "Mutated '$t' fails <$_>";
+      }
+    }
+  }
+
+  when '_cast_type' {
+    # [ <BINARY> | <NCHAR> ] [ '(' <number> ')' ]?
+    for <BINARY(2) NCHAR(2)> -> $t0 {
+      my $t = $t0;
+
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> with number and no space";
+
+      $t ~~ s/('(2)')/ $0/;
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> with number and a space";
+
+      $t ~~ s/'(2)'//;
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> without a number";
+
+      $t.substr-rw( (^$t.chars).pick, 1 ) = ('a'..'z').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated string '$t' fails <$_>";
+    }
+
+    # <CHAR> [ '(' <number> ')' ]? <BINARY>?
+    {
+      my $t0 = "CHAR (3) BINARY";
+      my $t = $t0;
+
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> with full syntax";
+
+      $t ~~ s/ ' ' <?before '('>//;
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> without a space before the number";
+
+      $t ~~ s/'(3)'//;
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> without a number";
+
+      ($t = $t0) ~~ s/' BINARY'//;
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> without 'BINARY'";
+
+      $t = 'CHAR';
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> without optional tokens";
+
+      # Only mutate the first 4 characters.
+      ($t = $t0).substr-rw( (^4).pick, 1 ) = ('a'..'z').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated string '$t' fails <$_>";
+    }
+
+    # <SIGNED> | <UNSIGNED> ] <INT>?
+    for <SIGNED UNSIGNED> -> $term {
+      # PAUSE
+      my $t0 = "$term INT";
+      my $t  = $t0;
+
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> with full syntax";
+
+      $t ~~ s/' INT'//;
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> without 'INT' token";
+
+      # Mutate only the $term portion of the string.
+      ($t = $t0).substr-rw( (^$term.chars).pick, 1 ) = ('a'..'z').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated string '$t' fails <$_>";
+    }
+
+    # <DATE>
+    # <JSON>
+    for <DATE JSON> -> $t0 {
+      my $t = $t0;
+
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "DATE passes <$_>";
+
+      $t.substr-rw( (^$t.chars).pick, 1) = ('a'..'z').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated string '$t' fails <$_>";
+    }
+
+    # [ <TIME> | <DATETIME> ] [ '(' <number> ')' ]?
+    for <TIME DATETIME> -> $term {
+      my $t0 = "$term (4)";
+      my $t = $t0;
+
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> with full syntax";
+
+      $t ~~ s/ ' ' <?before '('>//;
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> without a space before the number";
+
+      $t ~~ s/ '(4)'//;
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> without the number specification";
+
+      # Mutate only the $term part of the string.
+      ($t = $t0).substr-rw( (^$term.chars).pick, 1) = ('a'..'z').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated '$t' fails <$_>";
+    }
+
+    # <DECIMAL> [
+    #   '(' [
+    #     <m=number> [ ',' <d=number> ]?
+    #   ] ')'
+    # ]?
+    $count = 0;
+    for ('DECIMAL (5)', 'DECIMAL (5, 6)') -> $term {
+      my $t0 = $term;
+      my $t = $t0;
+
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> with full syntax";
+
+      $t ~~ s/ ' ' <?before '('>//;
+      ok
+        ( my $s = Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ) ),
+        "'$t' passes <$_> without space before number specification";
+
+      if (++$count == 1) {
+        ok
+          $s.defined && $s<m>.Str eq '5',
+          "'5' detected in numerical specication by subrule <m>";
+      } else {
+        ok
+          $s<m>.Str eq '5' && $s<d>.Str eq '6',
+          "'5' and '6' detected in numerical specication by subrules <m> and <d>";
+      }
+
+      $t ~~ s/ '(5' ',6'? ')' //;
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_> without the number specification";
+
+      # Test only the DECIMAL portion of the string.
+      ($t = $t0).substr-rw( (^'DECIMAL'.chars).pick, 1 ) = ('a'..'z').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated '$t' fails <$_>";
+    }
+  }
+
+  when '_limits' {
+    for (
+      'MAX_QUERIES_PER_HOUR',
+      'MAX_UPDATES_PER_HOUR',
+      'MAX_CONNECTIONS_PER_HOUR',
+      'MAX_USER_CONNECTIONS'
+    ) -> $term {
+      my $t = "$term 17";
+
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "'$t' passes <$_>";
+
+      $t ~~ /( $( $term ) )/;
+      my $tm := $t.substr-rw(0, $0.to);
+      $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated '$t' fails <$_>";
+    }
   }
 
 }
