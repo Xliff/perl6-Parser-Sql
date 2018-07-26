@@ -1653,9 +1653,50 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   }
 
   when 'server_option' {
+    for <USER HOST DATABASE OWNER PASSWORD SOCKET> -> $term {
+      my $t = "$term 'this is text'";
+
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+        "'$t' passes <$_> without number spec";
+
+      $t ~~ / ( $term )/;
+      my $tm := $t.substr-rw(0, $0.to);
+      $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated '$t' fails <$_>";
+    }
+
+    {
+      my $t = "PORT 30";
+      ok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+        "'$t' passes <$_> without number spec";
+
+      $t ~~ / (PORT) /;
+      my $tm := $t.substr-rw(0, $0.to);
+      $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+      nok
+        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+        "Mutated '$t' fails <$_>";
+    }
   }
 
   when 'server_opts' {
+    my $t = 'USER "username", PORT 31';
+
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_> without number spec";
+
+    ok $/<server_option>.elems == 2, "Match <server_option> has 2 elements";
+    ok
+      $/<server_option>[0] eq 'USER "username"',
+      'First element of Match<server_option> matches "USER \'username\'"';
+    ok
+      $/<server_option>[1] eq 'PORT 31',
+      'First element of Match<server_option> matches "PORT 31"';
   }
 
   when 'simple_ident_nospvar' {
