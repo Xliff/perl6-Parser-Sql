@@ -778,7 +778,7 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   }
 
   # <COLUMNS> [
-  #   $<t>=[ <TERMINATED> || <OPTIONALLY>? <ENCLOSED> || <ESCAPED> ]
+  #   $<t>=[ <TERMINATED> | <OPTIONALLY>? <ENCLOSED> | <ESCAPED> ]
   #   <BY> $<s>=<text_string>
   # ]+
   when 'field_term' {
@@ -1527,7 +1527,35 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     }
   }
 
+  # <ON> [
+  #   <UPDATE> [ <delete_option> <ON> <UPDATE> ]?
+  #   |
+  #   <DELETE> [ <delete_option> <ON> <DELETE> ]?
+  # ] <delete_option>
   when 'on_update_delete' {
+    for <UPDATE DELETE> -> $term-o {
+      for ('RESTRICT', 'CASCADE', 'SET', 'NO ACTION') -> $term-i {
+        my $ti = $term-i;
+        $ti ~= " { <NULL DEFAULT>.pick }" if $ti eq 'SET';
+        my $t = "ON $term-o $ti ON $term-o $ti";
+
+        ok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+          "'$t' passes <$_>";
+
+        $t ~~ s/" ON $term-o $ti"//;
+        ok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+          "'$t' passes <$_> without ON $term-o spec";
+
+        $t ~~ /( $ti )/;
+        my $tm := $t.substr-rw(0, $0.to);
+        $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
+        nok
+          Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
+          "Mutated '$t' fails <$_>";
+      }
+    }
   }
 
   when 'part_field_list' {

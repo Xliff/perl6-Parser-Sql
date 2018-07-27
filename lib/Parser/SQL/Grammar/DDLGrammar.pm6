@@ -864,13 +864,13 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     <DEFAULT>? <COLLATE> <EQ>? [ <_ident> || <text> ]
   }
 
-rule delete_option {
+  rule delete_option {
     <RESTRICT>
-    ||
+    |
     <CASCADE>
-    ||
-    <SET> [ <NULL> || <DEFAULT> ]
-    ||
+    |
+    <SET> [ <NULL> | <DEFAULT> ]
+    |
     <NO> <ACTION>
   }
 
