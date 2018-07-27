@@ -4,13 +4,20 @@ use Test;
 
 use Parser::SQL::Grammar::DDLGrammar;
 
+use lib 't';
+use TestRoutines;
+
 # WHEN REFACTORING, ALL TESTS THAT INCLUDE THE <EQ> TOKEN MUST ADD A test
 # REPLACING EQ WITH = FOR COMPLETENESS!!!
+
+plan 704;
 
 my $count;
 for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   diag $_;
   when <
+    CREATE_ST
+    TOP
     _con_function_call
     _gen_function_call
     _gorder_clause
@@ -27,7 +34,9 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     create_field_list
     create_partitioning
     create_select
+    create_table_opt
     create_table_opt2
+    create_table_opts
     create3
     derived_table_list
     escape
@@ -541,7 +550,7 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
 
       $t ~~ / ( 'WITH ' $term ) /;
       my $tm := $t.substr-rw(0, $0.to);
-      $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
+      $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
       nok
         Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
         "Mutated '$t' fails <$_>";
@@ -656,12 +665,6 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     #nok
     #  Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
     #  "Trailing '.' fails <$_>";
-  }
-
-  when 'create_table_opt' {
-  }
-
-  when 'create_table_opts' {
   }
 
   # <DEFAULT>? <charset> <EQ>? [ <_ident> || <text> ]
@@ -913,6 +916,7 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     while $t eq $t0 {
       $t ~~ s/ $( ('GENERATED ', ' ALWAYS').pick ) //;
     }
+
     nok
       Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
       "'$t' fails <$_>";
@@ -1064,7 +1068,6 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
               Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
               "'$t' passes <$_>";
           }
-
         }
       }
 
@@ -1073,7 +1076,7 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
         Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
         "'$t' passes <$_>";
 
-      $t ~~ / ( 'LIMIT' )/;
+      $t ~~ / ( 'LIMIT' ) /;
       my $tm := $t.substr-rw(0, $0.to);
       $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
       nok
@@ -1127,7 +1130,9 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
         Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
         "'$t' passes <$_>";
 
-      $t.substr-rw( (^$t.chars).pick, 1) = ('a'..'z').pick;
+      # 'x' is not allowed in the range due to interpretation as
+      # a hexidecimal literal.
+      $t.substr-rw( (^$t.chars).pick, 1) = ('a'..'w').pick;
       nok
         Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
         "Mutated '$t' fails <$_>";
@@ -1179,7 +1184,7 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
         "'$t' passes <$_> without charset";
 
       # Mutate outside hexidecimal or binary
-      $t.substr-rw( (^$t.chars).pick, 1 ) = ('g'..'z').pick;
+      $t.substr-rw( (^$t.chars).pick, 1 ) = ('g'..'w').pick;
       nok
         Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
         "Mutated '$t' fails <$_>";
@@ -1472,7 +1477,6 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
         "Mutated '$t' fails <$_>";
     }
   }
-
 
   # <all_key_opt> || <key_alg>
   when 'normal_key_options' {
@@ -1825,6 +1829,39 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   # [ <USE> <LOGFILE> <GROUP> <grp_name=_ident> ]?
   # <tablespace_option_list>
   when 'tablespace_info' {
+    my $t = qq:to/TSI/;
+'tablespace_name' ADD DATAFILE 'tablespace_file'
+USE LOGFILE GROUP 'logfile_group'
+AUTOEXTEND_SIZE EQ 32,
+COMMENT EQ "text string",
+EXTENT_SIZE EQ 33,
+FILE_BLOCK_SIZE EQ 34
+TSI
+
+    (my $ts = $t) ~~ s:g/\n//;
+    my $s = basic($t, $_, :text("$ts passes <$_>"));
+
+    ok $s<ts_name> eq "'tablespace_name'", "Match<ts_name> is \"'tablespace_name'\"";
+    ok $s<df_name> eq "'tablespace_file'", "Match<df_name> is \"'tablespace_file'\"";
+    ok $s<grp_name> eq "'logfile_group'", "Match<grp_name> is \"'logfile_group'\"";
+
+    # Yes, this blatent test number padding. :P
+    my $option;
+    my @options = $s<tablespace_option_list><_ts_option>;
+    ok @options.elems == 4, 'There are 4 tablespace option items';
+
+    $option = @options[0]<ts_autoextend_size>;
+    ok $option<AUTOEXTEND_SIZE>, 'First option is AUTOEXTEND_SIZE';
+    ok $option<number> eq '32', 'First option argument is the number 32';
+    $option = @options[1]<ts_comment>;
+    ok $option<COMMENT>, 'Second option is a COMMENT';
+    ok $option<text_string> eq '"text string"', 'Second option argument is the string "\'text string\'"';
+    $option = @options[2]<ts_extent_size>;
+    ok $option<EXTENT_SIZE>, 'Third option is EXTENT_SIZE';
+    ok $option<number> eq '33', 'Third option argument is the number 33';
+    $option = @options[3]<ts_file_block_size>;
+    ok $option<FILE_BLOCK_SIZE>, 'Fourth option is FILE_BLOCK_SIZE';
+    ok $option<number> eq '34', 'Fourth option argument is the number 34';
   }
 
   # local <_ts_option> = [

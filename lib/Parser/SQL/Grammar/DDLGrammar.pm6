@@ -613,7 +613,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   rule create_table_opt {
     <ENGINE> <EQ>? $<o>=[ <_ident> || <text> ]
     ||
-    [
+    $<t_num>=[
       <MAX_ROWS>        |
       <MIN_ROWS>        |
       <AUTO_INC>        |
@@ -624,7 +624,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
       <KEY_BLOCK_SIZE>
     ] <EQ>? <num>
     ||
-    $<t>=[
+    $<t_txt>=[
       <PASSWORD>    |
       <COMMENT>     |
       <COMPRESSION> |
@@ -632,7 +632,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
       [ <DATA> | <INDEX> ] <DIRECTORY>
     ] <EQ>? <text>
     ||
-    $<t>=[
+    $<t_o>=[
       <PACK_KEYS>         |
       <STATS_AUTO_RECALC> |
       <STATS_PERSISTENT>  |
