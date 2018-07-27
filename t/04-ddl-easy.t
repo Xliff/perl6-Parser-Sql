@@ -1583,7 +1583,20 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
 
   # '(' <_ident>+ % ',' ')'
   when 'ref_list' {
+    my @terms = ('@ident', "'name'", '"name"', '@@evil$var_name');
+    my $t = "({ @terms.join(', ') })";
 
+    ok
+      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
+      "'$t' passes <$_>";
+
+    ok $/<_ident>.elems == 4, "Match<_ident> has 4 items.";
+    my @ord = <First Second Third Fourth>;
+    for @terms.kv -> $k, $v {
+      ok
+        $/<_ident>[$k] eq $v,
+        "{ @ord[$k] } item of Match<_ident> is '{ $v }'"
+    }
   }
 
   # <REQUIRE> [
