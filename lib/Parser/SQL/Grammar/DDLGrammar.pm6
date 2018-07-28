@@ -68,7 +68,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule charset_name_or_default {
-    <_ident> || <text> || <BINARY> || <DEFAULT>
+    <BINARY> || <DEFAULT> || <text> || <_ident> 
   }
 
   rule create_select {
