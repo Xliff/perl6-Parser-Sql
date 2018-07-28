@@ -1910,90 +1910,42 @@ TEST
   when 'ts_initial_size' {
     my $t = 'INITIAL_SIZE EQ 29';
 
-    ok
-      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
-      "'$t' passes <$_>";
-
+    basic($t, $_);
     $t ~~ s/EQ/=/;
-    ok
-      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
-      "'$t' passes <$_> with '=' instead of 'EQ'";
-
+    basic($t, $_, :text("'$t' passes <$_> with '=' instead of 'EQ'") );
     $t ~~ s/\=//;
-    ok
-      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
-      "'$t' passes <$_> without '=' or 'EQ'";
-
-    $t ~~ / ('INITIAL_SIZE') /;
-    my $tm := $t.substr-rw(0, $0.to);
-    $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
-    nok
-      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-      "Mutated '$t' fails <$_>";
+    basic($t, $_, :text("'$t' passes <$_> without '=' or 'EQ'") );
+    basic-mutate($t, $_, :rx(/ ('INITIAL_SIZE') /) );
   }
 
   when 'ts_max_size' {
     my $t = 'MAX_SIZE EQ 30';
 
-    ok
-      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
-      "'$t' passes <$_>";
-
-    $t ~~ s/EQ/=/;
-    ok
-      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
-      "'$t' passes <$_> with '=' instead of 'EQ'";
-
+    basic($t, $_);
+    $t ~~ s/'EQ'/=/;
+    basic($t, $_, :text("'$t' passes <$_> with '=' instead of 'EQ'") );
     $t ~~ s/\=//;
-    ok
-      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
-      "'$t' passes <$_> without '=' or 'EQ'";
-
-    $t ~~ / ('MAX_SIZE') /;
-    my $tm := $t.substr-rw(0, $0.to);
-    $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
-    nok
-      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-      "Mutated '$t' fails <$_>";
+    basic($t, $_, :text("'$t' passes <$_> without '=' or 'EQ'") );
+    basic-mutate($t, $_, :rx(/ ('MAX_SIZE') /) );
   }
 
   when 'ts_nodegroup' {
     my $t = 'NODEGROUP EQ 30';
 
-    ok
-      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
-      "'$t' passes <$_>";
-
-    $t ~~ s/EQ/=/;
-    ok
-      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
-      "'$t' passes <$_> with '=' instead of 'EQ'";
-
+    basic($t, $_);
+    $t ~~ s/'EQ'/=/;
+    basic($t, $_, :text("'$t' passes <$_> with '=' instead of 'EQ'") );
     $t ~~ s/\=//;
-    ok
-      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
-      "'$t' passes <$_> without '=' or 'EQ'";
-
-    $t ~~ / ('NODEGROUP') /;
-    my $tm := $t.substr-rw(0, $0.to);
-    $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
-    nok
-      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-      "Mutated '$t' fails <$_>";
+    basic($t, $_, :text("'$t' passes <$_> without '=' or 'EQ'") );
+    basic-mutate($t, $_, :rx(/ ('NODEGROUP') /) );
   }
 
   when 'ts_wait' {
     for <WAIT NO_WAIT> -> $term {
       my $t =  $term;
 
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
-        "'$t' passes <$_>";
-
-      $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
-      nok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "Mutated '$t' fails <$_>";
+      basic($t, $_);
+      basic-mutate($t, $_);
     }
   }
 
@@ -2001,14 +1953,8 @@ TEST
     for <DEFAULT FIXED DYNAMIC COMPRESSED REDUNDANT COMPACT> -> $term {
       my $t = $term;
 
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
-        "'$t' passes <$_>";
-
-      $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
-      nok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
-        "'$t' fails <$_>";
+      basic($t, $_);
+      basic-mutate($t, $_);
     }
   }
 
