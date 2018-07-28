@@ -93,41 +93,24 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
       my $t = "7 $term REVERSE";
 
       # Test REVERSE
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_> with REVERSE";
-
+      basic($t, $_, :text("'$t' passes <$_> with REVERSE"));
       # Remove REVERSE and test match
       $t ~~ s/ 'REVERSE' //;
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_> without REVERSE";
-
+      basic($t, $_, :text("'$t' passes <$_> without REVERSE"));
       # Remove $term and test.
       $t ~~ s/ $term //;
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_> without $term";
-
+      basic($t, $_, :text("'$t' passes <$_> without $term"));
       # Mutate number and test failure.
-      $t.substr-rw(0, 1) = ('a'..'z').pick;
-      nok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "Mutated '$t' fails <$_>";
+      basic-mutate($t, $_, :rx(/^ (\w) /), :range('a'..'z'));
     }
   }
 
 
   when '__ws_nweights' {
     my $t = '(8)';
-    ok
-      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-      "'$t' passes <$_>";
 
-    $t.substr-rw( (^$t.chars).pick, 1 ) = ('a'..'z').pick;
-    nok
-      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-      "Mutated '$t' fails <$_>";
+    basic($t, $_);
+    basic-mutate($t, $_, :range('a'..'z'));
   }
 
   # <LEVEL> $<ws_list> = [
@@ -907,32 +890,20 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   when 'generated_always' {
     my $t = (my $t0 = 'GENERATED ALWAYS');
 
-    ok
-      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
-      "'$t' passes <$_>";
-
+    basic($t, $_);
     # This defeats the unlikely case where neither string results in any
     # change.
     while $t eq $t0 {
       $t ~~ s/ $( ('GENERATED ', ' ALWAYS').pick ) //;
     }
-
-    nok
-      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
-      "'$t' fails <$_>";
+    basic($t, $_, :fail);
   }
 
   when 'grant_opts' {
     my $t = 'GRANT OPTION';
-    ok
-      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
-      "'$t' passes <$_>";
 
-
-    $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
-    nok
-      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-      "Mutated '$t' fails <$_>";
+    basic($t, $_);
+    basic-mutate($t, $_);
 
     # from <_limits>
     for (
@@ -943,40 +914,21 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     ) -> $term {
       my $t = "$term 17";
 
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_>";
-
-      $t ~~ /( $( $term ) )/;
-      my $tm := $t.substr-rw(0, $0.to);
-      $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
-      nok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "Mutated '$t' fails <$_>";
+      basic($t, $_);
+      basic-mutate($t, $_, :rx( /( $( $term ) )/ ) );
     }
   }
 
   when 'index_lock_algo' {
     my $t = 'ALGORITHM EQ DEFAULT LOCK EQ DEFAULT';
 
-    ok
-      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
-      "'$t' passes <$_>";
-
+    basic($t, $_);
     $t ~~ s:g/ 'EQ '//;
-    ok
-      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
-      "'$t' passes <$_> without EQ";
-
+    basic($t, $_, :text("'$t' passes <$_> without EQ") );
     $t = 'LOCK EQ DEFAULT ALGORITHM EQ DEFAULT';
-    ok
-      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
-      "'$t' passes <$_>";
-
+    basic($t, $_);
     $t ~~ s:g/ 'EQ '//;
-    ok
-      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
-      "'$t' passes <$_> without EQ";
+    basic($t, $_, :text("'$t' passes <$_> without EQ") );
 
     # Compound test. No negatives necessary... yet.
   }
@@ -984,14 +936,8 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   when 'if_not_exists' {
     my $t = 'IF NOT EXISTS';
 
-    ok
-      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-      "'$t' passes <$_>";
-
-    $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
-    nok
-      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-      "Mutated '$t' fails <$_>";
+    basic($t, $_);
+    basic-mutate($t, $_);
   }
 
   when 'key_alg' {
@@ -999,14 +945,8 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
       for <BTREE RTREE HASH> -> $term-i {
         my $t = "$term-o $term-i";
 
-        ok
-          Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-          "'$t' passes <$_>";
-
-        $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
-        nok
-          Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-          "Mutated '$t' fails <$_>";
+        basic($t, $_);
+        basic-mutate($t, $_);
       }
     }
   }
@@ -1016,21 +956,11 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     for <ASC DESC> -> $term {
       my $t = "\@identifier (18) $term";
 
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_>";
+      basic($t, $_);
 
       $t ~~ s/ '(18) ' //;
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_> without number specification";
-
-      $t ~~ /( $term )/;
-      my $tm := $t.substr-rw($0.from, $0.to - $0.from);
-      $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
-      nok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "Mutated '$t' fails <$_>";
+      basic($t, $_, :text("'$t' passes <$_> without number specification" ) );
+      basic-mutate($t, $_, :rx( /( $term )/ ) );
     }
   }
 
@@ -1039,11 +969,7 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     for <ASC DESC> -> $term-o {
       for <DESC ASC> -> $term-i {
         my $t = "\@ident1 (19) $term-o, \@ident2 (20) $term-i";
-
-        ok
-          (my $s = Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ) ),
-          "'$t' passes <$_>";
-
+        my $s = basic($t, $_);
         ok $s<key_list>.elems == 2, "Match<key_list> contains 2 items";
 
         # No negative test required.
@@ -1058,32 +984,30 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
         for <@ident2 ? 16> -> $term-i {
           my $t = "LIMIT $term-o $term-m $term-i";
 
-          ok
-            Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-            "'$t' passes <$_>";
-
+          basic($t, $_);
           if $t ~~ /\,/ {
-            $t ~~ s/ ' ,' /,/;
-            ok
-              Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-              "'$t' passes <$_>";
+            $t .= trim;
+            basic($t, $_);
           }
         }
       }
 
       my $t = "LIMIT $term-o";
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_>";
-
-      $t ~~ / ( 'LIMIT' ) /;
-      my $tm := $t.substr-rw(0, $0.to);
-      $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
-      nok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "Mutated '$t' fails <$_>";
+      basic($t, $_);
+      basic-mutate($t, $_, :rx(/ ( 'LIMIT' ) /) );
     }
   }
+
+  # <LINES> [ $<t>=[ <TERMINATED> || <STARTING> ] <BY> $<s>=<text_string> ]+
+  when 'line_term' {
+    for <TERMINATED STARTING> -> $term {
+      my $t = "LINES $term BY 'text string'";
+
+      basic($t, $_);
+      basic-mutate($t, $_, :rx(/ ('LINES' \s+ $term \s+ 'BY') /) );
+    }
+  }
+
 
   # <underscore_charset>? <text>
   # ||
@@ -1100,112 +1024,54 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     # <underscore_charset>? <text>
     {
       my $t = "_latin1 'text string'";
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_>";
+      basic($t, $_);
 
       $t ~~ s/ '_latin1' //;
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_> without charset";
-
+      basic($t, $_, :text("'$t' passes <$_> without charset") );
       # No negative test written - Possible to replace quotes? Revisit.
     }
 
     # 'N'<text>
     {
       my $t = 'N"text String"';
-
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_>";
-
+      basic($t, $_);
       # No negative test possible without replacing the quotes. Revisit.
     }
 
     # <num>
     {
       my $t = '22';
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_>";
-
+      basic($t, $_);
       # 'x' is not allowed in the range due to interpretation as
       # a hexidecimal literal.
-      $t.substr-rw( (^$t.chars).pick, 1) = ('a'..'w').pick;
-      nok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "Mutated '$t' fails <$_>";
+      basic-mutate( $t, $_, :range('a'..'w') );
     }
 
     # [ <DATE> | <TIME>  | <TIMESTAMP> ] <text>
     for <DATE TIME TIMESTAMP> -> $term {
       my $t = "$term 'date string'";
+      my $s = basic($t, $_);
+      ok $s<text> eq "'date string'", 'Match<text> matches "date string"';
 
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_>";
-      ok $/<text> eq "'date string'", 'Match<text> matches "date string"';
-
-      $t ~~ /( $( $term ) )/;
-      my $tm := $t.substr-rw(0, $0.to);
-      $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
-      nok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "Mutated '$t' fails <$_>";
+      basic-mutate($t, $_, :rx(/( $( $term ) )/) );
     }
 
     # [ <NULL> | <FALSE> | <TRUE> ]
     for <NULL FALSE TRUE> -> $term {
       my $t = $term;
 
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_>";
-
-      $t.substr-rw( (^$t.chars).pick, 1 ) = ('0'..'9').pick;
-      nok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "Mutated '$t' fails <$_>";
+      basic($t, $_);
+      basic-mutate($t, $_);
     }
-
 
     # <underscore_charset>? [ <hex_num> || <bin_num> ]
     for <0xdeadbeef 0b10010101> -> $term {
       my $t = "_latin1 $term";
 
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_>";
-
+      basic($t, $_);
       $t ~~ s/ '_latin1' //;
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_> without charset";
-
-      # Mutate outside hexidecimal or binary
-      $t.substr-rw( (^$t.chars).pick, 1 ) = ('g'..'w').pick;
-      nok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "Mutated '$t' fails <$_>";
-    }
-  }
-
-  # <LINES> [ $<t>=[ <TERMINATED> || <STARTING> ] <BY> $<s>=<text_string> ]+
-  when 'line_term' {
-    for <TERMINATED STARTING> -> $term {
-      my $t = "LINES $term BY 'text string'";
-
-      ok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "'$t' passes <$_>";
-
-      $t ~~ / ('LINES' \s+ $term \s+ 'BY') /;
-      my $tm := $t.substr-rw(0, $0.to);
-      $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
-      nok
-        Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-        "Mutated '$t' fails <$_>";
+      basic($t, $_, :text("'$t' passes <$_> without charset") );
+      basic-mutate($t, $_, :range('g'..'w') );;
     }
   }
 
@@ -1794,20 +1660,17 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
 
   when 'table_list' {
     my $t = 'ns1.table1, ns2.table2, .table3';
+    my $s = basic($t, $_);
 
+    ok $s<table_ident>.elems == 3, "There are 3 tables referenced";
     ok
-      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
-      "'$t' passes <$_>";
-
-    ok $/<table_ident>.elems == 3, "There are 3 tables referenced";
-    ok
-      $/<table_ident>[0] eq 'ns1.table1',
+      $s<table_ident>[0] eq 'ns1.table1',
       "First table referenced is 'ns1.table1'";
     ok
-      $/<table_ident>[1].trim eq 'ns2.table2',
+      $s<table_ident>[1].trim eq 'ns2.table2',
       "First table referenced is 'ns2.table2'";
     ok
-      $/<table_ident>[2].trim eq '.table3',
+      $s<table_ident>[2].trim eq '.table3',
       "First table referenced is '.table3'";
   }
 
@@ -1840,7 +1703,6 @@ TSI
 
     (my $ts = $t) ~~ s:g/\n//;
     my $s = basic($t, $_, :text("$ts passes <$_>"));
-
     ok $s<ts_name> eq "'tablespace_name'", "Match<ts_name> is \"'tablespace_name'\"";
     ok $s<df_name> eq "'tablespace_file'", "Match<df_name> is \"'tablespace_file'\"";
     ok $s<grp_name> eq "'logfile_group'", "Match<grp_name> is \"'logfile_group'\"";
@@ -1886,25 +1748,22 @@ TEST
 
     # First test of multiline string, but this should work due the default
     # behavior of any rule.
+    my $s = basic($t, $_, :text("Multi-line tablespace option string passes <$_>") );
     ok
-      Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($_) ),
-      "Multi-line tablespace option string passes <$_>";
-
-    ok
-      $/<_ts_option>.elems == 4,
+      $s<_ts_option>.elems == 4,
       'Match<_ts_option> has 4 elements';
     ok
-      $/<_ts_option>[0] eq 'AUTOEXTEND_SIZE EQ 27',
+      $s<_ts_option>[0] eq 'AUTOEXTEND_SIZE EQ 27',
       "First Match<...><_ts_option> matches 'AUTOEXTEND_SIZE EQ 27'";
     ok
-      $/<_ts_option>[1] eq 'COMMENT EQ "text string"',
+      $s<_ts_option>[1] eq 'COMMENT EQ "text string"',
       'Second Match<...><_ts_option> matches "COMMENT EQ \'text string\'"';
     ok
-      $/<_ts_option>[2] eq 'EXTENT_SIZE EQ 28',
+      $s<_ts_option>[2] eq 'EXTENT_SIZE EQ 28',
       'Third Match<...><_ts_option> matches \'EXTENT_SIZE EQ 28\'';
     # Eliminate embeddded newline.
     ok
-      $/<_ts_option>[3].chomp eq 'FILE_BLOCK_SIZE EQ 29',
+      $s<_ts_option>[3].chomp eq 'FILE_BLOCK_SIZE EQ 29',
       'Fourth Match<...><_ts_option> matches \'FILE_BLOCK_SIZE EQ 29\'';
   }
 
@@ -2155,49 +2014,38 @@ TEST
 
   when 'use_partition' {
     my $t = 'PARTITION (@identifier, "text string", field)';
+    my $s = basic($t, $_);
 
     ok
-      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
-      "'$t' passes <$_>";
-
-    ok
-      $/<using_list><_ident> == 3,
+      $s<using_list><_ident> == 3,
       'Match<using_list><ident> has 3 items';
     ok
-      $/<using_list><_ident>[0] eq '@identifier',
+      $s<using_list><_ident>[0] eq '@identifier',
       "First item in Match...<_ident> matches '\@identifier'";
     ok
-      $/<using_list><_ident>[1] eq '"text string"',
+      $s<using_list><_ident>[1] eq '"text string"',
       "Second item in Match...<_ident> matches '\"text string\"'";
     ok
-      $/<using_list><_ident>[2] eq 'field',
+      $s<using_list><_ident>[2] eq 'field',
       "Third item in Match...<_ident> matches 'field'";
 
-    $t ~~ / ('PARTITION') /;
-    my $tm := $t.substr-rw(0, $0.to);
-    $tm.substr-rw( (^$tm.chars).pick, 1 ) = ('0'..'9').pick;
-    nok
-      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
-      "'$t' fails <$_>";
+    basic-mutate($t, $_, :rx(/ ('PARTITION') /) );
   }
 
   # <_ident>+ % ','
   when 'using_list' {
     my $t = '@identifier, "text string", field';
+    my $s = basic($t, $_);
 
+    ok $s<_ident> == 3, 'Match<ident> has 3 items';
     ok
-      Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($_) ),
-      "'$t' passes <$_>";
-
-    ok $/<_ident> == 3, 'Match<ident> has 3 items';
-    ok
-      $/<_ident>[0] eq '@identifier',
+      $s<_ident>[0] eq '@identifier',
       "First item in Match...<_ident> matches '\@identifier'";
     ok
-      $/<_ident>[1] eq '"text string"',
+      $s<_ident>[1] eq '"text string"',
       "Second item in Match...<_ident> matches '\"text string\"'";
     ok
-      $/<_ident>[2] eq 'field',
+      $s<_ident>[2] eq 'field',
       "Third item in Match...<_ident> matches 'field'";
   }
 
