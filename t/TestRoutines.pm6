@@ -40,7 +40,7 @@ sub basic-mutate($t0, $rule, :$rx, :$text, :$range = '0'..'9' ) is export {
   $tm.substr-rw( (^$tm.chars).pick, 1 ) = ($range).pick;
   nok
     (my $s = Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($rule) ) ),
-    "Mutated '$t' fails <$rule>";
+    "(Mutated) '$t' fails <$rule>";
   $s;
 }
 

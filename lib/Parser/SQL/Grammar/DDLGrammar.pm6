@@ -761,16 +761,18 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     $<t>=[ <BOOL> | <BOOLEAN> ]
     ||
     [
-      $<t>=[ <CHAR> | <VARCHAR> ] '(' <num> ')'
-      |
+      $<t>=[ <CHAR> <VARYING> || <VARCHAR> ] '(' <num> ')'
+      ||
+      <t=CHAR> [ '(' <num> ')' ]?
+      ||
       <t=TINYTEXT>
-      |
+      ||
       <t=TEXT> [ '(' <num> ')' ]?
-      |
+      ||
       <t=MEDIUMTEXT>
-      |
+      ||
       <t=LONGTEXT>
-      |
+      ||
       $<t>=[ <ENUM> | <SET> ] '(' <text>+ % ',' ')'
     ]
     $<b>=[
@@ -785,17 +787,17 @@ grammar Parser::SQL::Grammar::DDLGrammar {
       <BINARY>? <charset> [ <text> || <_ident> ]
     ]?
     ||
-    [
-      $<t>=[ <NCHAR> | <NATIONAL> <CHAR> ] [ '(' <num> ')' ]?
-      |
+    $<t>=[
       [
-        $<t>=[ <NATIONAL>  [ <VARCHAR> ] | [ <CHAR> <VARYING> ] ]
-        |
-        <t=NVARCHAR>
-        |
-        $<t>=[ <NCHAR> [ <VARCHAR> | <VARYING> ] ]
+        <NATIONAL> [ <VARCHAR> | [ <CHAR> <VARYING> ] ]
+        ||
+        <NVARCHAR>
+        ||
+        <NCHAR> [ <VARCHAR> | <VARYING> ]
       ]
-    ] <BINARY>?
+      ||
+      [ <NCHAR> | <NATIONAL> <CHAR> ]
+    ] [ '(' <num> ')' ]? <BINARY>?
     ||
     <t=DATE>
     ||
@@ -1153,17 +1155,17 @@ grammar Parser::SQL::Grammar::DDLGrammar {
 
 };
 
-our sub MAIN is export {
-  my $test = qq:to/SQL/;
-  CREATE TABLE Persons (
-      PersonID int,
-      LastName varchar(255),
-      FirstName varchar(255),
-      Address varchar(255),
-      City varchar(255)
-  );
-  SQL
-
-  my $a = Parser::SQL::Grammar::DDLGrammar.parse($test);
-  $a.gist.say;
-}
+# our sub MAIN is export {
+#   my $test = qq:to/SQL/;
+#   CREATE TABLE Persons (
+#       PersonID int,
+#       LastName varchar(255),
+#       FirstName varchar(255),
+#       Address varchar(255),
+#       City varchar(255)
+#   );
+#   SQL
+#
+#   my $a = Parser::SQL::Grammar::DDLGrammar.parse($test);
+#   $a.gist.say;
+# }
