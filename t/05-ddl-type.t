@@ -7,7 +7,7 @@ use Parser::SQL::Grammar::DDLGrammar;
 use lib 't';
 use TestRoutines;
 
-plan 573;
+plan 622;
 
 sub test($t, :$text, :$ident = True) {
   my $i = $t;
@@ -148,7 +148,15 @@ sub MAIN {
     my $t = "$term (9) BINARY";
     my $t0 = $t;
 
-    ($s) = test-and-mutate( $t, :rx(/ ($term) /), :ident($term) );
+
+    if $t ~~ (
+      /'NCHAR'/,
+      /'NATIONAL CHAR VARYING'/
+    ).none {
+      ($s) = test-and-mutate( $t, :rx(/ ($term) /), :ident($term) );
+    } else {
+      $s = test($t, :ident($term) );
+    }
     ok $s<num> eq '9', 'Character number specification equals 9';
     $t ~~ s/'(9) '//;
     test($t, :text("'$t' passes <type> without number spec"), :!ident);
@@ -172,7 +180,18 @@ sub MAIN {
     POINT
     POLYGON
   >;
+  test-and-mutate($_) for <LONGBLOB MEDIUMBLOB>;
+  test('LONG VARBINARY');
 
-  # $<t>=[ <MEDIUMBLOB> | <LONGBLOB> ]
+  for ('CHAR VARYING', 'VARCHAR') -> $term {
+    my $t = "LONG $term BINARY";
 
+    test-and-mutate( $t, :rx(/ ('LONG') /), :ident('LONG') );
+    $t ~~ s/ ($term) //;
+    test($t, :text("'$t' passes without '$term'"), :!ident);
+    $t ~~ s/'BINARY'//;
+    test($t, :text("'$t' passes without BINARY"), :!ident);
+  }
+
+  test-and-mutate($_) for <SERIAL JSON>;
 }

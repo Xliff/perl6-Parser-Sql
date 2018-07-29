@@ -788,15 +788,13 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     ]?
     ||
     $<t>=[
-      [
-        <NATIONAL> [ <VARCHAR> | [ <CHAR> <VARYING> ] ]
-        ||
-        <NVARCHAR>
-        ||
-        <NCHAR> [ <VARCHAR> | <VARYING> ]
-      ]
+      <NATIONAL> [ <VARCHAR> | <CHAR> <VARYING> ]
       ||
-      [ <NCHAR> | <NATIONAL> <CHAR> ]
+      <NVARCHAR>
+      ||
+      <NCHAR> [ <VARCHAR> | <VARYING> ]?
+      ||
+      <NATIONAL> <CHAR>
     ] [ '(' <num> ')' ]? <BINARY>?
     ||
     <t=DATE>
@@ -820,11 +818,11 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     ||
     $<t>=[ <MEDIUMBLOB> | <LONGBLOB> ]
     ||
+    $<t>=[ <LONG> <VARBINARY> ]
+    ||
     <t=LONG> $<o>=[
-      <VARBINARY>
-      |
-      [ <CHAR> <VARYING> | <VARCHAR> ]? <b=BINARY>?
-    ]
+      [ <CHAR> <VARYING> | <VARCHAR> ]
+    ]? <b=BINARY>?
     ||
     <t=SERIAL>
     ||
