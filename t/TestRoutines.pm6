@@ -29,7 +29,6 @@ sub basic($t, $rule, :$text, :$fail = False) is export {
 
 sub basic-mutate($t0, $rule, :$rx, :$text, :$range = '0'..'9' ) is export {
   my $t = $t0;
-  my $txt = $text // "Mutated '$t' fails <$rule>";
   my $tm;
 
   with $rx {
@@ -41,13 +40,15 @@ sub basic-mutate($t0, $rule, :$rx, :$text, :$range = '0'..'9' ) is export {
   $tm.substr-rw( (^$tm.chars).pick, 1 ) = ($range).pick;
   nok
     (my $s = Parser::SQL::Grammar::DDLGrammar.subparse( $t, :rule($rule) ) ),
-    $txt;
+    "Mutated '$t' fails <$rule>";
   $s;
 }
 
 sub basic-and-mutate($t, $rule, :$rx, :$range = '0'..'9' ) is export {
-  basic($t, $rule);
-  basic-mutate($t, $rule, :$rx, :$range);
+  (
+    basic($t, $rule),
+    basic-mutate($t, $rule, :$rx, :$range)
+  );
 }
 
 sub test-limits($rule = '_limits', :$prefix) is export {

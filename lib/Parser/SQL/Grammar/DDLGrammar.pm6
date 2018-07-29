@@ -14,7 +14,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule attribute {
-    <not2>? <NULL>
+    <NOT>? <NULL>
     ||
     <DEFAULT> $<o>=[ <now> || <num> || <literal> ]
     ||
@@ -32,9 +32,9 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     ||
     <COLLATE> [ <collate_id=ident> || <collate_txt=text> ]
     ||
-    <COLUMN_FORMAT> $<o>=[ <DEFAULT> || <FIXED> || <DYNAMIC> ]
+    <COLUMN_FORMAT> $<o>=[ <DEFAULT> | <FIXED> | <DYNAMIC> ]
     ||
-    <STORAGE> $<o>=[ <DEFAULT> || <DISK> || <MEMORY> ]
+    <STORAGE> $<o>=[ <DEFAULT> | <DISK> | <MEMORY> ]
   }
 
   rule bit_expr {
@@ -68,7 +68,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule charset_name_or_default {
-    <BINARY> || <DEFAULT> || <text> || <_ident> 
+    <BINARY> || <DEFAULT> || <text> || <_ident>
   }
 
   rule create_select {
@@ -86,10 +86,10 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   rule expr {
     [
       <expr> [ <or> | <XOR> | <and> ]
-      |
+      ||
       <NOT>
     ] <expr>
-    |
+    ||
     <bool_pri> [ <IS> <not2>? [ <TRUE> | <FALSE> | <UNKNOWN> ] ]?
   }
 
@@ -113,7 +113,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule group_clause {
-    <GROUP> <BY> <order_expr>+ % ',' [ <WITH_CUBE> || <WITH_ROLLUP> ]?
+    <GROUP> <BY> <order_expr>+ % ',' [ <WITH_CUBE> | <WITH_ROLLUP> ]?
   }
 
   rule having_clause {
@@ -131,11 +131,11 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule limit_clause {
-    <LIMIT> <limit_options> [ [ ',' || <OFFSET> ] <limit_options> ]?
+    <LIMIT> <limit_options> [ [ ',' | <OFFSET> ] <limit_options> ]?
   }
 
   rule line_term {
-    <LINES> [ $<t>=[ <TERMINATED> || <STARTING> ] <BY> $<s>=<text_string> ]+
+    <LINES> [ $<t>=[ <TERMINATED> | <STARTING> ] <BY> $<s>=<text_string> ]+
   }
 
   rule literal {
@@ -157,12 +157,12 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule lock_expire_opts {
-    <ACCOUNT> [ <UNLOCK> || <LOCK> ]
+    <ACCOUNT> [ <UNLOCK> | <LOCK> ]
     |
     <PASSWORD> <EXPIRE> [
       <INTERVAL> <num> <DAY>
       |
-      [ <NEVER> || <DEFAULT> ]
+      [ <NEVER> | <DEFAULT> ]
     ]
   }
 
@@ -744,66 +744,62 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule type {
-    $<t>=[ <INT> || <TINYINT> || <SMALLINT> || <MEDIUMINT> || <BIGINT> || <YEAR> ]
+    $<t>=[ <INT> | <TINYINT> | <SMALLINT> | <MEDIUMINT> | <BIGINT> | <YEAR> ]
     [ '(' <num> ')' ]?
     ||
-    $<t>=[ <REAL> || <DOUBLE> <PRECISION>? ]
+    $<t>=[ <REAL> | <DOUBLE> <PRECISION>? ]
     ||
-    $<t>=[ <FLOAT> || <DECIMAL> || <NUMERIC> || <FIXED> ]
+    $<t>=[ <FLOAT> | <DECIMAL> | <NUMERIC> | <FIXED> ]
     [
-      '(' [
-        [ <n=number> ]
-        |
-        [ <m=number> ',' <d=number> ]
-      ')' ]
-    ]? $<o>=[ <SIGNED> || <UNSIGNED> || <ZEROFILL> ]*
+      '(' [ <m=number> ] ')'
+      ||
+      '(' [ <m=number> ',' <d=number> ] ')'
+    ]? [ $<o>=[ <SIGNED> | <UNSIGNED> | <ZEROFILL> ] ]*
+    ||
+    $<t>=[ <BIT> | <BINARY> ] '(' <num> ')'
+    ||
+    $<t>=[ <BOOL> | <BOOLEAN> ]
     ||
     [
-      $<t>=[ <BIT> || <BINARY> ] '(' <num> ')'
+      $<t>=[ <CHAR> | <VARCHAR> ] '(' <num> ')'
       |
-      $<t>=[ <BOOL> || <BOOLEAN> ]
+      <t=TINYTEXT>
       |
-      [
-        $<t>=[ <CHAR> || <VARCHAR> ] '(' <num> ')'
-        |
-        <t=TINYTEXT>
-        |
-        <t=TEXT> [ '(' <num> ')' ]?
-        |
-        <t=MEDIUMTEXT>
-        |
-        <t=LONGTEXT>
-        |
-        $<t>=[ <ENUM> || <SET> ] '(' <text>+ % ',' ')'
-      ]
-      [
-        $<t>=[ [ <ASCII> <BINARY> ] || [<BINARY> <ASCII> ] ]
-        |
-        $<t>=[ [ <UNICODE> <BINARY> ] || [ <BINARY> <UNICODE> ] ]
-        |
-        <t=BYTE>
-        |
-        <charset> [ <_ident> || <text> ] <BINARY>?
-        |
-        <BINARY>? <charset> [ <_ident> || <text> ]
-      ]
+      <t=TEXT> [ '(' <num> ')' ]?
+      |
+      <t=MEDIUMTEXT>
+      |
+      <t=LONGTEXT>
+      |
+      $<t>=[ <ENUM> | <SET> ] '(' <text>+ % ',' ')'
     ]
+    $<b>=[
+      [ <ASCII> <BINARY>? ] || [<BINARY> <ASCII> ]
+      |
+      [ <UNICODE> <BINARY>? ] || [ <BINARY> <UNICODE> ]
+      |
+      <BYTE>
+      |
+      <charset> [ <text> || <_ident> ] <BINARY>?
+      |
+      <BINARY>? <charset> [ <text> || <_ident> ]
+    ]?
     ||
     [
       $<t>=[ <NCHAR> | <NATIONAL> <CHAR> ] [ '(' <num> ')' ]?
       |
       [
-        $<t>=[ <NATIONAL>  [ <VARCHAR> ] || [ <CHAR> <VARYING> ] ]
+        $<t>=[ <NATIONAL>  [ <VARCHAR> ] | [ <CHAR> <VARYING> ] ]
         |
         <t=NVARCHAR>
         |
-        $<t>=[ <NCHAR> [ <VARCHAR> || <VARYING> ] ]
+        $<t>=[ <NCHAR> [ <VARCHAR> | <VARYING> ] ]
       ]
     ] <BINARY>?
     ||
     <t=DATE>
     ||
-    $<t>=[ <TIME> || <TIMESTAMP> || <DATETIME> ] [ '(' <num> ')' ]?
+    $<t>=[ <TIME> | <TIMESTAMP> | <DATETIME> ] [ '(' <num> ')' ]?
     ||
     <t=TINYBLOB>
     ||
@@ -820,7 +816,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
       <MULTIPOLYGON>
     ]
     ||
-    $<t>=[ <MEDIUMBLOB> || <LONGBLOB> ]
+    $<t>=[ <MEDIUMBLOB> | <LONGBLOB> ]
     ||
     <t=LONG> $<o>=[
       <VARBINARY>
@@ -897,9 +893,9 @@ grammar Parser::SQL::Grammar::DDLGrammar {
 
   rule _limits {
     [
-      <MAX_QUERIES_PER_HOUR>     ||
-      <MAX_UPDATES_PER_HOUR>     ||
-      <MAX_CONNECTIONS_PER_HOUR> ||
+      <MAX_QUERIES_PER_HOUR>     |
+      <MAX_UPDATES_PER_HOUR>     |
+      <MAX_CONNECTIONS_PER_HOUR> |
       <MAX_USER_CONNECTIONS>
     ] <num>
   }
@@ -931,7 +927,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule match_clause {
-    <MATCH> [ <FULL> || <PARTIAL> || <SIMPLE> ]
+    <MATCH> [ <FULL> | <PARTIAL> | <SIMPLE> ]
   }
 
   rule normal_key_options {
@@ -989,7 +985,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
       # Not using % because of optional delimiter
       <require_list_element> [ <AND>? <require_list_element> ]*
       |
-      [ <SSL> || <X509> || <NONE> ]
+      [ <SSL> | <X509> | <NONE> ]
     ]
   }
 
@@ -1169,5 +1165,5 @@ our sub MAIN is export {
   SQL
 
   my $a = Parser::SQL::Grammar::DDLGrammar.parse($test);
-  say $a;
+  $a.gist.say;
 }
