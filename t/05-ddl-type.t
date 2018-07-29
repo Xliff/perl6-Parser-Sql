@@ -29,6 +29,15 @@ sub test-and-mutate($t, :$rx, :$range = '0'..'9', :$ident = True;) {
   $s;
 }
 
+sub test-number-spec($t, $count) {
+  my $txt = "{ $t }({ $count })";
+
+  my ($s) = test-and-mutate( $txt, :rx(/ ($t) /), :ident($t) );
+  ok $s<num> eq $count.Str, "Time number specification equals $count";
+  $t ~~ s/"($count)"//;
+  test($txt, :text("'$t' passes <type> without number spec"), :!ident);
+}
+
 sub MAIN {
   my $s;
 
@@ -150,13 +159,20 @@ sub MAIN {
   }
 
   test-and-mutate('DATE');
-  # $<t>=[ <TIME> | <TIMESTAMP> | <DATETIME> ] [ '(' <num> ')' ]?
-  for <TIME TIMESTAMP DATETIME> -> $term {
-    my $t = "$term (10)";
-    ($s) = test-and-mutate( $t, :rx(/ ($term) /), :ident($term) );
-    ok $s<num> eq '10', 'Time number specification equals 10';
-    $t ~~ s/'(10)'//;
-    test($t, :text("'$t' passes <type> without number spec"), :!ident);
-  }
+  test-number-spec($_, 10) for <TIME TIMESTAMP DATETIME>;
   test-and-mutate('TINYBLOB');
+  test-number-spec('BLOB', 11);
+  test-and-mutate($_) for <
+    GEOMETRY
+    GEOMETRYCOLLECTION
+    LINESTRING
+    MULTILINESTRING
+    MULTIPOINT
+    MULTIPOLYGON
+    POINT
+    POLYGON
+  >;
+
+  # $<t>=[ <MEDIUMBLOB> | <LONGBLOB> ]
+
 }
