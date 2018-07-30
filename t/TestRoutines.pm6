@@ -64,3 +64,58 @@ sub test-limits($rule = '_limits', :$prefix) is export {
     basic-and-mutate($t, $rule, :rx(/( $( $t0 ) )/) );
   }
 }
+
+sub test-literal($rule = 'literal') is export {
+  # <underscore_charset>? <text>
+  {
+    my $t = "_latin1 'text string'";
+
+    basic($t, $rule);
+    $t ~~ s/ '_latin1' //;
+    basic($t, $rule, :text("'$t' passes <$rule> without charset") );
+    # No negative test written - Possible to replace quotes? Revisit.
+  }
+
+  # 'N'<text>
+  {
+    my $t = 'N"text String"';
+    basic($t, $rule);
+    # No negative test possible without replacing the quotes. Revisit.
+  }
+
+  # <num>
+  {
+    my $t = '22';
+    # 'x' is not allowed in the range due to interpretation as
+    # a hexidecimal literal.
+    basic-and-mutate( $t, $rule, :range('a'..'w') );
+  }
+
+  # [ <DATE> | <TIME>  | <TIMESTAMP> ] <text>
+  for <DATE TIME TIMESTAMP> -> $term {
+    my $t = "$term 'date string'";
+    my $s = basic($t, $rule);
+    $s = $rule eq 'literal' ?? $s !! $s<literal>;
+
+    ok $s<text> eq "'date string'", 'Match<text> matches "date string"';
+    basic-mutate( $t, $rule, :rx(/( $( $term ) )/) );
+  }
+
+  # [ <NULL> | <FALSE> | <TRUE> ]
+  for <NULL FALSE TRUE> -> $term {
+    my $t = $term;
+
+    basic($t, $rule);
+    basic-mutate($t, $rule);
+  }
+
+  # <underscore_charset>? [ <hex_num> || <bin_num> ]
+  for <0xdeadbeef 0b10010101> -> $term {
+    my $t = "_latin1 $term";
+
+    basic($t, $rule);
+    $t ~~ s/ '_latin1' //;
+    basic($t, $rule, :text("'$t' passes <$rule> without charset") );
+    basic-mutate($t, $rule, :range('g'..'w') );;
+  }
+}

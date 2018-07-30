@@ -10,7 +10,7 @@ use TestRoutines;
 # WHEN REFACTORING, ALL TESTS THAT INCLUDE THE <EQ> TOKEN MUST ADD A test
 # REPLACING EQ WITH = FOR COMPLETENESS!!!
 
-plan 740;
+plan 772;
 
 my $count;
 for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
@@ -49,7 +49,6 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     group_clause
     having_clause
     key_def
-    now
     order_clause
     order_expr
     order_or_limit
@@ -651,57 +650,7 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   # ||
   # <underscore_charset>? [ <hex_num> || <bin_num> ]
   when 'literal' {
-    # <underscore_charset>? <text>
-    {
-      my $t = "_latin1 'text string'";
-
-      basic($t, $_);
-      $t ~~ s/ '_latin1' //;
-      basic($t, $_, :text("'$t' passes <$_> without charset") );
-      # No negative test written - Possible to replace quotes? Revisit.
-    }
-
-    # 'N'<text>
-    {
-      my $t = 'N"text String"';
-      basic($t, $_);
-      # No negative test possible without replacing the quotes. Revisit.
-    }
-
-    # <num>
-    {
-      my $t = '22';
-      # 'x' is not allowed in the range due to interpretation as
-      # a hexidecimal literal.
-      basic-and-mutate( $t, $_, :range('a'..'w') );
-    }
-
-    # [ <DATE> | <TIME>  | <TIMESTAMP> ] <text>
-    for <DATE TIME TIMESTAMP> -> $term {
-      my $t = "$term 'date string'";
-      my $s = basic($t, $_);
-
-      ok $s<text> eq "'date string'", 'Match<text> matches "date string"';
-      basic-mutate($t, $_, :rx(/( $( $term ) )/) );
-    }
-
-    # [ <NULL> | <FALSE> | <TRUE> ]
-    for <NULL FALSE TRUE> -> $term {
-      my $t = $term;
-
-      basic($t, $_);
-      basic-mutate($t, $_);
-    }
-
-    # <underscore_charset>? [ <hex_num> || <bin_num> ]
-    for <0xdeadbeef 0b10010101> -> $term {
-      my $t = "_latin1 $term";
-
-      basic($t, $_);
-      $t ~~ s/ '_latin1' //;
-      basic($t, $_, :text("'$t' passes <$_> without charset") );
-      basic-mutate($t, $_, :range('g'..'w') );;
-    }
+    test-literal();
   }
 
   when 'load_data_charset' {
@@ -900,6 +849,13 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     }
   }
 
+  when 'now' {
+    basic-and-mutate( 'NOW', $_, :rx(/ (NOW) /) );
+    basic('NOW()', $_);
+    my $s = basic('NOW(35)', $_);
+    ok $s<number> eq '35', 'Number specification for <now> is 35';
+  }
+
   # <ON> [
   #   <UPDATE> [ <delete_option> <ON> <UPDATE> ]?
   #   |
@@ -1073,6 +1029,12 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     ok
       $s<server_option>[1] eq 'PORT 31',
       'First element of Match<server_option> matches "PORT 31"';
+  }
+
+  when 'signed_literal' {
+    my $s = basic('+3.14159', $_);
+    $s = basic('-3.14159', $_);
+    test-literal('signed_literal');
   }
 
   when 'simple_ident_nospvar' {
