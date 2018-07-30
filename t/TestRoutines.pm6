@@ -59,9 +59,8 @@ sub test-limits($rule = '_limits', :$prefix) is export {
     'MAX_USER_CONNECTIONS'
   ) -> $term {
     my $t0 = "{ $prefix // '' }$term";
-    my $t = "$t0 17";
+    my $t = "$t0 417";
 
-    basic($t, $rule);
-    basic-mutate($t, $rule, :rx(/( $( $t0 ) )/) );
+    basic-and-mutate($t, $rule, :rx(/( $( $t0 ) )/) );
   }
 }

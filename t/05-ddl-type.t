@@ -7,7 +7,7 @@ use Parser::SQL::Grammar::DDLGrammar;
 use lib 't';
 use TestRoutines;
 
-plan 622;
+plan 642;
 
 sub test($t, :$text, :$ident = True) {
   my $i = $t;
@@ -33,7 +33,7 @@ sub test-number-spec($t, $count) {
   my $txt = "{ $t }({ $count })";
 
   my ($s) = test-and-mutate( $txt, :rx(/ ($t) /), :ident($t) );
-  ok $s<num> eq $count.Str, "Time number specification equals $count";
+  ok $s<number> eq $count.Str, "Time number specification equals $count";
   $t ~~ s/"($count)"//;
   test($txt, :text("'$t' passes <type> without number spec"), :!ident);
 }
@@ -42,12 +42,7 @@ sub MAIN {
   my $s;
 
   #$<t>=[ <INT> || <TINYINT> | <SMALLINT> | <MEDIUMINT> | <BIGINT> | <YEAR> ]
-  for <INT TINYINT SMALLINT MEDIUMINT BIGINT YEAR> -> $term {
-    my $t = "$term (1)";
-    ($s) = test-and-mutate( $t, :rx(/ ($term) /), :ident($term) );
-    $t ~~ s/' (1)'//;
-    test( $t, :text("'$t' passes rule without number spec"), :!ident );
-  }
+  test-number-spec($_, 1) for <INT TINYINT SMALLINT MEDIUMINT BIGINT YEAR>;
 
   #$<t>=[ <REAL> | <DOUBLE> <PRECISION>? ]
   test-and-mutate('REAL');
@@ -98,17 +93,13 @@ sub MAIN {
 
       given $term-o {
         when <CHAR TEXT>.any {
-          $t ~= "(6)";
-          ($s) = test-and-mutate( $t, :rx(/ ($term-o) /), :!ident );
-          ok $s<num> eq '6', 'Character number specification equals 6';
-          $t ~~ s/'(6)'//;
-          test($t, :text("'$t' passes <type> without number spec"), :!ident);
+          test-number-spec($_, 6);
         }
 
         when 'VARCHAR' {
           $t ~= '(7)';
           ($s) = test-and-mutate( $t, :rx(/ ($term-o) /), :!ident );
-          ok $s<num> eq '7', 'Character number specification equals 7';
+          ok $s<number> eq '7', 'Character number specification equals 7';
           $t ~~ s/'VARCHAR'/CHAR VARYING/;
           test($t, :text('CHAR VARYING in place of VARCHAR passes <type>'), :!ident);
           # XXX - Investigate why this does not succeed.
@@ -157,7 +148,7 @@ sub MAIN {
     } else {
       $s = test($t, :ident($term) );
     }
-    ok $s<num> eq '9', 'Character number specification equals 9';
+    ok $s<number> eq '9', 'Character number specification equals 9';
     $t ~~ s/'(9) '//;
     test($t, :text("'$t' passes <type> without number spec"), :!ident);
     $t ~~ s/'BINARY'//;

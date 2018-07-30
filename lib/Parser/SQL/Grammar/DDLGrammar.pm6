@@ -16,7 +16,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   rule attribute {
     <NOT>? <NULL>
     ||
-    <DEFAULT> $<o>=[ <now> || <num> || <literal> ]
+    <DEFAULT> $<o>=[<now> || <signed_literal>]
     ||
     <ON> <UPDATE> <now>
     ||
@@ -278,7 +278,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule table_alias {
-    [ <AS> || <EQ> ] <_ident>
+    [ <AS> | <EQ> ] <_ident>
   }
 
   rule table_expression {
@@ -305,7 +305,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   rule _join_table {
     :my rule __onexpr { <ON> <expr> };
     <table_ref> [
-      [ <INNER> || <CROSS> ]? <JOIN> <table_ref> [
+      [ <INNER> | <CROSS> ]? <JOIN> <table_ref> [
         <__onexpr>
         ||
         <USING> '(' <using_list> ')'
@@ -313,9 +313,9 @@ grammar Parser::SQL::Grammar::DDLGrammar {
       ||
       <STRAIGHT_JOIN> <table_factor> <__onexpr>?
       ||
-      <NATURAL> [ [ <LEFT> || <RIGHT> ] <OUTER>? ]? <JOIN> <table_factor>
+      <NATURAL> [ [ <LEFT> | <RIGHT> ] <OUTER>? ]? <JOIN> <table_factor>
       ||
-      [ <LEFT> || <RIGHT> ] <OUTER>? <JOIN> [
+      [ <LEFT> | <RIGHT> ] <OUTER>? <JOIN> [
        <table_ref> <__onexpr>
        ||
        <table_factor> <USING> '(' <using_list> ')'
@@ -341,21 +341,21 @@ grammar Parser::SQL::Grammar::DDLGrammar {
 
   rule _cast_type {
     [ <BINARY> | <NCHAR> ] [ '(' <number> ')' ]?
-    |
+    ||
     <CHAR> [ '(' <number> ')' ]? <BINARY>?
-    |
+    ||
     [ <SIGNED> | <UNSIGNED> ] <INT>?
-    |
+    ||
     <DATE>
-    |
+    ||
     [ <TIME> | <DATETIME> ] [ '(' <number> ')' ]?
-    |
+    ||
     <DECIMAL> [
       '(' [
         <m=number> [ ',' <d=number> ]?
       ] ')'
     ]?
-    |
+    ||
     <JSON>
   }
 
@@ -373,24 +373,31 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   rule _con_function_call {
     [
       [
-        [ <ASCII>   || <CHARSET> || <COLLATION> || <MICROSECOND> || <PASSWORD> ||
-          <QUARTER> || <REVERSE> ] '('
-        |
         [
-          [ <IF> || <REPLACE> ] '('  <expr> ','
-          |
-          [ <MOD> || <REPEAT> || <TRUNCATE> ] '('
+          <ASCII>       |
+          <CHARSET>     |
+          <COLLATION>   |
+          <MICROSECOND> |
+          <PASSWORD>    |
+          <QUARTER>     |
+          <REVERSE>
+        ] '('
+        ||
+        [
+          [ <IF> | <REPLACE> ] '('  <expr> ','
+          ||
+          [ <MOD> | <REPEAT> | <TRUNCATE> ] '('
         ] <expr> ','
-        |
+        ||
         [ <FORMAT>  '(' <expr> ','
-          |
+          ||
           <WEEK> '('
         ] <expr> ','?
       ] <expr>
       ||
       <COALESCE> '(' <expr_list>
       ||
-      [ <DATABASE> || <ROW_COUNT> ] '('
+      [ <DATABASE> | <ROW_COUNT> ] '('
       ||
       <WEIGHT_STRING> '(' <expr> [
         <__ws_levels>?
@@ -404,13 +411,17 @@ grammar Parser::SQL::Grammar::DDLGrammar {
         ]
       ]
       ||
-      [ <CONTAINS> || <POINT> ] '(' <expr> ',' <expr>
+      [ <CONTAINS> | <POINT> ] '(' <expr> ',' <expr>
       ||
       <GEOMETRYCOLLECTION> '(' <expr_list>?
       ||
-      [ <LINESTRING> || <MULTILINESTRING> || <MULTIPOINT> || <MULTIPOLYGON> ||
-        <POLYGON> ]
-      '(' <expr_list>
+      [
+        <LINESTRING>      |
+        <MULTILINESTRING> |
+        <MULTIPOINT>      |
+        <MULTIPOLYGON>    |
+        <POLYGON>
+      ] '(' <expr_list>
     ] ')'
   }
 
@@ -419,8 +430,8 @@ grammar Parser::SQL::Grammar::DDLGrammar {
       <CHAR> '(' <expr_list> [ USING <charset_name=ident> ]? ')'
       |
       [
-        [ <DATE> || <DAY> || <HOUR> || <MINUTE> || <MONTH> || <SECOND> ||
-          <TIME> || <YEAR>
+        [ <DATE> | <DAY> | <HOUR> | <MINUTE> | <MONTH> | <SECOND> |
+          <TIME> | <YEAR>
         ]
         |
         [
@@ -434,7 +445,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
         <TRIM> '(' [
           <expr>
           |
-          [ <LEADING> || <TRAILING> || <BOTH> ] <expr>?
+          [ <LEADING> | <TRAILING> | <BOTH> ] <expr>?
         ] <FROM>
       ] <expr>
       |
@@ -455,9 +466,9 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule _nonkey_function_call {
-    :my token _precision { '(' <num> ')'  };
+    :my token _precision { '(' <number> ')'  };
     [
-      [ <ADDDATE> || <SUBDATE> ] '(' <expr> ',' [
+      [ <ADDDATE> | <SUBDATE> ] '(' <expr> ',' [
         <expr> | <INTERVAL> <expr> <interval>
       ]
       ||
@@ -467,9 +478,9 @@ grammar Parser::SQL::Grammar::DDLGrammar {
         <EXTRACT> '(' <interval> <FROM>
         ||
         [
-          <GET_FORMAT> [ <DATE> || <TIME> || <TIMESTAMP> || <DATETIME> ]
+          <GET_FORMAT> [ <DATE> | <TIME> | <TIMESTAMP> | <DATETIME> ]
           ||
-          [ <TIMESTAMP_ADD> || <TIMESTAMP_DIFF> ] '(' <interval_time_stamp> ','
+          [ <TIMESTAMP_ADD> | <TIMESTAMP_DIFF> ] '(' <interval_time_stamp> ','
           <expr>
         ] ','
         ||
@@ -483,9 +494,9 @@ grammar Parser::SQL::Grammar::DDLGrammar {
       ] <expr>
     ] ')'
     ||
-    [ <CURDATE> || <UTC_DATE> ] [ '(' ')' ]?
+    [ <CURDATE> | <UTC_DATE> ] [ '(' ')' ]?
     ||
-    [ <CURTIME> || <SYSDATE> || <UTC_TIME> || <UTC_TIMESTAMP> ] <_precision>?
+    [ <CURTIME> | <SYSDATE> | <UTC_TIME> | <UTC_TIMESTAMP> ] <_precision>?
     ||
     <NOW> <_precision>?
   }
@@ -546,7 +557,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
       <CONVERT> '(' <EXPR> [
         ',' <_cast_type>
         ||
-        <USING> <charset_name=.ident>
+        <USING> <charset_name=_ident>
       ]
     ] ')'
     |
@@ -554,7 +565,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     |
     <CASE> <expr>?
     <_when_clause>+
-    [ <ELSE> <else_expr=.expr> ]? <END>
+    [ <ELSE> <else_expr=expr> ]? <END>
     |
     <INTERVAL> <expr> <interval> '+' <expr>
   }
@@ -573,10 +584,10 @@ grammar Parser::SQL::Grammar::DDLGrammar {
                 <VARIANCE>    || <STDDEV_SAMP> || <VAR_SAMP> ]
       '('
      ] <_in_sum_expr>
-     |
+     ||
      <GROUP_CONCAT> '(' <DISTINCT>? <expr_list> <_gorder_clause>?
      [ <SEPARATOR> <text> ]?
-     |
+     ||
      <COUNT> '(' [ <ALL>? | <_in_sum_expr> | <DISTINCT> <expr_list> ]
    ] ')'
  }
@@ -677,11 +688,11 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   rule field_def {
     <type> [
       <attribute>?
-      |
+      ||
       <collate_explicit>?
       <generated_always>?
       <AS> '(' <expr> ')'
-      [ <VIRTUAL> || <STORED> ]?
+      [ <VIRTUAL> | <STORED> ]?
       [ <gcol_attr>+ ]?
     ]
   }
@@ -700,8 +711,13 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     <PRIMARY>? <KEY>
   }
 
+  # Do we break this into <now> and <now_or_signed_literal>?=
   rule now {
-    <NOW> || <signed_literal>
+    <NOW> [ '(' <number>? ')' ]?
+  }
+
+  rule signed_literal {
+    <signed_number> || <literal>
   }
 
   rule col_def {
@@ -745,7 +761,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
 
   rule type {
     $<t>=[ <INT> | <TINYINT> | <SMALLINT> | <MEDIUMINT> | <BIGINT> | <YEAR> ]
-    [ '(' <num> ')' ]?
+    [ '(' <number> ')' ]?
     ||
     $<t>=[ <REAL> | <DOUBLE> <PRECISION>? ]
     ||
@@ -756,18 +772,18 @@ grammar Parser::SQL::Grammar::DDLGrammar {
       '(' [ <m=number> ',' <d=number> ] ')'
     ]? [ $<o>=[ <SIGNED> | <UNSIGNED> | <ZEROFILL> ] ]*
     ||
-    $<t>=[ <BIT> | <BINARY> ] '(' <num> ')'
+    $<t>=[ <BIT> | <BINARY> ] '(' <number> ')'
     ||
     $<t>=[ <BOOL> | <BOOLEAN> ]
     ||
     [
-      $<t>=[ <CHAR> <VARYING> || <VARCHAR> ] '(' <num> ')'
+      $<t>=[ <CHAR> <VARYING> || <VARCHAR> ] '(' <number> ')'
       ||
-      <t=CHAR> [ '(' <num> ')' ]?
+      <t=CHAR> [ '(' <number> ')' ]?
       ||
       <t=TINYTEXT>
       ||
-      <t=TEXT> [ '(' <num> ')' ]?
+      <t=TEXT> [ '(' <number> ')' ]?
       ||
       <t=MEDIUMTEXT>
       ||
@@ -795,15 +811,15 @@ grammar Parser::SQL::Grammar::DDLGrammar {
       <NCHAR> [ <VARCHAR> | <VARYING> ]?
       ||
       <NATIONAL> <CHAR>
-    ] [ '(' <num> ')' ]? <BINARY>?
+    ] [ '(' <number> ')' ]? <BINARY>?
     ||
     <t=DATE>
     ||
-    $<t>=[ <TIME> | <TIMESTAMP> | <DATETIME> ] [ '(' <num> ')' ]?
+    $<t>=[ <TIME> | <TIMESTAMP> | <DATETIME> ] [ '(' <number> ')' ]?
     ||
     <t=TINYBLOB>
     ||
-    <t=BLOB> [ '(' <num> ')' ]?
+    <t=BLOB> [ '(' <number> ')' ]?
     ||
     $<t>=[
       <GEOMETRY>           |
@@ -884,7 +900,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule key_list {
-    <_ident> [ '(' <num> ')' ]?  <order_dir>
+    <_ident> [ '(' <number> ')' ]?  <order_dir>
   }
 
   rule key_lists {
@@ -1009,7 +1025,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     [ <USER> | <HOST> | <DATABASE> | <OWNER> | <PASSWORD> | <SOCKET> ]
     <text>
     ||
-    <PORT> <num>
+    <PORT> <number>
   }
 
   rule server_opts {
