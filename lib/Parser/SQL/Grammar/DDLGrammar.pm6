@@ -506,7 +506,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
 
   rule simple_expr {
     :my rule _ident_list { <simple_ident>+ % ',' };
-    <simple_ident> [ <JSON_SEPARATOR> || <JSON_UNQ_SEPEARATOR> ] <text>
+    <simple_ident> [ <JSON_SEPARATOR> | <JSON_UNQ_SEPEARATOR> ] <text>
     |
     <_key_function_call>
     |
@@ -530,7 +530,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     |
     <sum_expr>
     |
-    [ <PLUS> || <MINUS> || <BIT_NOT> || <NOT> || <NOT_OP> || <BINARY> ]
+    [ <PLUS> | <MINUS> | <BIT_NOT> | <NOT> | <NOT_OP> | <BINARY> ]
     <simple_expr>
     |
     [
@@ -577,15 +577,24 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     :my rule _in_sum_expr { <ALL>? <expr> }
     [
       [
-        $<op>=[ <AVG> || <MIN> || <MAX> || <SUM> ] '(' <DISTINCT>?
+        $<op>=[ <AVG> | <MIN> | <MAX> | <SUM> ] '(' <DISTINCT>?
         |
-        $<op>=[ <BIT_AND>     || <BIT_OR>      || <BIT_XOR> || <STD> ||
-                <VARIANCE>    || <STDDEV_SAMP> || <VAR_SAMP> ]
-      '('
+        $<op>=[
+          <BIT_AND>     |
+          <BIT_OR>      |
+          <BIT_XOR>     |
+          <STD>         |
+          <VARIANCE>    |
+          <STDDEV_SAMP> |
+          <VAR_SAMP>
+        ] '('
      ] <_in_sum_expr>
      ||
-     <GROUP_CONCAT> '(' <DISTINCT>? <expr_list> <_gorder_clause>?
-     [ <SEPARATOR> <text> ]?
+     <GROUP_CONCAT> '('
+       <DISTINCT>?
+       <expr_list>
+       <_gorder_clause>?
+       [ <SEPARATOR> <text> ]?
      ||
      <COUNT> '(' [ <ALL>? | <_in_sum_expr> | <DISTINCT> <expr_list> ]
    ] ')'
@@ -609,10 +618,10 @@ grammar Parser::SQL::Grammar::DDLGrammar {
 
   rule variable {
     '@' [
-      [ <_ident> | <text> ] [ <SET> <expr> ]?
+      [ <text> || <_ident> ] [ <SET> <expr> ]?
       |
-      '@' [ <GLOBAL> || <LOCAL> || <SESSION> ] '.'
-      [ <_ident> | <text> ] [ '.' <_ident> ]?
+      '@' $<s>=[ <GLOBAL> | <LOCAL> | <SESSION> ] '.'
+      [ <text> || <_ident> ] [ '.' <_ident> ]?
     ]
   }
 
@@ -621,7 +630,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule create_table_opt {
-    <ENGINE> <EQ>? $<o>=[ <_ident> || <text> ]
+    <ENGINE> <EQ>? $<o>=[ <text> || <_ident> ]
     ||
     $<t_num>=[
       <MAX_ROWS>        |

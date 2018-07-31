@@ -525,8 +525,10 @@ our token IDENT_QUOTED is export                { 'IDENT_QUOTED' }
 our token IGNORE_SERVER_IDS is export           { 'IGNORE_SERVER_IDS' }
 our token INITIAL_SIZE is export                { 'INITIAL_SIZE' }
 our token INSERT_METHOD is export               { 'INSERT_METHOD' }
-our token JSON_SEPARATOR is export              { 'JSON_SEPARATOR' }
-our token JSON_UNQ_SEPEARATOR is export         { 'JSON_UNQ_SEPEARATOR' }
+
+our token JSON_SEPARATOR is export              { ':' }
+our token JSON_UNQ_SEPEARATOR is export         { ',' }
+
 our token KEY_BLOCK_SIZE is export              { 'KEY_BLOCK_SIZE' }
 our token MASTER_AUTO_POSITION is export        { 'MASTER_AUTO_POSITION' }
 our token MASTER_CONNECT_RETRY is export        { 'MASTER_CONNECT_RETRY' }
