@@ -239,13 +239,12 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule _into {
-    :my rule __select_var_ident { '@'? [ <_ident> | <text> ] }
     <INTO> [
       <OUTFILE> <text> <load_data_charset>? <field_term>? <line_term>?
-      |
+      ||
       <DUMPFILE> <text>
-      |
-      <__select_var_ident>+ % ','
+      ||
+      [ $<sv>=[ <text> || <_ident> ] ]+ % ','
     ]
   }
 
