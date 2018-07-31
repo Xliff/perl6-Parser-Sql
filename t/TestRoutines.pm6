@@ -14,7 +14,6 @@ our @ord is export = <
 sub basic($t, $rule, :$text, :$fail = False) is export {
   my $txt = $text // ($fail ?? "'$t' fails <$rule>" !! "'$t' passes <$rule>");
   my $s;
-
   if $fail {
     nok
       ($s = Parser::SQL::Grammar::DDLGrammar.subparse( $t , :rule($rule) ) ),
@@ -30,7 +29,6 @@ sub basic($t, $rule, :$text, :$fail = False) is export {
 sub basic-mutate($t0, $rule, :$rx, :$text, :$range = '0'..'9' ) is export {
   my $t = $t0;
   my $tm;
-
   with $rx {
     my $r = $t ~~ $rx;
     $tm := $t.substr-rw($r.from, $r.to - $r.from);
@@ -51,6 +49,7 @@ sub basic-and-mutate($t, $rule, :$rx, :$range = '0'..'9' ) is export {
   );
 }
 
+# Introduced in 04-ddl-easy
 sub test-limits($rule = '_limits', :$prefix) is export {
   for (
     'MAX_QUERIES_PER_HOUR',
@@ -60,7 +59,6 @@ sub test-limits($rule = '_limits', :$prefix) is export {
   ) -> $term {
     my $t0 = "{ $prefix // '' }$term";
     my $t = "$t0 417";
-
     basic-and-mutate($t, $rule, :rx(/( $( $t0 ) )/) );
   }
 }
@@ -104,7 +102,6 @@ sub test-literal($rule = 'literal') is export {
   # [ <NULL> | <FALSE> | <TRUE> ]
   for <NULL FALSE TRUE> -> $term {
     my $t = $term;
-
     basic($t, $rule);
     basic-mutate($t, $rule);
   }
@@ -118,4 +115,49 @@ sub test-literal($rule = 'literal') is export {
     basic($t, $rule, :text("'$t' passes <$rule> without charset") );
     basic-mutate($t, $rule, :range('g'..'w') );;
   }
+}
+
+# Originated in 04-ddl-easy. Used in:
+#   07-ddl-create_table_opt
+sub test-row_types($prefix = '', :$rule = 'row_types', :$rx, :$eq = False) is export {
+  for <DEFAULT FIXED DYNAMIC COMPRESSED REDUNDANT COMPACT> -> $term {
+    my $t = "{ $prefix }$term";
+    basic-and-mutate($t, $rule, :$rx);
+    if $eq {
+      my $eq_sym = $eq !~~ Bool ?? $eq !! 'EQ';
+      $t ~~ s/$eq_sym//;
+      basic($t, $rule);
+    }
+  }
+}
+
+# Introduced in 05-ddl-type
+sub test($t, :$rule = 'type', :$text, :$ident = True) is export {
+  my $i = $t;
+  my $s = basic($t, $rule, :$text);
+  $i = $ident unless $ident ~~ Bool;
+  ok $s<t>.trim eq $i, "Match<t> returns the correct value of '$i'" if $ident;
+  $s;
+}
+
+sub test-mutate($t, :$rule = 'type', :$rx, :$range = '0'..'9') is export {
+  basic-mutate($t, $rule, :$rx, :$range);
+}
+
+sub test-and-mutate($t, :$rule = 'type', :$rx, :$range = '0'..'9', :$ident = True)
+  is export
+{
+  my ($s, $sm) = basic-and-mutate($t, $rule, :$rx, :$range);
+  my $i = $t;
+  $i = $ident unless $ident ~~ Bool;
+  ok $s<t>.trim eq $i, "Match<t> returns the correct value of '$i'" if $ident;
+  $s;
+}
+
+sub test-number-spec($t, $count, :$rule = 'type') is export {
+  my $txt = "{ $t }({ $count })";
+  my ($s) = test-and-mutate( $txt, :rx(/ ($t) /), :$rule, :ident($t) );
+  ok $s<number> eq $count.Str, "Time number specification equals $count";
+  $t ~~ s/"($count)"//;
+  test($txt, :text("'$t' passes <type> without number spec"), :!ident);
 }

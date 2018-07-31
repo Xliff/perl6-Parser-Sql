@@ -1268,9 +1268,7 @@ TEST
   }
 
   when 'row_types' {
-    for <DEFAULT FIXED DYNAMIC COMPRESSED REDUNDANT COMPACT> -> $term {
-      basic-and-mutate($term, $_);
-    }
+    test-row_types();
   }
 
   when 'use_partition' {

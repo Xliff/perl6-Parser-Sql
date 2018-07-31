@@ -9,35 +9,6 @@ use TestRoutines;
 
 plan 642;
 
-sub test($t, :$text, :$ident = True) {
-  my $i = $t;
-  my $s = basic($t, 'type', :$text);
-  $i = $ident unless $ident ~~ Bool;
-  ok $s<t>.trim eq $i, "Match<t> returns the correct value of '$i'" if $ident;
-  $s;
-}
-
-sub test-mutate($t, :$rx, :$range = '0'..'9') {
-  basic-mutate($t, 'type', :$rx, :$range);
-}
-
-sub test-and-mutate($t, :$rx, :$range = '0'..'9', :$ident = True;) {
-  my ($s, $sm) = basic-and-mutate($t, 'type', :$rx, :$range);
-  my $i = $t;
-  $i = $ident unless $ident ~~ Bool;
-  ok $s<t>.trim eq $i, "Match<t> returns the correct value of '$i'" if $ident;
-  $s;
-}
-
-sub test-number-spec($t, $count) {
-  my $txt = "{ $t }({ $count })";
-
-  my ($s) = test-and-mutate( $txt, :rx(/ ($t) /), :ident($t) );
-  ok $s<number> eq $count.Str, "Time number specification equals $count";
-  $t ~~ s/"($count)"//;
-  test($txt, :text("'$t' passes <type> without number spec"), :!ident);
-}
-
 sub MAIN {
   my $s;
 
