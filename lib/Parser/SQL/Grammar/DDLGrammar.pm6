@@ -625,10 +625,6 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     ]
   }
 
-  rule create_table_opts {
-    <create_table_opt>+ % ','
-  }
-
   rule create_table_opt {
     $<t_ti>=[
       <ENGINE>
@@ -671,6 +667,10 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     <TABLESPACE> <EQ>? <ts_ident=_ident>
     ||
     <STORAGE> $<o>=[ <DISK> | <MEMORY> ]
+  }
+
+  rule create_table_opts {
+    <create_table_opt>+ % ','
   }
 
   rule check_constraint {

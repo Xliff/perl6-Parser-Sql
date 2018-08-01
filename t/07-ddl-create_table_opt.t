@@ -7,22 +7,35 @@ use Parser::SQL::Grammar::DDLGrammar;
 use lib 't';
 use TestRoutines;
 
-plan 226;
+plan 227;
 
 my ($s, $sm);
 my $rule = 'create_table_opt';
 my $ident = False;
+
+my @opts;
+my $opts_added;
+
+sub random_add_opt($t) {
+  # 50% chance to add an opt until flag is set.
+  return if $opts_added;
+  @opts.push: $t if (^4).pick == 0;
+  $opts_added = True;
+}
 
 # $<t_ti>=[
 #   <ENGINE>
 #   ||
 #   <DEFAULT>? [ <charset> || <COLLATE> ]
 # ] <EQ>? $<o>=[ <text> || <_ident> ]
+$opts_added = False;
 for ('ENGINE', 'CHAR SET', 'CHARSET', 'COLLATE') -> $term-o {
   for ("'text string'", '@ident') -> $term-i {
     my $to = $term-o;
     $to = "DEFAULT $to" unless $term-o eq 'ENGINE';
     my $t = "$to EQ $term-i";
+
+    random_add_opt($t);
 
     ($s, $sm) = test-and-mutate($t, :rx( /($term-o)/ ), :$rule, :$ident);
     ok $s<t_ti>.trim eq $to, "Match<t_ti> is defined and properly set to '$to'";
@@ -47,6 +60,7 @@ for ('ENGINE', 'CHAR SET', 'CHARSET', 'COLLATE') -> $term-o {
 #   <DELAY_KEY_WRITE> |
 #   <KEY_BLOCK_SIZE>
 # ] <EQ>? <number>
+$opts_added = False;
 for <
   MAX_ROWS
   MIN_ROWS
@@ -58,6 +72,8 @@ for <
   KEY_BLOCK_SIZE
 > -> $term {
   my $t = "$term EQ 1";
+
+  random_add_opt($t);
 
   ($s, $sm) = test-and-mutate($t, :$rule, :rx(/ ($term) /), :$ident);
   ok $s<t_number>.trim eq $term, 'Match<t_number> is defined and properly set';
@@ -73,6 +89,7 @@ for <
 #   <ENCRYPTION>  |
 #   [ <DATA> | <INDEX> ] <DIRECTORY>
 # ] <EQ>? <text>
+$opts_added = False;
 for <
   PASSWORD
   COMMENT
@@ -84,6 +101,8 @@ for <
   my $term = $term0;
   $term ~= ' DIRECTORY' if $term0 eq <DATA INDEX>.any;
   my $t = "$term EQ 'just another perl hacker'";
+
+  random_add_opt($t);
 
   ($s, $sm) = test-and-mutate($t, :$rule, :rx(/ ($term) /), :$ident);
   ok $s<t_text>.trim eq $term, 'Match<t_text> is defined and properly set.';
@@ -100,6 +119,7 @@ for <
 #   <STATS_PERSISTENT>  |
 #   <STATS_SAMPLE_PAGES>
 # ] <EQ>? $<o>=[ <number> || <DEFAULT> ]
+$opts_added = False;
 for <
   PACK_KEYS
   STATS_AUTO_RECALC
@@ -109,6 +129,8 @@ for <
   for ('2', 'DEFAULT') -> $term-i {
     my $t = "$term-o EQ $term-i";
 
+    random_add_opt($t);
+
     ($s, $sm) = test-and-mutate($t, :$rule, :rx(/ ($term-o) /), :$ident);
     ok $s<t_o>.trim eq $term-o, 'Match<t_o> is defined and properly set';
     ok $s<o> eq $term-i, "Match<o> is set and equals $term-i";
@@ -117,6 +139,12 @@ for <
   }
 }
 
+#### ↓↓↓↓ FUTURE ISSUE ↓↓↓↓ ####
+#
+# cw: Note, that the next 4 tests will never be added to the create_table_opts
+# test, due to reuse limitations, it would be enough to force a simple test
+# outside of the functions, but that can be left for later.
+
 # <ROW_FORMAT> <EQ>? <row_types>
 test-row_types("ROW_FORMAT EQ ", :$rule, :eq);
 
@@ -124,10 +152,18 @@ test-row_types("ROW_FORMAT EQ ", :$rule, :eq);
 test-table_list('UNION EQ (%s)', :$rule);
 test-table_list('UNION (%s)', :$rule);
 basic-and-mutate('UNION()', $rule, :rx(/ ('UNION') /) );
+# INSURE there is a test in @opts by this point. otherwise add this with 25% chance.
+@opts.push: "UNION()" if !@opts || (^4).pick == 0;
+#
+#### ↑↑↑↑ FUTURE ISSUE ↑↑↑↑ ####
+
 
 # <INSERT_METHOD> <EQ>? $<o>=[ <NO> | <FIRST> | <LAST> ]
+$opts_added = False;
 for <NO FIRST LAST> -> $term {
   my $t = "INSERT_METHOD EQ $term";
+
+  random_add_opt($t);
 
   ($s, $sm) = test-and-mutate($t, :$rule, :rx(/ ('INSERT_METHOD') /), :$ident);
   ok $s<o> eq $term, "Match<o> is set and equals $term";
@@ -136,8 +172,11 @@ for <NO FIRST LAST> -> $term {
 }
 
 # <TABLESPACE> <EQ>? <ts_ident=ident>
+$opts_added = False;
 for <tablespace @a_table_space_name 'quoted_name' "double_quoted_name"> -> $term {
   my $t = "TABLESPACE EQ $term";
+
+  random_add_opt($t);
 
   ($s, $sm) = test-and-mutate($t, :$rule, :rx(/ ('TABLESPACE') /), :$ident);
   ok $s<ts_ident> eq $term, "Match<ts_ident> is set and equals '$term'";
@@ -146,7 +185,22 @@ for <tablespace @a_table_space_name 'quoted_name' "double_quoted_name"> -> $term
 }
 
 # <STORAGE> $<o>=[ <DISK> | <MEMORY> ]
+$opts_added = False;
 for <DISK MEMORY> -> $term {
-  ($s, $sm) = test-and-mutate( "STORAGE $term", :$rule, :rx(/ ('STORAGE') /), :$ident );
+  my $t = "STORAGE $term";
+
+  random_add_opt($t);
+
+  ($s, $sm) = test-and-mutate( $t, :$rule, :rx(/ ('STORAGE') /), :$ident );
   ok $s<o> eq $term, "Match<o> is set and equals '$term'";
+}
+
+# <create_table_opts> TEST
+subtest '<create_table_opts> tests' => {
+  my $t = "{ @opts.join(', ') }";
+
+  $s = basic($t, 'create_table_opts');
+  ok $s<create_table_opt> == @opts, "Match<create_table_opts> contains { +@opts } elements";
+  ok $s<create_table_opt>[$_] eq @opts[$_], "{ @ord[$_] } element is { @opts[$_] }"
+    for ^@opts.elems;
 }
