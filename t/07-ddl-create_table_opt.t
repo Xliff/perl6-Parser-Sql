@@ -197,10 +197,10 @@ for <DISK MEMORY> -> $term {
 
 # <create_table_opts> TEST
 subtest '<create_table_opts> tests' => {
-  my $t = "{ @opts.join(', ') }";
+  my $t = "{ @opts.join(' , ') }";
 
   $s = basic($t, 'create_table_opts');
   ok $s<create_table_opt> == @opts, "Match<create_table_opts> contains { +@opts } elements";
-  ok $s<create_table_opt>[$_] eq @opts[$_], "{ @ord[$_] } element is { @opts[$_] }"
+  ok $s<create_table_opt>[$_].trim eq @opts[$_], "{ @ord[$_] } element is { @opts[$_] }"
     for ^@opts.elems;
 }

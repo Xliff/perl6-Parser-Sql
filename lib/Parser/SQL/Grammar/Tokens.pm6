@@ -814,12 +814,12 @@ our token query_spec_option is export {
   <SQL_CALC_FOUND_ROWS> | <ALL>
 }
 
-our token simple_ident is export {
-  <simple_ident_q>
-}
-
 our token simple_ident_q is export {
   '.'? <_ident> ** 1..3 % '.'
+}
+
+our token simple_ident is export {
+  <simple_ident_q>
 }
 
 our token text is export {

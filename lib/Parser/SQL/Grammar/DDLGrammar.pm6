@@ -37,18 +37,19 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     <STORAGE> $<o>=[ <DEFAULT> | <DISK> | <MEMORY> ]
   }
 
+  # How to properly write a self-referential rule, properly?
   rule bit_expr {
-    <bit_expr> [
-      <bit_ops> <bit_expr>
-      |
-      <plus_minus> [
-        <bit_expr>
-        |
-        <INTERNAL> <expr> <interval>
+    <simple_expr> [
+      $<h>=[ <bit_ops> <bit_expr> ]
+      ||
+      $<l>=[
+        <plus_minus> [
+          <bit_expr>
+          ||
+          <INTERNAL> <expr> <interval>
+        ]
       ]
-    ]
-    |
-    <simple_expr>
+    ]?
   }
 
   rule bool_pri {
@@ -84,13 +85,13 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule expr {
-    [
-      <expr> [ <or> | <XOR> | <and> ]
-      ||
-      <NOT>
-    ] <expr>
+    <NOT> <expr>
     ||
     <bool_pri> [ <IS> <not2>? [ <TRUE> | <FALSE> | <UNKNOWN> ] ]?
+    [
+      [ <or> | <XOR> | <and> ]
+      <expr>
+    ]?
   }
 
   rule expr_list {
@@ -158,10 +159,10 @@ grammar Parser::SQL::Grammar::DDLGrammar {
 
   rule lock_expire_opts {
     <ACCOUNT> [ <UNLOCK> | <LOCK> ]
-    |
+    ||
     <PASSWORD> <EXPIRE> [
       <INTERVAL> <num> <DAY>
-      |
+      ||
       [ <NEVER> | <DEFAULT> ]
     ]
   }
@@ -176,7 +177,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
 
   rule order_or_limit {
     <order_clause> <limit_clause>?
-    |
+    ||
     <limit_clause>
   }
 
@@ -184,22 +185,22 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     :my rule _in_expr { <IN> '(' [ <subselect> || <expr_list> ] ')' }
     [
       <AND> <bit_expr> <BETWEEN> <not2>?
-      |
+      ||
       <bit_expr>
     ]
     [
       <_in_expr>
-      |
+      ||
       <not2> [
         <_in_expr>
-        |
+        ||
         <LIKE> <simple_expr> <escape>?
-        |
+        ||
         <REGEXP> <bit_expr>
       ]
-      |
+      ||
       [ <SOUNDS> <LIKE> | <REGEXP> ] <bit_expr>
-      |
+      ||
       <LIKE> <simple_expr> <escape>?
     ]?
   }
@@ -210,12 +211,12 @@ grammar Parser::SQL::Grammar::DDLGrammar {
 
   rule query_spec {
     <SELECT> <select_part2_derived> <table_expression>
-    |
+    ||
     '(' <select_paren_derived> ')' <order_or_limit>?
   }
 
   rule select_item {
-    <table_wild> | <expr> <select_alias>
+    <table_wild> || <expr> <select_alias>
   }
 
   rule select_item_list {
@@ -251,10 +252,12 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   rule select_part2 {
     <select_option> <select_item_list>
     [
-      <order_clause>? <limit_clause>?
-      |
-      <_into>
-      |
+      <order_clause> <limit_clause>
+      ||
+      <order_clause>
+      ||
+      <limit_clause>
+      ||
       <_into>?
         <from_clause>
         <where_clause>?
@@ -265,7 +268,9 @@ grammar Parser::SQL::Grammar::DDLGrammar {
         <procedure_analyse_clause>?
         <_into>?
         <select_lock_type>?
-    ]
+      ||
+      <_into>
+    ]?
   }
 
   rule select_part2_derived {
@@ -273,7 +278,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule simple_ident_nospvar {
-    <_ident> | <simple_ident_q>
+    <_ident> || <simple_ident_q>
   }
 
   rule table_alias {
@@ -427,32 +432,32 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   rule _key_function_call {
     [
       <CHAR> '(' <expr_list> [ USING <charset_name=ident> ]? ')'
-      |
+      ||
       [
         [ <DATE> | <DAY> | <HOUR> | <MINUTE> | <MONTH> | <SECOND> |
           <TIME> | <YEAR>
         ]
-        |
+        ||
         [
           <INSERT> '(' <expr> ',' <expr> ','
-          |
-          [ <LEFT> || <RIGHT> ] '('
+          ||
+          [ <LEFT> | <RIGHT> ] '('
         ] <expr> ','
-        |
+        ||
         <TIMESTAMP> '(' [ <expr> ',' ]?
-        |
+        ||
         <TRIM> '(' [
           <expr>
-          |
+          ||
           [ <LEADING> | <TRAILING> | <BOTH> ] <expr>?
         ] <FROM>
       ] <expr>
-      |
+      ||
       <USER> '('
-      |
+      ||
       <INTERVAL> '(' <expr> ',' <expr> [ ',' <expr_list> ]?
     ] ')'
-    |
+    ||
     <CURRENT_USER> [ '(' ')' ]?
   }
 
@@ -630,8 +635,8 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   rule create_table_opt {
     $<t_ti>=[
       <ENGINE>
-      ||
-      <DEFAULT>? [ <charset> || <COLLATE> ]
+      |
+      <DEFAULT>? [ <charset> | <COLLATE> ]
     ] <EQ>? $<o>=[ <text> || <_ident> ]
     ||
     $<t_number>=[
@@ -855,9 +860,8 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     <t=JSON>
   }
 
-  # XXX - Check this for completeness
   rule all_key_opt {
-    <KEY_BLOCK_SIZE> <EQ>? <num> | <COMMENT> <text>
+    <KEY_BLOCK_SIZE> <EQ>? <num> || <COMMENT> <text>
   }
 
   rule constraint_key_type {
@@ -897,11 +901,11 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule fulltext_key_opt {
-    [ <all_key_opt> || <WITH> <PARSER> <ident_sys> ]
+    <all_key_opt> || <WITH> <PARSER> <ident_sys>
   }
 
   rule grant_opts {
-    <GRANT> <OPTION> | <_limits>
+    <GRANT> <OPTION> || <_limits>
   }
 
   rule key_alg {
@@ -1050,7 +1054,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     <SUBPARTITION> <BY> <LINEAR>?
     [
       <HASH> '(' <bit_expr> ')'
-      |
+      ||
       <KEY> <key_alg>? '(' <_ident>+ % ',' ')'
     ] [ <SUBPARTITIONS> <number> ]?
   }
@@ -1125,39 +1129,39 @@ grammar Parser::SQL::Grammar::DDLGrammar {
         <TEMPORARY>? <TABLE> <if_not_exists>? <table_ident> [
           '(' [
             <create_field_list> ')' <create_table_opts>? <create_partitioning>? <create3>?
-            |
+            ||
             <create_partitioning>? <create_select> ')' <union_opt>?
-            |
+            ||
             <LIKE> <table_ident> ')'
           ]
-          |
+          ||
           <create_table_opts>? <create_partitioning>? <create3>?
-          |
+          ||
           <LIKE> <table_ident>
         ]
-        |
+        ||
         [
           <UNIQUE>? <INDEX> <idx_ident=_ident> <key_alg> 'ON' <table_ident> '(' <key_lists> ')' <normal_key_options>?
-          |
+          ||
           <FULLTEXT> <INDEX> <idx_ident=_ident> 'ON' <table_ident> '('
            <key_lists> ')' <fulltext_key_opt>?
-          |
+          ||
           <SPACIAL> <INDEX> <idx_ident=_ident> 'ON'  <table_ident> '('
            <key_lists> ')' <spacial_key_opt>?
         ] <index_lock_algo>?
-        |
+        ||
         <DATABASE> <if_not_exists>? <_ident> <create_database_opts>?
-        |
+        ||
         <USER> <if not exists>?
           <grant_opts>?
           <require_clause>
           <connect_opts>
           <lock_expire_opts>?
-        |
+        ||
         <LOGFILE> <GROUP> <logfile_group_info>
-        |
+        ||
         <TABLESPACE> <tablespace_info>
-        |
+        ||
         <SERVER>
           [ <server_ident=_ident> || <server_text=text> ]
           <FOREIGN> <DATA> <WRAPPER>
@@ -1178,6 +1182,8 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
 };
+
+constant \P_MYSQL is export := Parser::SQL::Grammar::DDLGrammar;
 
 # our sub MAIN is export {
 #   my $test = qq:to/SQL/;
