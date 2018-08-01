@@ -1,0 +1,818 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="630"
+   height="614"
+   version="1.1"
+   id="svg260"
+   sodipodi:docname="predicate.svg"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)">
+  <metadata
+     id="metadata264">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1340"
+     inkscape:window-height="872"
+     id="namedview262"
+     showgrid="false"
+     inkscape:zoom="1.1745514"
+     inkscape:cx="315.25"
+     inkscape:cy="341.05556"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="a252" />
+  <defs
+     id="defs4">
+    <style
+       type="text/css"
+       id="style2">
+               @namespace &quot;http://www.w3.org/2000/svg&quot;;
+               .line                 {fill: none; stroke: #0D2026;}
+               .bold-line            {stroke: #050D0F; shape-rendering: crispEdges; stroke-width:
+               2; }
+               .thin-line            {stroke: #081317; shape-rendering: crispEdges}
+               .filled               {fill: #0D2026; stroke: none;}
+               text.terminal         {font-family: Verdana, Sans-serif;
+               font-size: 12px;
+               fill: #050D0F;
+               font-weight: bold;
+               }
+               text.nonterminal      {font-family: Verdana, Sans-serif;
+               font-size: 12px;
+               fill: #061013;
+               }
+               text.regexp           {font-family: Verdana, Sans-serif;
+               font-size: 12px;
+               fill: #081317;
+               }
+               rect, circle, polygon {fill: #0D2026; stroke: #0D2026;}
+               rect.terminal         {fill: #66B3CC; stroke: #0D2026;}
+               rect.nonterminal      {fill: #9ECFDF; stroke: #0D2026;}
+               rect.text             {fill: none; stroke: none;}
+               polygon.regexp        {fill: #BBDDE8; stroke: #0D2026;}
+
+            </style>
+  </defs>
+  <polygon
+     points="11 93 3 89 3 97"
+     id="polygon6" />
+  <polygon
+     points="19 93 11 89 11 97"
+     id="polygon8" />
+  <a
+     xlink:href="#bit_expr"
+     xlink:title="bit_expr"
+     id="a16">
+    <rect
+       x="53"
+       y="79"
+       width="68"
+       height="32"
+       id="rect10" />
+    <rect
+       x="51"
+       y="77"
+       width="68"
+       height="32"
+       class="nonterminal"
+       id="rect12"
+       style="fill:#ffff00" />
+    <text
+       class="nonterminal"
+       x="61"
+       y="97"
+       id="text14">bit_expr</text>
+  </a>
+  <a
+     xlink:href="#AND_SYM"
+     xlink:title="AND_SYM"
+     id="a24">
+    <rect
+       x="53"
+       y="3"
+       width="78"
+       height="32"
+       id="rect18" />
+    <rect
+       x="51"
+       y="1"
+       width="78"
+       height="32"
+       class="nonterminal"
+       id="rect20" />
+    <text
+       class="nonterminal"
+       x="61"
+       y="21"
+       id="text22">AND_SYM</text>
+  </a>
+  <a
+     xlink:href="#bit_expr"
+     xlink:title="bit_expr"
+     id="a32">
+    <rect
+       x="151"
+       y="3"
+       width="68"
+       height="32"
+       id="rect26" />
+    <rect
+       x="149"
+       y="1"
+       width="68"
+       height="32"
+       class="nonterminal"
+       id="rect28"
+       style="fill:#ffff00" />
+    <text
+       class="nonterminal"
+       x="159"
+       y="21"
+       id="text30">bit_expr</text>
+  </a>
+  <a
+     xlink:href="#BETWEEN_SYM"
+     xlink:title="BETWEEN_SYM"
+     id="a40">
+    <rect
+       x="239"
+       y="3"
+       width="110"
+       height="32"
+       id="rect34" />
+    <rect
+       x="237"
+       y="1"
+       width="110"
+       height="32"
+       class="nonterminal"
+       id="rect36" />
+    <text
+       class="nonterminal"
+       x="247"
+       y="21"
+       id="text38">BETWEEN_SYM</text>
+  </a>
+  <a
+     xlink:href="#not"
+     xlink:title="not"
+     id="a48">
+    <rect
+       x="389"
+       y="35"
+       width="40"
+       height="32"
+       id="rect42" />
+    <rect
+       x="387"
+       y="33"
+       width="40"
+       height="32"
+       class="nonterminal"
+       id="rect44" />
+    <text
+       class="nonterminal"
+       x="397"
+       y="53"
+       id="text46">not</text>
+  </a>
+  <a
+     xlink:href="#IN_SYM"
+     xlink:title="IN_SYM"
+     id="a56">
+    <rect
+       x="45"
+       y="165"
+       width="66"
+       height="32"
+       id="rect50" />
+    <rect
+       x="43"
+       y="163"
+       width="66"
+       height="32"
+       class="nonterminal"
+       id="rect52" />
+    <text
+       class="nonterminal"
+       x="53"
+       y="183"
+       id="text54">IN_SYM</text>
+  </a>
+  <rect
+     x="131"
+     y="165"
+     width="26"
+     height="32"
+     rx="10"
+     id="rect58" />
+  <rect
+     x="129"
+     y="163"
+     width="26"
+     height="32"
+     class="terminal"
+     rx="10"
+     id="rect60" />
+  <text
+     class="terminal"
+     x="139"
+     y="183"
+     id="text62">(</text>
+  <a
+     xlink:href="#subselect"
+     xlink:title="subselect"
+     id="a70">
+    <rect
+       x="197"
+       y="165"
+       width="74"
+       height="32"
+       id="rect64" />
+    <rect
+       x="195"
+       y="163"
+       width="74"
+       height="32"
+       class="nonterminal"
+       id="rect66" />
+    <text
+       class="nonterminal"
+       x="205"
+       y="183"
+       id="text68">subselect</text>
+  </a>
+  <a
+     xlink:href="#expr"
+     xlink:title="expr"
+     id="a78">
+    <rect
+       x="197"
+       y="209"
+       width="46"
+       height="32"
+       id="rect72" />
+    <rect
+       x="195"
+       y="207"
+       width="46"
+       height="32"
+       class="nonterminal"
+       id="rect74" />
+    <text
+       class="nonterminal"
+       x="205"
+       y="227"
+       id="text76">expr</text>
+  </a>
+  <rect
+     x="283"
+     y="241"
+     width="24"
+     height="32"
+     rx="10"
+     id="rect80" />
+  <rect
+     x="281"
+     y="239"
+     width="24"
+     height="32"
+     class="terminal"
+     rx="10"
+     id="rect82" />
+  <text
+     class="terminal"
+     x="291"
+     y="259"
+     id="text84">,</text>
+  <a
+     xlink:href="#expr_list"
+     xlink:title="expr_list"
+     id="a92">
+    <rect
+       x="327"
+       y="241"
+       width="70"
+       height="32"
+       id="rect86" />
+    <rect
+       x="325"
+       y="239"
+       width="70"
+       height="32"
+       class="nonterminal"
+       id="rect88" />
+    <text
+       class="nonterminal"
+       x="335"
+       y="259"
+       id="text90">expr_list</text>
+  </a>
+  <rect
+     x="457"
+     y="165"
+     width="26"
+     height="32"
+     rx="10"
+     id="rect94" />
+  <rect
+     x="455"
+     y="163"
+     width="26"
+     height="32"
+     class="terminal"
+     rx="10"
+     id="rect96" />
+  <text
+     class="terminal"
+     x="465"
+     y="183"
+     id="text98">)</text>
+  <a
+     xlink:href="#not"
+     xlink:title="not"
+     id="a106">
+    <rect
+       x="45"
+       y="285"
+       width="40"
+       height="32"
+       id="rect100" />
+    <rect
+       x="43"
+       y="283"
+       width="40"
+       height="32"
+       class="nonterminal"
+       id="rect102" />
+    <text
+       class="nonterminal"
+       x="53"
+       y="303"
+       id="text104">not</text>
+  </a>
+  <a
+     xlink:href="#IN_SYM"
+     xlink:title="IN_SYM"
+     id="a114">
+    <rect
+       x="125"
+       y="285"
+       width="66"
+       height="32"
+       id="rect108" />
+    <rect
+       x="123"
+       y="283"
+       width="66"
+       height="32"
+       class="nonterminal"
+       id="rect110" />
+    <text
+       class="nonterminal"
+       x="133"
+       y="303"
+       id="text112">IN_SYM</text>
+  </a>
+  <rect
+     x="211"
+     y="285"
+     width="26"
+     height="32"
+     rx="10"
+     id="rect116" />
+  <rect
+     x="209"
+     y="283"
+     width="26"
+     height="32"
+     class="terminal"
+     rx="10"
+     id="rect118" />
+  <text
+     class="terminal"
+     x="219"
+     y="303"
+     id="text120">(</text>
+  <a
+     xlink:href="#subselect"
+     xlink:title="subselect"
+     id="a128">
+    <rect
+       x="277"
+       y="285"
+       width="74"
+       height="32"
+       id="rect122" />
+    <rect
+       x="275"
+       y="283"
+       width="74"
+       height="32"
+       class="nonterminal"
+       id="rect124" />
+    <text
+       class="nonterminal"
+       x="285"
+       y="303"
+       id="text126">subselect</text>
+  </a>
+  <a
+     xlink:href="#expr"
+     xlink:title="expr"
+     id="a136">
+    <rect
+       x="277"
+       y="329"
+       width="46"
+       height="32"
+       id="rect130" />
+    <rect
+       x="275"
+       y="327"
+       width="46"
+       height="32"
+       class="nonterminal"
+       id="rect132" />
+    <text
+       class="nonterminal"
+       x="285"
+       y="347"
+       id="text134">expr</text>
+  </a>
+  <rect
+     x="363"
+     y="361"
+     width="24"
+     height="32"
+     rx="10"
+     id="rect138" />
+  <rect
+     x="361"
+     y="359"
+     width="24"
+     height="32"
+     class="terminal"
+     rx="10"
+     id="rect140" />
+  <text
+     class="terminal"
+     x="371"
+     y="379"
+     id="text142">,</text>
+  <a
+     xlink:href="#expr_list"
+     xlink:title="expr_list"
+     id="a150">
+    <rect
+       x="407"
+       y="361"
+       width="70"
+       height="32"
+       id="rect144" />
+    <rect
+       x="405"
+       y="359"
+       width="70"
+       height="32"
+       class="nonterminal"
+       id="rect146" />
+    <text
+       class="nonterminal"
+       x="415"
+       y="379"
+       id="text148">expr_list</text>
+  </a>
+  <rect
+     x="537"
+     y="285"
+     width="26"
+     height="32"
+     rx="10"
+     id="rect152" />
+  <rect
+     x="535"
+     y="283"
+     width="26"
+     height="32"
+     class="terminal"
+     rx="10"
+     id="rect154" />
+  <text
+     class="terminal"
+     x="545"
+     y="303"
+     id="text156">)</text>
+  <a
+     xlink:href="#LIKE"
+     xlink:title="LIKE"
+     id="a164">
+    <rect
+       x="125"
+       y="405"
+       width="46"
+       height="32"
+       id="rect158" />
+    <rect
+       x="123"
+       y="403"
+       width="46"
+       height="32"
+       class="nonterminal"
+       id="rect160" />
+    <text
+       class="nonterminal"
+       x="133"
+       y="423"
+       id="text162">LIKE</text>
+  </a>
+  <a
+     xlink:href="#simple_expr"
+     xlink:title="simple_expr"
+     id="a172">
+    <rect
+       x="191"
+       y="405"
+       width="92"
+       height="32"
+       id="rect166" />
+    <rect
+       x="189"
+       y="403"
+       width="92"
+       height="32"
+       class="nonterminal"
+       id="rect168" />
+    <text
+       class="nonterminal"
+       x="199"
+       y="423"
+       id="text170">simple_expr</text>
+  </a>
+  <a
+     xlink:href="#opt_escape"
+     xlink:title="opt_escape"
+     id="a180">
+    <rect
+       x="303"
+       y="405"
+       width="90"
+       height="32"
+       id="rect174" />
+    <rect
+       x="301"
+       y="403"
+       width="90"
+       height="32"
+       class="nonterminal"
+       id="rect176" />
+    <text
+       class="nonterminal"
+       x="311"
+       y="423"
+       id="text178">opt_escape</text>
+  </a>
+  <a
+     xlink:href="#REGEXP"
+     xlink:title="REGEXP"
+     id="a188">
+    <rect
+       x="125"
+       y="449"
+       width="66"
+       height="32"
+       id="rect182" />
+    <rect
+       x="123"
+       y="447"
+       width="66"
+       height="32"
+       class="nonterminal"
+       id="rect184" />
+    <text
+       class="nonterminal"
+       x="133"
+       y="467"
+       id="text186">REGEXP</text>
+  </a>
+  <a
+     xlink:href="#bit_expr"
+     xlink:title="bit_expr"
+     id="a196">
+    <rect
+       x="211"
+       y="449"
+       width="68"
+       height="32"
+       id="rect190" />
+    <rect
+       x="209"
+       y="447"
+       width="68"
+       height="32"
+       class="nonterminal"
+       id="rect192"
+       style="fill:#ffff00" />
+    <text
+       class="nonterminal"
+       x="219"
+       y="467"
+       id="text194">bit_expr</text>
+  </a>
+  <a
+     xlink:href="#SOUNDS_SYM"
+     xlink:title="SOUNDS_SYM"
+     id="a204">
+    <rect
+       x="65"
+       y="493"
+       width="106"
+       height="32"
+       id="rect198" />
+    <rect
+       x="63"
+       y="491"
+       width="106"
+       height="32"
+       class="nonterminal"
+       id="rect200" />
+    <text
+       class="nonterminal"
+       x="73"
+       y="511"
+       id="text202">SOUNDS_SYM</text>
+  </a>
+  <a
+     xlink:href="#LIKE"
+     xlink:title="LIKE"
+     id="a212">
+    <rect
+       x="191"
+       y="493"
+       width="46"
+       height="32"
+       id="rect206" />
+    <rect
+       x="189"
+       y="491"
+       width="46"
+       height="32"
+       class="nonterminal"
+       id="rect208" />
+    <text
+       class="nonterminal"
+       x="199"
+       y="511"
+       id="text210">LIKE</text>
+  </a>
+  <a
+     xlink:href="#REGEXP"
+     xlink:title="REGEXP"
+     id="a220">
+    <rect
+       x="65"
+       y="537"
+       width="66"
+       height="32"
+       id="rect214" />
+    <rect
+       x="63"
+       y="535"
+       width="66"
+       height="32"
+       class="nonterminal"
+       id="rect216" />
+    <text
+       class="nonterminal"
+       x="73"
+       y="555"
+       id="text218">REGEXP</text>
+  </a>
+  <a
+     xlink:href="#bit_expr"
+     xlink:title="bit_expr"
+     id="a228">
+    <rect
+       x="277"
+       y="493"
+       width="68"
+       height="32"
+       id="rect222" />
+    <rect
+       x="275"
+       y="491"
+       width="68"
+       height="32"
+       class="nonterminal"
+       id="rect224"
+       style="fill:#ffff00" />
+    <text
+       class="nonterminal"
+       x="285"
+       y="511"
+       id="text226">bit_expr</text>
+  </a>
+  <a
+     xlink:href="#LIKE"
+     xlink:title="LIKE"
+     id="a236">
+    <rect
+       x="45"
+       y="581"
+       width="46"
+       height="32"
+       id="rect230" />
+    <rect
+       x="43"
+       y="579"
+       width="46"
+       height="32"
+       class="nonterminal"
+       id="rect232" />
+    <text
+       class="nonterminal"
+       x="53"
+       y="599"
+       id="text234">LIKE</text>
+  </a>
+  <a
+     xlink:href="#simple_expr"
+     xlink:title="simple_expr"
+     id="a244">
+    <rect
+       x="111"
+       y="581"
+       width="92"
+       height="32"
+       id="rect238" />
+    <rect
+       x="109"
+       y="579"
+       width="92"
+       height="32"
+       class="nonterminal"
+       id="rect240" />
+    <text
+       class="nonterminal"
+       x="119"
+       y="599"
+       id="text242">simple_expr</text>
+  </a>
+  <a
+     xlink:href="#opt_escape"
+     xlink:title="opt_escape"
+     id="a252">
+    <rect
+       x="223"
+       y="581"
+       width="90"
+       height="32"
+       id="rect246" />
+    <rect
+       x="221"
+       y="579"
+       width="90"
+       height="32"
+       class="nonterminal"
+       id="rect248" />
+    <text
+       class="nonterminal"
+       x="231"
+       y="599"
+       id="text250">opt_escape</text>
+  </a>
+  <path
+     class="line"
+     d="m19 93 h2 m20 0 h10 m68 0 h10 m0 0 h328 m-436 0 l20 0 m-1 0 q-9 0 -9 -10 l0 -56 q0 -10 10 -10 m416 76 l20 0 m-20 0 q10 0 10 -10 l0 -56 q0 -10 -10 -10 m-416 0 h10 m78 0 h10 m0 0 h10 m68 0 h10 m0 0 h10 m110 0 h10 m20 0 h10 m0 0 h50 m-80 0 h20 m60 0 h20 m-100 0 q10 0 10 10 m80 0 q0 -10 10 -10 m-90 10 v12 m80 0 v-12 m-80 12 q0 10 10 10 m60 0 q10 0 10 -10 m-70 10 h10 m40 0 h10 m42 44 l2 0 m2 0 l2 0 m2 0 l2 0 m-488 54 l2 0 m2 0 l2 0 m2 0 l2 0 m22 0 h10 m0 0 h548 m-578 0 h20 m558 0 h20 m-598 0 q10 0 10 10 m578 0 q0 -10 10 -10 m-588 10 v12 m578 0 v-12 m-578 12 q0 10 10 10 m558 0 q10 0 10 -10 m-568 10 h10 m66 0 h10 m0 0 h10 m26 0 h10 m20 0 h10 m74 0 h10 m0 0 h146 m-260 0 h20 m240 0 h20 m-280 0 q10 0 10 10 m260 0 q0 -10 10 -10 m-270 10 v24 m260 0 v-24 m-260 24 q0 10 10 10 m240 0 q10 0 10 -10 m-250 10 h10 m46 0 h10 m20 0 h10 m0 0 h124 m-154 0 h20 m134 0 h20 m-174 0 q10 0 10 10 m154 0 q0 -10 10 -10 m-164 10 v12 m154 0 v-12 m-154 12 q0 10 10 10 m134 0 q10 0 10 -10 m-144 10 h10 m24 0 h10 m0 0 h10 m70 0 h10 m40 -76 h10 m26 0 h10 m0 0 h100 m-568 -10 v20 m578 0 v-20 m-578 20 v100 m578 0 v-100 m-578 100 q0 10 10 10 m558 0 q10 0 10 -10 m-568 10 h10 m40 0 h10 m20 0 h10 m66 0 h10 m0 0 h10 m26 0 h10 m20 0 h10 m74 0 h10 m0 0 h146 m-260 0 h20 m240 0 h20 m-280 0 q10 0 10 10 m260 0 q0 -10 10 -10 m-270 10 v24 m260 0 v-24 m-260 24 q0 10 10 10 m240 0 q10 0 10 -10 m-250 10 h10 m46 0 h10 m20 0 h10 m0 0 h124 m-154 0 h20 m134 0 h20 m-174 0 q10 0 10 10 m154 0 q0 -10 10 -10 m-164 10 v12 m154 0 v-12 m-154 12 q0 10 10 10 m134 0 q10 0 10 -10 m-144 10 h10 m24 0 h10 m0 0 h10 m70 0 h10 m40 -76 h10 m26 0 h10 m-478 0 h20 m458 0 h20 m-498 0 q10 0 10 10 m478 0 q0 -10 10 -10 m-488 10 v100 m478 0 v-100 m-478 100 q0 10 10 10 m458 0 q10 0 10 -10 m-468 10 h10 m46 0 h10 m0 0 h10 m92 0 h10 m0 0 h10 m90 0 h10 m0 0 h170 m-468 -10 v20 m478 0 v-20 m-478 20 v24 m478 0 v-24 m-478 24 q0 10 10 10 m458 0 q10 0 10 -10 m-468 10 h10 m66 0 h10 m0 0 h10 m68 0 h10 m0 0 h284 m-548 -174 v20 m578 0 v-20 m-578 20 v188 m578 0 v-188 m-578 188 q0 10 10 10 m558 0 q10 0 10 -10 m-548 10 h10 m106 0 h10 m0 0 h10 m46 0 h10 m-212 0 h20 m192 0 h20 m-232 0 q10 0 10 10 m212 0 q0 -10 10 -10 m-222 10 v24 m212 0 v-24 m-212 24 q0 10 10 10 m192 0 q10 0 10 -10 m-202 10 h10 m66 0 h10 m0 0 h106 m20 -44 h10 m68 0 h10 m0 0 h238 m-568 -10 v20 m578 0 v-20 m-578 20 v68 m578 0 v-68 m-578 68 q0 10 10 10 m558 0 q10 0 10 -10 m-568 10 h10 m46 0 h10 m0 0 h10 m92 0 h10 m0 0 h10 m90 0 h10 m0 0 h270 m23 -448 h-3"
+     id="path254" />
+  <polygon
+     points="621 147 629 143 629 151"
+     id="polygon256" />
+  <polygon
+     points="621 147 613 143 613 151"
+     id="polygon258" />
+</svg>
