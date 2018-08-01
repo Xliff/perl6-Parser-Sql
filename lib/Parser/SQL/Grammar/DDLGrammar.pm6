@@ -630,9 +630,13 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule create_table_opt {
-    <ENGINE> <EQ>? $<o>=[ <text> || <_ident> ]
+    $<t_ti>=[
+      <ENGINE>
+      ||
+      <DEFAULT>? [ <charset> || <COLLATE> ]
+    ] <EQ>? $<o>=[ <text> || <_ident> ]
     ||
-    $<t_num>=[
+    $<t_number>=[
       <MAX_ROWS>        |
       <MIN_ROWS>        |
       <AUTO_INC>        |
@@ -641,9 +645,9 @@ grammar Parser::SQL::Grammar::DDLGrammar {
       <TABLE_CHECKSUM>  |
       <DELAY_KEY_WRITE> |
       <KEY_BLOCK_SIZE>
-    ] <EQ>? <num>
+    ] <EQ>? <number>
     ||
-    $<t_txt>=[
+    $<t_text>=[
       <PASSWORD>    |
       <COMMENT>     |
       <COMPRESSION> |
@@ -662,13 +666,9 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     ||
     <UNION> <EQ>? '(' <table_list>? ')'
     ||
-    <DEFAULT>? <charset> <EQ>? $<o>=[ <text> || <_ident> ]
-    ||
-    <DEFAULT>? <COLLATE> <EQ>? $<o>=[ <text> || <_ident> ]
-    ||
     <INSERT_METHOD> <EQ>? $<o>=[ <NO> | <FIRST> | <LAST> ]
     ||
-    <TABLESPACE> <EQ>? <ts_ident=ident>
+    <TABLESPACE> <EQ>? <ts_ident=_ident>
     ||
     <STORAGE> $<o>=[ <DISK> | <MEMORY> ]
   }

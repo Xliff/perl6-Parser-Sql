@@ -131,6 +131,27 @@ sub test-row_types($prefix = '', :$rule = 'row_types', :$rx, :$eq = False) is ex
   }
 }
 
+# Originated in 04-ddl-easy. Used in:
+#   07-ddl-create_table_opt
+sub test-table_list($template = '%s', :$rule = 'table_list') is export {
+  my $t = sprintf($template, 'ns1.table1, ns2.table2, .table3');
+
+  my $s0 = basic($t, $rule);
+  my $s = $rule eq 'table_list' ?? $s0 !! $s0<table_list>;
+
+  ok $s<table_ident>.elems == 3, "There are 3 tables referenced";
+  ok
+    $s<table_ident>[0] eq 'ns1.table1',
+    "First table referenced is 'ns1.table1'";
+  ok
+    $s<table_ident>[1].trim eq 'ns2.table2',
+    "First table referenced is 'ns2.table2'";
+  ok
+    $s<table_ident>[2].trim eq '.table3',
+    "First table referenced is '.table3'";
+  $s;
+}
+
 # Introduced in 05-ddl-type
 sub test($t, :$rule = 'type', :$text, :$ident = True) is export {
   my $i = $t;

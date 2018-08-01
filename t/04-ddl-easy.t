@@ -1062,19 +1062,7 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   }
 
   when 'table_list' {
-    my $t = 'ns1.table1, ns2.table2, .table3';
-    my $s = basic($t, $_);
-
-    ok $s<table_ident>.elems == 3, "There are 3 tables referenced";
-    ok
-      $s<table_ident>[0] eq 'ns1.table1',
-      "First table referenced is 'ns1.table1'";
-    ok
-      $s<table_ident>[1].trim eq 'ns2.table2',
-      "First table referenced is 'ns2.table2'";
-    ok
-      $s<table_ident>[2].trim eq '.table3',
-      "First table referenced is '.table3'";
+    test-table_list();
   }
 
   when 'table_wild' {
