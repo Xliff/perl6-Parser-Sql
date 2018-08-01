@@ -21,7 +21,6 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     _con_function_call
     _gen_function_call
     _gorder_clause
-    _into
     _join_table
     _key_function_call
     _nonkey_function_call
@@ -34,9 +33,6 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     create_field_list
     create_partitioning
     create_select
-    create_table_opt
-    create_table_opt2
-    create_table_opts
     create3
     derived_table_list
     escape
@@ -84,6 +80,14 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
     where_expr
   >.any {
     pass "<$_> evaluated in a separate test.";
+  }
+
+  when '_into' {
+    pass "Evaluated in 06-ddl-_into.t";
+  }
+
+  when <create_table_opt create_table_opts>.any {
+    pass "Evaluated in 07-ddl-create_table_opt.t";
   }
 
   when '__ws_list_item' {

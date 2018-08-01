@@ -506,40 +506,31 @@ grammar Parser::SQL::Grammar::DDLGrammar {
 
   rule simple_expr {
     :my rule _ident_list { <simple_ident>+ % ',' };
-    <simple_ident> [ <JSON_SEPARATOR> | <JSON_UNQ_SEPEARATOR> ] <text>
-    |
-    <_key_function_call>
-    |
-    <_nonkey_function_call>
-    |
-    <_gen_function_call>
-    |
-    <_con_function_call>
-    |
-    <simple_expr> [
-      <COLLATE> [ <_ident> || <text> ]
-      ||
-      <OR2> <simple_expr>
-    ]
-    |
-    <literal>
-    |
     <PARAM_MARK>
-    |
+    ||
+    <simple_ident> [ <JSON_SEPARATOR> | <JSON_UNQ_SEPEARATOR> ] <text>
+    ||
+    <_key_function_call>
+    ||
+    <_nonkey_function_call>
+    ||
+    <_gen_function_call>
+    ||
+    <_con_function_call>
+    ||
+    <literal>
+    ||
     <variable>
-    |
+    ||
     <sum_expr>
-    |
-    [ <PLUS> | <MINUS> | <BIT_NOT> | <NOT> | <NOT_OP> | <BINARY> ]
-    <simple_expr>
-    |
+    ||
     [
       '(' [ <subselect> | <expr> [ ',' <expr_list> ]* ]
-      |
-      <ROW> '(' <expr> ',' <expr_list>
-      |
+      ||
+      <ROW> '(' <expr_list>
+      ||
       <EXISTS> '(' <subselect>
-      |
+      ||
       <MATCH> [  <_ident_list> | '(' <_ident_list> ')' ] <AGAINST> '('
       <bit_expr> [
         [ <IN> <NATURAL> <LANGUAGE> <MODE> ]?
@@ -547,26 +538,37 @@ grammar Parser::SQL::Grammar::DDLGrammar {
         ||
         <IN> <BOOLEAN> <MODE>
       ]
+      ||
       <CAST> '(' <expr> <AS> <_cast_type> ')'
-      |
+      ||
       <DEFAULT> '(' <simple_ident>
-      |
+      ||
       <VALUES> '(' <simple_ident_nospvar>
-      |
+      ||
       <CONVERT> '(' <EXPR> [
         ',' <_cast_type>
         ||
         <USING> <charset_name=_ident>
       ]
     ] ')'
-    |
+    ||
     '(' <_ident> <expr> ')'
-    |
+    ||
+    <INTERVAL> <expr> <interval> '+' <expr>
+    ||
     <CASE> <expr>?
     <_when_clause>+
-    [ <ELSE> <else_expr=expr> ]? <END>
-    |
-    <INTERVAL> <expr> <interval> '+' <expr>
+    [ <ELSE> <else_expr=expr> ]?
+    <END>
+    ||
+    [ <PLUS> | <MINUS> | <BIT_NOT> | <NOT2> | <NOT_OP> | <BINARY> ]
+    <simple_expr>
+    ||
+    <simple_expr> [
+      <COLLATE> [ <text> || <_ident> ]
+      ||
+      <OR2> <simple_expr>
+    ]
   }
 
   my rule _gorder_clause {
@@ -678,7 +680,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule collate_explicit {
-    <COLLATE> $<o>=[ <_ident> || <text> ]
+    <COLLATE> $<o>=[ <text> || <_ident> ]
   }
 
   rule constraint {
@@ -690,7 +692,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule field_list_item {
-    <col_def> | <key_def>
+    <col_def> || <key_def>
   }
 
   rule field_def {
@@ -711,11 +713,11 @@ grammar Parser::SQL::Grammar::DDLGrammar {
 
   rule gcol_attr {
     <UNIQUE> <KEY>?
-    |
+    ||
     <COMMENT> <text>
-    |
+    ||
     <not2>? <NULL>
-    |
+    ||
     <PRIMARY>? <KEY>
   }
 
