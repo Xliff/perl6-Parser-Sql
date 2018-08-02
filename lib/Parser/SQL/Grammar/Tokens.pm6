@@ -19,6 +19,8 @@ our token NOT_OP is export      { '!' }
 our token NOT2                  { '<>' }
 our token OR2 is export         { '||' }
 our token PLUS is export        { '+' }
+our token MULT is export        { '*' }
+our token DIVIDE is export      { '/' }
 our token SHIFT_L is export     { '<<' }
 our token SHIFT_R is export     { '>>' }
 

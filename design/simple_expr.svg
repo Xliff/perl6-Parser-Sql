@@ -1,0 +1,1914 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="818"
+   height="1398"
+   version="1.1"
+   id="svg1476"
+   sodipodi:docname="simple_expr.svg"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)">
+  <metadata
+     id="metadata1480">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1428"
+     inkscape:window-height="859"
+     id="namedview1478"
+     showgrid="false"
+     inkscape:zoom="1.431423"
+     inkscape:cx="377.47876"
+     inkscape:cy="630.43105"
+     inkscape:window-x="222"
+     inkscape:window-y="170"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg1476" />
+  <defs
+     id="defs876">
+    <style
+       type="text/css"
+       id="style874">
+               @namespace &quot;http://www.w3.org/2000/svg&quot;;
+               .line                 {fill: none; stroke: #0D2026;}
+               .bold-line            {stroke: #050D0F; shape-rendering: crispEdges; stroke-width:
+               2; }
+               .thin-line            {stroke: #081317; shape-rendering: crispEdges}
+               .filled               {fill: #0D2026; stroke: none;}
+               text.terminal         {font-family: Verdana, Sans-serif;
+               font-size: 12px;
+               fill: #050D0F;
+               font-weight: bold;
+               }
+               text.nonterminal      {font-family: Verdana, Sans-serif;
+               font-size: 12px;
+               fill: #061013;
+               }
+               text.regexp           {font-family: Verdana, Sans-serif;
+               font-size: 12px;
+               fill: #081317;
+               }
+               rect, circle, polygon {fill: #0D2026; stroke: #0D2026;}
+               rect.terminal         {fill: #66B3CC; stroke: #0D2026;}
+               rect.nonterminal      {fill: #9ECFDF; stroke: #0D2026;}
+               rect.text             {fill: none; stroke: none;}
+               polygon.regexp        {fill: #BBDDE8; stroke: #0D2026;}
+
+            </style>
+  </defs>
+  <polygon
+     points="9 17 1 13 1 21"
+     id="polygon878" />
+  <polygon
+     points="17 17 9 13 9 21"
+     id="polygon880" />
+  <a
+     xlink:href="#simple_ident"
+     xlink:title="simple_ident"
+     id="a888">
+    <rect
+       x="51"
+       y="3"
+       width="94"
+       height="32"
+       id="rect882" />
+    <rect
+       x="49"
+       y="1"
+       width="94"
+       height="32"
+       class="nonterminal"
+       id="rect884"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="59"
+       y="21"
+       id="text886">simple_ident</text>
+  </a>
+  <a
+     xlink:href="#JSON_SEPARATOR_SYM"
+     xlink:title="JSON_SEPARATOR_SYM"
+     id="a896">
+    <rect
+       x="205"
+       y="35"
+       width="164"
+       height="32"
+       id="rect890" />
+    <rect
+       x="203"
+       y="33"
+       width="164"
+       height="32"
+       class="nonterminal"
+       id="rect892"
+       style="fill:#ffff00" />
+    <text
+       class="nonterminal"
+       x="213"
+       y="53"
+       id="text894">JSON_SEPARATOR_SYM</text>
+  </a>
+  <a
+     xlink:href="#JSON_UNQUOTED_SEPARATOR_SYM"
+     xlink:title="JSON_UNQUOTED_SEPARATOR_SYM"
+     id="a904">
+    <rect
+       x="205"
+       y="79"
+       width="240"
+       height="32"
+       id="rect898" />
+    <rect
+       x="203"
+       y="77"
+       width="240"
+       height="32"
+       class="nonterminal"
+       id="rect900"
+       style="fill:#ffff00" />
+    <text
+       class="nonterminal"
+       x="213"
+       y="97"
+       id="text902">JSON_UNQUOTED_SEPARATOR_SYM</text>
+  </a>
+  <a
+     xlink:href="#TEXT_STRING_literal"
+     xlink:title="TEXT_STRING_literal"
+     id="a912">
+    <rect
+       x="485"
+       y="35"
+       width="140"
+       height="32"
+       id="rect906" />
+    <rect
+       x="483"
+       y="33"
+       width="140"
+       height="32"
+       class="nonterminal"
+       id="rect908"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="493"
+       y="53"
+       id="text910">TEXT_STRING_literal</text>
+  </a>
+  <a
+     xlink:href="#function_call_keyword"
+     xlink:title="function_call_keyword"
+     id="a920">
+    <rect
+       x="51"
+       y="123"
+       width="154"
+       height="32"
+       id="rect914" />
+    <rect
+       x="49"
+       y="121"
+       width="154"
+       height="32"
+       class="nonterminal"
+       id="rect916"
+       style="fill:#ff0000" />
+    <text
+       class="nonterminal"
+       x="59"
+       y="141"
+       id="text918">function_call_keyword</text>
+  </a>
+  <a
+     xlink:href="#function_call_nonkeyword"
+     xlink:title="function_call_nonkeyword"
+     id="a928">
+    <rect
+       x="51"
+       y="167"
+       width="176"
+       height="32"
+       id="rect922" />
+    <rect
+       x="49"
+       y="165"
+       width="176"
+       height="32"
+       class="nonterminal"
+       id="rect924"
+       style="fill:#ff0000" />
+    <text
+       class="nonterminal"
+       x="59"
+       y="185"
+       id="text926">function_call_nonkeyword</text>
+  </a>
+  <a
+     xlink:href="#function_call_generic"
+     xlink:title="function_call_generic"
+     id="a936">
+    <rect
+       x="51"
+       y="211"
+       width="144"
+       height="32"
+       id="rect930" />
+    <rect
+       x="49"
+       y="209"
+       width="144"
+       height="32"
+       class="nonterminal"
+       id="rect932"
+       style="fill:#ff0000" />
+    <text
+       class="nonterminal"
+       x="59"
+       y="229"
+       id="text934">function_call_generic</text>
+  </a>
+  <a
+     xlink:href="#function_call_conflict"
+     xlink:title="function_call_conflict"
+     id="a944">
+    <rect
+       x="51"
+       y="255"
+       width="142"
+       height="32"
+       id="rect938" />
+    <rect
+       x="49"
+       y="253"
+       width="142"
+       height="32"
+       class="nonterminal"
+       id="rect940"
+       style="fill:#ff0000" />
+    <text
+       class="nonterminal"
+       x="59"
+       y="273"
+       id="text942">function_call_conflict</text>
+  </a>
+  <a
+     xlink:href="#simple_expr"
+     xlink:title="simple_expr"
+     id="a952">
+    <rect
+       x="51"
+       y="299"
+       width="92"
+       height="32"
+       id="rect946" />
+    <rect
+       x="49"
+       y="297"
+       width="92"
+       height="32"
+       class="nonterminal"
+       id="rect948"
+       style="fill:#ffff00" />
+    <text
+       class="nonterminal"
+       x="59"
+       y="317"
+       id="text950">simple_expr</text>
+  </a>
+  <a
+     xlink:href="#COLLATE_SYM"
+     xlink:title="COLLATE_SYM"
+     id="a960">
+    <rect
+       x="183"
+       y="299"
+       width="106"
+       height="32"
+       id="rect954" />
+    <rect
+       x="181"
+       y="297"
+       width="106"
+       height="32"
+       class="nonterminal"
+       id="rect956"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="191"
+       y="317"
+       id="text958">COLLATE_SYM</text>
+  </a>
+  <a
+     xlink:href="#ident_or_text"
+     xlink:title="ident_or_text"
+     id="a968">
+    <rect
+       x="309"
+       y="299"
+       width="102"
+       height="32"
+       id="rect962" />
+    <rect
+       x="307"
+       y="297"
+       width="102"
+       height="32"
+       class="nonterminal"
+       id="rect964"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="317"
+       y="317"
+       id="text966">ident_or_text</text>
+  </a>
+  <a
+     xlink:href="#OR_OR_SYM"
+     xlink:title="OR_OR_SYM"
+     id="a976">
+    <rect
+       x="183"
+       y="343"
+       width="96"
+       height="32"
+       id="rect970" />
+    <rect
+       x="181"
+       y="341"
+       width="96"
+       height="32"
+       class="nonterminal"
+       id="rect972"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="191"
+       y="361"
+       id="text974">OR_OR_SYM</text>
+  </a>
+  <a
+     xlink:href="#simple_expr"
+     xlink:title="simple_expr"
+     id="a984">
+    <rect
+       x="299"
+       y="343"
+       width="92"
+       height="32"
+       id="rect978" />
+    <rect
+       x="297"
+       y="341"
+       width="92"
+       height="32"
+       class="nonterminal"
+       id="rect980"
+       style="fill:#ffff00" />
+    <text
+       class="nonterminal"
+       x="307"
+       y="361"
+       id="text982">simple_expr</text>
+  </a>
+  <a
+     xlink:href="#literal"
+     xlink:title="literal"
+     id="a992">
+    <rect
+       x="51"
+       y="387"
+       width="50"
+       height="32"
+       id="rect986" />
+    <rect
+       x="49"
+       y="385"
+       width="50"
+       height="32"
+       class="nonterminal"
+       id="rect988"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="59"
+       y="405"
+       id="text990">literal</text>
+  </a>
+  <a
+     xlink:href="#param_marker"
+     xlink:title="param_marker"
+     id="a1000">
+    <rect
+       x="51"
+       y="431"
+       width="110"
+       height="32"
+       id="rect994" />
+    <rect
+       x="49"
+       y="429"
+       width="110"
+       height="32"
+       class="nonterminal"
+       id="rect996"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="59"
+       y="449"
+       id="text998">param_marker</text>
+  </a>
+  <a
+     xlink:href="#variable"
+     xlink:title="variable"
+     id="a1008">
+    <rect
+       x="51"
+       y="475"
+       width="66"
+       height="32"
+       id="rect1002" />
+    <rect
+       x="49"
+       y="473"
+       width="66"
+       height="32"
+       class="nonterminal"
+       id="rect1004"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="59"
+       y="493"
+       id="text1006">variable</text>
+  </a>
+  <a
+     xlink:href="#sum_expr"
+     xlink:title="sum_expr"
+     id="a1016">
+    <rect
+       x="51"
+       y="519"
+       width="80"
+       height="32"
+       id="rect1010" />
+    <rect
+       x="49"
+       y="517"
+       width="80"
+       height="32"
+       class="nonterminal"
+       id="rect1012"
+       style="fill:#ff0000" />
+    <text
+       class="nonterminal"
+       x="59"
+       y="537"
+       id="text1014">sum_expr</text>
+  </a>
+  <rect
+     x="71"
+     y="563"
+     width="30"
+     height="32"
+     rx="10"
+     id="rect1018" />
+  <rect
+     x="69"
+     y="561"
+     width="30"
+     height="32"
+     class="terminal"
+     rx="10"
+     id="rect1020"
+     style="fill:#00ff00" />
+  <text
+     class="terminal"
+     x="79"
+     y="581"
+     id="text1022">+</text>
+  <rect
+     x="71"
+     y="607"
+     width="26"
+     height="32"
+     rx="10"
+     id="rect1024" />
+  <rect
+     x="69"
+     y="605"
+     width="26"
+     height="32"
+     class="terminal"
+     rx="10"
+     id="rect1026"
+     style="fill:#00ff00" />
+  <text
+     class="terminal"
+     x="79"
+     y="625"
+     id="text1028">-</text>
+  <rect
+     x="71"
+     y="651"
+     width="30"
+     height="32"
+     rx="10"
+     id="rect1030" />
+  <rect
+     x="69"
+     y="649"
+     width="30"
+     height="32"
+     class="terminal"
+     rx="10"
+     id="rect1032"
+     style="fill:#00ff00" />
+  <text
+     class="terminal"
+     x="79"
+     y="669"
+     id="text1034">~</text>
+  <a
+     xlink:href="#not2"
+     xlink:title="not2"
+     id="a1042">
+    <rect
+       x="71"
+       y="695"
+       width="48"
+       height="32"
+       id="rect1036" />
+    <rect
+       x="69"
+       y="693"
+       width="48"
+       height="32"
+       class="nonterminal"
+       id="rect1038"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="79"
+       y="713"
+       id="text1040">not2</text>
+  </a>
+  <a
+     xlink:href="#BINARY"
+     xlink:title="BINARY"
+     id="a1050">
+    <rect
+       x="71"
+       y="739"
+       width="64"
+       height="32"
+       id="rect1044" />
+    <rect
+       x="69"
+       y="737"
+       width="64"
+       height="32"
+       class="nonterminal"
+       id="rect1046"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="79"
+       y="757"
+       id="text1048">BINARY</text>
+  </a>
+  <a
+     xlink:href="#simple_expr"
+     xlink:title="simple_expr"
+     id="a1058">
+    <rect
+       x="175"
+       y="563"
+       width="92"
+       height="32"
+       id="rect1052" />
+    <rect
+       x="173"
+       y="561"
+       width="92"
+       height="32"
+       class="nonterminal"
+       id="rect1054"
+       style="fill:#ffff00" />
+    <text
+       class="nonterminal"
+       x="183"
+       y="581"
+       id="text1056">simple_expr</text>
+  </a>
+  <rect
+     x="71"
+     y="783"
+     width="26"
+     height="32"
+     rx="10"
+     id="rect1060" />
+  <rect
+     x="69"
+     y="781"
+     width="26"
+     height="32"
+     class="terminal"
+     rx="10"
+     id="rect1062"
+     style="fill:#00ff00" />
+  <text
+     class="terminal"
+     x="79"
+     y="801"
+     id="text1064">(</text>
+  <a
+     xlink:href="#subselect"
+     xlink:title="subselect"
+     id="a1072">
+    <rect
+       x="137"
+       y="783"
+       width="74"
+       height="32"
+       id="rect1066" />
+    <rect
+       x="135"
+       y="781"
+       width="74"
+       height="32"
+       class="nonterminal"
+       id="rect1068"
+       style="fill:#ff0000" />
+    <text
+       class="nonterminal"
+       x="145"
+       y="801"
+       id="text1070">subselect</text>
+  </a>
+  <a
+     xlink:href="#expr"
+     xlink:title="expr"
+     id="a1080">
+    <rect
+       x="137"
+       y="827"
+       width="46"
+       height="32"
+       id="rect1074" />
+    <rect
+       x="135"
+       y="825"
+       width="46"
+       height="32"
+       class="nonterminal"
+       id="rect1076"
+       style="fill:#ff0000" />
+    <text
+       class="nonterminal"
+       x="145"
+       y="845"
+       id="text1078">expr</text>
+  </a>
+  <rect
+     x="223"
+     y="859"
+     width="24"
+     height="32"
+     rx="10"
+     id="rect1082" />
+  <rect
+     x="221"
+     y="857"
+     width="24"
+     height="32"
+     class="terminal"
+     rx="10"
+     id="rect1084"
+     style="fill:#00ff00" />
+  <text
+     class="terminal"
+     x="231"
+     y="877"
+     id="text1086">,</text>
+  <a
+     xlink:href="#expr_list"
+     xlink:title="expr_list"
+     id="a1094">
+    <rect
+       x="267"
+       y="859"
+       width="70"
+       height="32"
+       id="rect1088" />
+    <rect
+       x="265"
+       y="857"
+       width="70"
+       height="32"
+       class="nonterminal"
+       id="rect1090"
+       style="fill:#ff0000" />
+    <text
+       class="nonterminal"
+       x="275"
+       y="877"
+       id="text1092">expr_list</text>
+  </a>
+  <a
+     xlink:href="#ROW_SYM"
+     xlink:title="ROW_SYM"
+     id="a1102">
+    <rect
+       x="71"
+       y="903"
+       width="82"
+       height="32"
+       id="rect1096" />
+    <rect
+       x="69"
+       y="901"
+       width="82"
+       height="32"
+       class="nonterminal"
+       id="rect1098"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="79"
+       y="921"
+       id="text1100">ROW_SYM</text>
+  </a>
+  <rect
+     x="173"
+     y="903"
+     width="26"
+     height="32"
+     rx="10"
+     id="rect1104" />
+  <rect
+     x="171"
+     y="901"
+     width="26"
+     height="32"
+     class="terminal"
+     rx="10"
+     id="rect1106"
+     style="fill:#00ff00" />
+  <text
+     class="terminal"
+     x="181"
+     y="921"
+     id="text1108">(</text>
+  <a
+     xlink:href="#expr"
+     xlink:title="expr"
+     id="a1116">
+    <rect
+       x="219"
+       y="903"
+       width="46"
+       height="32"
+       id="rect1110" />
+    <rect
+       x="217"
+       y="901"
+       width="46"
+       height="32"
+       class="nonterminal"
+       id="rect1112"
+       style="fill:#ff0000" />
+    <text
+       class="nonterminal"
+       x="227"
+       y="921"
+       id="text1114">expr</text>
+  </a>
+  <rect
+     x="285"
+     y="903"
+     width="24"
+     height="32"
+     rx="10"
+     id="rect1118" />
+  <rect
+     x="283"
+     y="901"
+     width="24"
+     height="32"
+     class="terminal"
+     rx="10"
+     id="rect1120"
+     style="fill:#00ff00" />
+  <text
+     class="terminal"
+     x="293"
+     y="921"
+     id="text1122">,</text>
+  <a
+     xlink:href="#expr_list"
+     xlink:title="expr_list"
+     id="a1130">
+    <rect
+       x="329"
+       y="903"
+       width="70"
+       height="32"
+       id="rect1124" />
+    <rect
+       x="327"
+       y="901"
+       width="70"
+       height="32"
+       class="nonterminal"
+       id="rect1126"
+       style="fill:#ff0000" />
+    <text
+       class="nonterminal"
+       x="337"
+       y="921"
+       id="text1128">expr_list</text>
+  </a>
+  <a
+     xlink:href="#EXISTS"
+     xlink:title="EXISTS"
+     id="a1138">
+    <rect
+       x="71"
+       y="947"
+       width="62"
+       height="32"
+       id="rect1132" />
+    <rect
+       x="69"
+       y="945"
+       width="62"
+       height="32"
+       class="nonterminal"
+       id="rect1134"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="79"
+       y="965"
+       id="text1136">EXISTS</text>
+  </a>
+  <rect
+     x="153"
+     y="947"
+     width="26"
+     height="32"
+     rx="10"
+     id="rect1140" />
+  <rect
+     x="151"
+     y="945"
+     width="26"
+     height="32"
+     class="terminal"
+     rx="10"
+     id="rect1142"
+     style="fill:#00ff00" />
+  <text
+     class="terminal"
+     x="161"
+     y="965"
+     id="text1144">(</text>
+  <a
+     xlink:href="#subselect"
+     xlink:title="subselect"
+     id="a1152">
+    <rect
+       x="199"
+       y="947"
+       width="74"
+       height="32"
+       id="rect1146" />
+    <rect
+       x="197"
+       y="945"
+       width="74"
+       height="32"
+       class="nonterminal"
+       id="rect1148"
+       style="fill:#ff0000" />
+    <text
+       class="nonterminal"
+       x="207"
+       y="965"
+       id="text1150">subselect</text>
+  </a>
+  <a
+     xlink:href="#MATCH"
+     xlink:title="MATCH"
+     id="a1160">
+    <rect
+       x="71"
+       y="991"
+       width="62"
+       height="32"
+       id="rect1154" />
+    <rect
+       x="69"
+       y="989"
+       width="62"
+       height="32"
+       class="nonterminal"
+       id="rect1156"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="79"
+       y="1009"
+       id="text1158">MATCH</text>
+  </a>
+  <a
+     xlink:href="#ident_list_arg"
+     xlink:title="ident_list_arg"
+     id="a1168">
+    <rect
+       x="153"
+       y="991"
+       width="100"
+       height="32"
+       id="rect1162" />
+    <rect
+       x="151"
+       y="989"
+       width="100"
+       height="32"
+       class="nonterminal"
+       id="rect1164"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="161"
+       y="1009"
+       id="text1166">ident_list_arg</text>
+  </a>
+  <a
+     xlink:href="#AGAINST"
+     xlink:title="AGAINST"
+     id="a1176">
+    <rect
+       x="273"
+       y="991"
+       width="72"
+       height="32"
+       id="rect1170" />
+    <rect
+       x="271"
+       y="989"
+       width="72"
+       height="32"
+       class="nonterminal"
+       id="rect1172"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="281"
+       y="1009"
+       id="text1174">AGAINST</text>
+  </a>
+  <rect
+     x="365"
+     y="991"
+     width="26"
+     height="32"
+     rx="10"
+     id="rect1178" />
+  <rect
+     x="363"
+     y="989"
+     width="26"
+     height="32"
+     class="terminal"
+     rx="10"
+     id="rect1180"
+     style="fill:#00ff00" />
+  <text
+     class="terminal"
+     x="373"
+     y="1009"
+     id="text1182">(</text>
+  <a
+     xlink:href="#bit_expr"
+     xlink:title="bit_expr"
+     id="a1190">
+    <rect
+       x="411"
+       y="991"
+       width="68"
+       height="32"
+       id="rect1184" />
+    <rect
+       x="409"
+       y="989"
+       width="68"
+       height="32"
+       class="nonterminal"
+       id="rect1186"
+       style="fill:#ffff00" />
+    <text
+       class="nonterminal"
+       x="419"
+       y="1009"
+       id="text1188">bit_expr</text>
+  </a>
+  <a
+     xlink:href="#fulltext_options"
+     xlink:title="fulltext_options"
+     id="a1198">
+    <rect
+       x="499"
+       y="991"
+       width="112"
+       height="32"
+       id="rect1192" />
+    <rect
+       x="497"
+       y="989"
+       width="112"
+       height="32"
+       class="nonterminal"
+       id="rect1194"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="507"
+       y="1009"
+       id="text1196">fulltext_options</text>
+  </a>
+  <a
+     xlink:href="#CAST_SYM"
+     xlink:title="CAST_SYM"
+     id="a1206">
+    <rect
+       x="71"
+       y="1035"
+       width="84"
+       height="32"
+       id="rect1200" />
+    <rect
+       x="69"
+       y="1033"
+       width="84"
+       height="32"
+       class="nonterminal"
+       id="rect1202"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="79"
+       y="1053"
+       id="text1204">CAST_SYM</text>
+  </a>
+  <rect
+     x="175"
+     y="1035"
+     width="26"
+     height="32"
+     rx="10"
+     id="rect1208" />
+  <rect
+     x="173"
+     y="1033"
+     width="26"
+     height="32"
+     class="terminal"
+     rx="10"
+     id="rect1210"
+     style="fill:#00ff00" />
+  <text
+     class="terminal"
+     x="183"
+     y="1053"
+     id="text1212">(</text>
+  <a
+     xlink:href="#expr"
+     xlink:title="expr"
+     id="a1220">
+    <rect
+       x="221"
+       y="1035"
+       width="46"
+       height="32"
+       id="rect1214" />
+    <rect
+       x="219"
+       y="1033"
+       width="46"
+       height="32"
+       class="nonterminal"
+       id="rect1216"
+       style="fill:#ff0000" />
+    <text
+       class="nonterminal"
+       x="229"
+       y="1053"
+       id="text1218">expr</text>
+  </a>
+  <a
+     xlink:href="#AS"
+     xlink:title="AS"
+     id="a1228">
+    <rect
+       x="287"
+       y="1035"
+       width="36"
+       height="32"
+       id="rect1222" />
+    <rect
+       x="285"
+       y="1033"
+       width="36"
+       height="32"
+       class="nonterminal"
+       id="rect1224"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="295"
+       y="1053"
+       id="text1226">AS</text>
+  </a>
+  <a
+     xlink:href="#cast_type"
+     xlink:title="cast_type"
+     id="a1236">
+    <rect
+       x="343"
+       y="1035"
+       width="78"
+       height="32"
+       id="rect1230" />
+    <rect
+       x="341"
+       y="1033"
+       width="78"
+       height="32"
+       class="nonterminal"
+       id="rect1232"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="351"
+       y="1053"
+       id="text1234">cast_type</text>
+  </a>
+  <a
+     xlink:href="#DEFAULT"
+     xlink:title="DEFAULT"
+     id="a1244">
+    <rect
+       x="71"
+       y="1079"
+       width="72"
+       height="32"
+       id="rect1238" />
+    <rect
+       x="69"
+       y="1077"
+       width="72"
+       height="32"
+       class="nonterminal"
+       id="rect1240"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="79"
+       y="1097"
+       id="text1242">DEFAULT</text>
+  </a>
+  <rect
+     x="163"
+     y="1079"
+     width="26"
+     height="32"
+     rx="10"
+     id="rect1246" />
+  <rect
+     x="161"
+     y="1077"
+     width="26"
+     height="32"
+     class="terminal"
+     rx="10"
+     id="rect1248"
+     style="fill:#00ff00" />
+  <text
+     class="terminal"
+     x="171"
+     y="1097"
+     id="text1250">(</text>
+  <a
+     xlink:href="#simple_ident"
+     xlink:title="simple_ident"
+     id="a1258">
+    <rect
+       x="209"
+       y="1079"
+       width="94"
+       height="32"
+       id="rect1252" />
+    <rect
+       x="207"
+       y="1077"
+       width="94"
+       height="32"
+       class="nonterminal"
+       id="rect1254"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="217"
+       y="1097"
+       id="text1256">simple_ident</text>
+  </a>
+  <a
+     xlink:href="#VALUES"
+     xlink:title="VALUES"
+     id="a1266">
+    <rect
+       x="71"
+       y="1123"
+       width="66"
+       height="32"
+       id="rect1260" />
+    <rect
+       x="69"
+       y="1121"
+       width="66"
+       height="32"
+       class="nonterminal"
+       id="rect1262"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="79"
+       y="1141"
+       id="text1264">VALUES</text>
+  </a>
+  <rect
+     x="157"
+     y="1123"
+     width="26"
+     height="32"
+     rx="10"
+     id="rect1268" />
+  <rect
+     x="155"
+     y="1121"
+     width="26"
+     height="32"
+     class="terminal"
+     rx="10"
+     id="rect1270"
+     style="fill:#00ff00" />
+  <text
+     class="terminal"
+     x="165"
+     y="1141"
+     id="text1272">(</text>
+  <a
+     xlink:href="#simple_ident_nospvar"
+     xlink:title="simple_ident_nospvar"
+     id="a1280">
+    <rect
+       x="203"
+       y="1123"
+       width="150"
+       height="32"
+       id="rect1274" />
+    <rect
+       x="201"
+       y="1121"
+       width="150"
+       height="32"
+       class="nonterminal"
+       id="rect1276"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="211"
+       y="1141"
+       id="text1278">simple_ident_nospvar</text>
+  </a>
+  <a
+     xlink:href="#CONVERT_SYM"
+     xlink:title="CONVERT_SYM"
+     id="a1288">
+    <rect
+       x="71"
+       y="1167"
+       width="110"
+       height="32"
+       id="rect1282" />
+    <rect
+       x="69"
+       y="1165"
+       width="110"
+       height="32"
+       class="nonterminal"
+       id="rect1284"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="79"
+       y="1185"
+       id="text1286">CONVERT_SYM</text>
+  </a>
+  <rect
+     x="201"
+     y="1167"
+     width="26"
+     height="32"
+     rx="10"
+     id="rect1290" />
+  <rect
+     x="199"
+     y="1165"
+     width="26"
+     height="32"
+     class="terminal"
+     rx="10"
+     id="rect1292"
+     style="fill:#00ff00" />
+  <text
+     class="terminal"
+     x="209"
+     y="1185"
+     id="text1294">(</text>
+  <a
+     xlink:href="#expr"
+     xlink:title="expr"
+     id="a1302">
+    <rect
+       x="247"
+       y="1167"
+       width="46"
+       height="32"
+       id="rect1296" />
+    <rect
+       x="245"
+       y="1165"
+       width="46"
+       height="32"
+       class="nonterminal"
+       id="rect1298"
+       style="fill:#ff0000" />
+    <text
+       class="nonterminal"
+       x="255"
+       y="1185"
+       id="text1300">expr</text>
+  </a>
+  <rect
+     x="333"
+     y="1167"
+     width="24"
+     height="32"
+     rx="10"
+     id="rect1304" />
+  <rect
+     x="331"
+     y="1165"
+     width="24"
+     height="32"
+     class="terminal"
+     rx="10"
+     id="rect1306"
+     style="fill:#00ff00" />
+  <text
+     class="terminal"
+     x="341"
+     y="1185"
+     id="text1308">,</text>
+  <a
+     xlink:href="#cast_type"
+     xlink:title="cast_type"
+     id="a1316">
+    <rect
+       x="377"
+       y="1167"
+       width="78"
+       height="32"
+       id="rect1310" />
+    <rect
+       x="375"
+       y="1165"
+       width="78"
+       height="32"
+       class="nonterminal"
+       id="rect1312"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="385"
+       y="1185"
+       id="text1314">cast_type</text>
+  </a>
+  <a
+     xlink:href="#USING"
+     xlink:title="USING"
+     id="a1324">
+    <rect
+       x="333"
+       y="1211"
+       width="58"
+       height="32"
+       id="rect1318" />
+    <rect
+       x="331"
+       y="1209"
+       width="58"
+       height="32"
+       class="nonterminal"
+       id="rect1320"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="341"
+       y="1229"
+       id="text1322">USING</text>
+  </a>
+  <a
+     xlink:href="#charset_name"
+     xlink:title="charset_name"
+     id="a1332">
+    <rect
+       x="411"
+       y="1211"
+       width="106"
+       height="32"
+       id="rect1326" />
+    <rect
+       x="409"
+       y="1209"
+       width="106"
+       height="32"
+       class="nonterminal"
+       id="rect1328"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="419"
+       y="1229"
+       id="text1330">charset_name</text>
+  </a>
+  <rect
+     x="651"
+     y="783"
+     width="26"
+     height="32"
+     rx="10"
+     id="rect1334" />
+  <rect
+     x="649"
+     y="781"
+     width="26"
+     height="32"
+     class="terminal"
+     rx="10"
+     id="rect1336"
+     style="fill:#00ff00" />
+  <text
+     class="terminal"
+     x="659"
+     y="801"
+     id="text1338">)</text>
+  <rect
+     x="51"
+     y="1255"
+     width="28"
+     height="32"
+     rx="10"
+     id="rect1340" />
+  <rect
+     x="49"
+     y="1253"
+     width="28"
+     height="32"
+     class="terminal"
+     rx="10"
+     id="rect1342"
+     style="fill:#00ff00" />
+  <text
+     class="terminal"
+     x="59"
+     y="1273"
+     id="text1344">{</text>
+  <a
+     xlink:href="#ident"
+     xlink:title="ident"
+     id="a1352">
+    <rect
+       x="99"
+       y="1255"
+       width="48"
+       height="32"
+       id="rect1346" />
+    <rect
+       x="97"
+       y="1253"
+       width="48"
+       height="32"
+       class="nonterminal"
+       id="rect1348"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="107"
+       y="1273"
+       id="text1350">ident</text>
+  </a>
+  <a
+     xlink:href="#expr"
+     xlink:title="expr"
+     id="a1360">
+    <rect
+       x="167"
+       y="1255"
+       width="46"
+       height="32"
+       id="rect1354" />
+    <rect
+       x="165"
+       y="1253"
+       width="46"
+       height="32"
+       class="nonterminal"
+       id="rect1356"
+       style="fill:#ff0000" />
+    <text
+       class="nonterminal"
+       x="175"
+       y="1273"
+       id="text1358">expr</text>
+  </a>
+  <rect
+     x="233"
+     y="1255"
+     width="28"
+     height="32"
+     rx="10"
+     id="rect1362" />
+  <rect
+     x="231"
+     y="1253"
+     width="28"
+     height="32"
+     class="terminal"
+     rx="10"
+     id="rect1364"
+     style="fill:#00ff00" />
+  <text
+     class="terminal"
+     x="241"
+     y="1273"
+     id="text1366">}</text>
+  <a
+     xlink:href="#CASE_SYM"
+     xlink:title="CASE_SYM"
+     id="a1374">
+    <rect
+       x="51"
+       y="1321"
+       width="86"
+       height="32"
+       id="rect1368" />
+    <rect
+       x="49"
+       y="1319"
+       width="86"
+       height="32"
+       class="nonterminal"
+       id="rect1370"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="59"
+       y="1339"
+       id="text1372">CASE_SYM</text>
+  </a>
+  <a
+     xlink:href="#opt_expr"
+     xlink:title="opt_expr"
+     id="a1382">
+    <rect
+       x="157"
+       y="1321"
+       width="74"
+       height="32"
+       id="rect1376" />
+    <rect
+       x="155"
+       y="1319"
+       width="74"
+       height="32"
+       class="nonterminal"
+       id="rect1378"
+       style="fill:#ff0000" />
+    <text
+       class="nonterminal"
+       x="165"
+       y="1339"
+       id="text1380">opt_expr</text>
+  </a>
+  <a
+     xlink:href="#WHEN_SYM"
+     xlink:title="WHEN_SYM"
+     id="a1390">
+    <rect
+       x="271"
+       y="1321"
+       width="90"
+       height="32"
+       id="rect1384" />
+    <rect
+       x="269"
+       y="1319"
+       width="90"
+       height="32"
+       class="nonterminal"
+       id="rect1386"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="279"
+       y="1339"
+       id="text1388">WHEN_SYM</text>
+  </a>
+  <a
+     xlink:href="#expr"
+     xlink:title="expr"
+     id="a1398">
+    <rect
+       x="381"
+       y="1321"
+       width="46"
+       height="32"
+       id="rect1392" />
+    <rect
+       x="379"
+       y="1319"
+       width="46"
+       height="32"
+       class="nonterminal"
+       id="rect1394"
+       style="fill:#ff0000" />
+    <text
+       class="nonterminal"
+       x="389"
+       y="1339"
+       id="text1396">expr</text>
+  </a>
+  <a
+     xlink:href="#THEN_SYM"
+     xlink:title="THEN_SYM"
+     id="a1406">
+    <rect
+       x="447"
+       y="1321"
+       width="84"
+       height="32"
+       id="rect1400" />
+    <rect
+       x="445"
+       y="1319"
+       width="84"
+       height="32"
+       class="nonterminal"
+       id="rect1402"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="455"
+       y="1339"
+       id="text1404">THEN_SYM</text>
+  </a>
+  <a
+     xlink:href="#expr"
+     xlink:title="expr"
+     id="a1414">
+    <rect
+       x="551"
+       y="1321"
+       width="46"
+       height="32"
+       id="rect1408" />
+    <rect
+       x="549"
+       y="1319"
+       width="46"
+       height="32"
+       class="nonterminal"
+       id="rect1410"
+       style="fill:#ff0000" />
+    <text
+       class="nonterminal"
+       x="559"
+       y="1339"
+       id="text1412">expr</text>
+  </a>
+  <a
+     xlink:href="#opt_else"
+     xlink:title="opt_else"
+     id="a1422">
+    <rect
+       x="637"
+       y="1321"
+       width="70"
+       height="32"
+       id="rect1416" />
+    <rect
+       x="635"
+       y="1319"
+       width="70"
+       height="32"
+       class="nonterminal"
+       id="rect1418"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="645"
+       y="1339"
+       id="text1420">opt_else</text>
+  </a>
+  <a
+     xlink:href="#END"
+     xlink:title="END"
+     id="a1430">
+    <rect
+       x="727"
+       y="1321"
+       width="44"
+       height="32"
+       id="rect1424" />
+    <rect
+       x="725"
+       y="1319"
+       width="44"
+       height="32"
+       class="nonterminal"
+       id="rect1426"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="735"
+       y="1339"
+       id="text1428">END</text>
+  </a>
+  <a
+     xlink:href="#INTERVAL_SYM"
+     xlink:title="INTERVAL_SYM"
+     id="a1438">
+    <rect
+       x="51"
+       y="1365"
+       width="110"
+       height="32"
+       id="rect1432" />
+    <rect
+       x="49"
+       y="1363"
+       width="110"
+       height="32"
+       class="nonterminal"
+       id="rect1434"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="59"
+       y="1383"
+       id="text1436">INTERVAL_SYM</text>
+  </a>
+  <a
+     xlink:href="#expr"
+     xlink:title="expr"
+     id="a1446">
+    <rect
+       x="181"
+       y="1365"
+       width="46"
+       height="32"
+       id="rect1440" />
+    <rect
+       x="179"
+       y="1363"
+       width="46"
+       height="32"
+       class="nonterminal"
+       id="rect1442"
+       style="fill:#ff0000" />
+    <text
+       class="nonterminal"
+       x="189"
+       y="1383"
+       id="text1444">expr</text>
+  </a>
+  <a
+     xlink:href="#interval"
+     xlink:title="interval"
+     id="a1454">
+    <rect
+       x="247"
+       y="1365"
+       width="62"
+       height="32"
+       id="rect1448" />
+    <rect
+       x="245"
+       y="1363"
+       width="62"
+       height="32"
+       class="nonterminal"
+       id="rect1450"
+       style="fill:#00ff00" />
+    <text
+       class="nonterminal"
+       x="255"
+       y="1383"
+       id="text1452">interval</text>
+  </a>
+  <rect
+     x="329"
+     y="1365"
+     width="30"
+     height="32"
+     rx="10"
+     id="rect1456" />
+  <rect
+     x="327"
+     y="1363"
+     width="30"
+     height="32"
+     class="terminal"
+     rx="10"
+     id="rect1458"
+     style="fill:#00ff00" />
+  <text
+     class="terminal"
+     x="337"
+     y="1383"
+     id="text1460">+</text>
+  <a
+     xlink:href="#expr"
+     xlink:title="expr"
+     id="a1468">
+    <rect
+       x="379"
+       y="1365"
+       width="46"
+       height="32"
+       id="rect1462" />
+    <rect
+       x="377"
+       y="1363"
+       width="46"
+       height="32"
+       class="nonterminal"
+       id="rect1464"
+       style="fill:#ff0000" />
+    <text
+       class="nonterminal"
+       x="387"
+       y="1383"
+       id="text1466">expr</text>
+  </a>
+  <path
+     class="line"
+     d="m17 17 h2 m20 0 h10 m94 0 h10 m20 0 h10 m0 0 h450 m-480 0 h20 m460 0 h20 m-500 0 q10 0 10 10 m480 0 q0 -10 10 -10 m-490 10 v12 m480 0 v-12 m-480 12 q0 10 10 10 m460 0 q10 0 10 -10 m-450 10 h10 m164 0 h10 m0 0 h76 m-280 0 h20 m260 0 h20 m-300 0 q10 0 10 10 m280 0 q0 -10 10 -10 m-290 10 v24 m280 0 v-24 m-280 24 q0 10 10 10 m260 0 q10 0 10 -10 m-270 10 h10 m240 0 h10 m20 -44 h10 m140 0 h10 m20 -32 h126 m-760 0 h20 m740 0 h20 m-780 0 q10 0 10 10 m760 0 q0 -10 10 -10 m-770 10 v100 m760 0 v-100 m-760 100 q0 10 10 10 m740 0 q10 0 10 -10 m-750 10 h10 m154 0 h10 m0 0 h566 m-750 -10 v20 m760 0 v-20 m-760 20 v24 m760 0 v-24 m-760 24 q0 10 10 10 m740 0 q10 0 10 -10 m-750 10 h10 m176 0 h10 m0 0 h544 m-750 -10 v20 m760 0 v-20 m-760 20 v24 m760 0 v-24 m-760 24 q0 10 10 10 m740 0 q10 0 10 -10 m-750 10 h10 m144 0 h10 m0 0 h576 m-750 -10 v20 m760 0 v-20 m-760 20 v24 m760 0 v-24 m-760 24 q0 10 10 10 m740 0 q10 0 10 -10 m-750 10 h10 m142 0 h10 m0 0 h578 m-750 -10 v20 m760 0 v-20 m-760 20 v24 m760 0 v-24 m-760 24 q0 10 10 10 m740 0 q10 0 10 -10 m-750 10 h10 m92 0 h10 m20 0 h10 m106 0 h10 m0 0 h10 m102 0 h10 m-268 0 h20 m248 0 h20 m-288 0 q10 0 10 10 m268 0 q0 -10 10 -10 m-278 10 v24 m268 0 v-24 m-268 24 q0 10 10 10 m248 0 q10 0 10 -10 m-258 10 h10 m96 0 h10 m0 0 h10 m92 0 h10 m0 0 h20 m20 -44 h340 m-750 -10 v20 m760 0 v-20 m-760 20 v68 m760 0 v-68 m-760 68 q0 10 10 10 m740 0 q10 0 10 -10 m-750 10 h10 m50 0 h10 m0 0 h670 m-750 -10 v20 m760 0 v-20 m-760 20 v24 m760 0 v-24 m-760 24 q0 10 10 10 m740 0 q10 0 10 -10 m-750 10 h10 m110 0 h10 m0 0 h610 m-750 -10 v20 m760 0 v-20 m-760 20 v24 m760 0 v-24 m-760 24 q0 10 10 10 m740 0 q10 0 10 -10 m-750 10 h10 m66 0 h10 m0 0 h654 m-750 -10 v20 m760 0 v-20 m-760 20 v24 m760 0 v-24 m-760 24 q0 10 10 10 m740 0 q10 0 10 -10 m-750 10 h10 m80 0 h10 m0 0 h640 m-750 -10 v20 m760 0 v-20 m-760 20 v24 m760 0 v-24 m-760 24 q0 10 10 10 m740 0 q10 0 10 -10 m-730 10 h10 m30 0 h10 m0 0 h34 m-104 0 h20 m84 0 h20 m-124 0 q10 0 10 10 m104 0 q0 -10 10 -10 m-114 10 v24 m104 0 v-24 m-104 24 q0 10 10 10 m84 0 q10 0 10 -10 m-94 10 h10 m26 0 h10 m0 0 h38 m-94 -10 v20 m104 0 v-20 m-104 20 v24 m104 0 v-24 m-104 24 q0 10 10 10 m84 0 q10 0 10 -10 m-94 10 h10 m30 0 h10 m0 0 h34 m-94 -10 v20 m104 0 v-20 m-104 20 v24 m104 0 v-24 m-104 24 q0 10 10 10 m84 0 q10 0 10 -10 m-94 10 h10 m48 0 h10 m0 0 h16 m-94 -10 v20 m104 0 v-20 m-104 20 v24 m104 0 v-24 m-104 24 q0 10 10 10 m84 0 q10 0 10 -10 m-94 10 h10 m64 0 h10 m20 -176 h10 m92 0 h10 m0 0 h504 m-750 -10 v20 m760 0 v-20 m-760 20 v200 m760 0 v-200 m-760 200 q0 10 10 10 m740 0 q10 0 10 -10 m-730 10 h10 m26 0 h10 m20 0 h10 m74 0 h10 m0 0 h146 m-260 0 h20 m240 0 h20 m-280 0 q10 0 10 10 m260 0 q0 -10 10 -10 m-270 10 v24 m260 0 v-24 m-260 24 q0 10 10 10 m240 0 q10 0 10 -10 m-250 10 h10 m46 0 h10 m20 0 h10 m0 0 h124 m-154 0 h20 m134 0 h20 m-174 0 q10 0 10 10 m154 0 q0 -10 10 -10 m-164 10 v12 m154 0 v-12 m-154 12 q0 10 10 10 m134 0 q10 0 10 -10 m-144 10 h10 m24 0 h10 m0 0 h10 m70 0 h10 m40 -76 h234 m-580 0 h20 m560 0 h20 m-600 0 q10 0 10 10 m580 0 q0 -10 10 -10 m-590 10 v100 m580 0 v-100 m-580 100 q0 10 10 10 m560 0 q10 0 10 -10 m-570 10 h10 m82 0 h10 m0 0 h10 m26 0 h10 m0 0 h10 m46 0 h10 m0 0 h10 m24 0 h10 m0 0 h10 m70 0 h10 m0 0 h212 m-570 -10 v20 m580 0 v-20 m-580 20 v24 m580 0 v-24 m-580 24 q0 10 10 10 m560 0 q10 0 10 -10 m-570 10 h10 m62 0 h10 m0 0 h10 m26 0 h10 m0 0 h10 m74 0 h10 m0 0 h338 m-570 -10 v20 m580 0 v-20 m-580 20 v24 m580 0 v-24 m-580 24 q0 10 10 10 m560 0 q10 0 10 -10 m-570 10 h10 m62 0 h10 m0 0 h10 m100 0 h10 m0 0 h10 m72 0 h10 m0 0 h10 m26 0 h10 m0 0 h10 m68 0 h10 m0 0 h10 m112 0 h10 m-570 -10 v20 m580 0 v-20 m-580 20 v24 m580 0 v-24 m-580 24 q0 10 10 10 m560 0 q10 0 10 -10 m-570 10 h10 m84 0 h10 m0 0 h10 m26 0 h10 m0 0 h10 m46 0 h10 m0 0 h10 m36 0 h10 m0 0 h10 m78 0 h10 m0 0 h190 m-570 -10 v20 m580 0 v-20 m-580 20 v24 m580 0 v-24 m-580 24 q0 10 10 10 m560 0 q10 0 10 -10 m-570 10 h10 m72 0 h10 m0 0 h10 m26 0 h10 m0 0 h10 m94 0 h10 m0 0 h308 m-570 -10 v20 m580 0 v-20 m-580 20 v24 m580 0 v-24 m-580 24 q0 10 10 10 m560 0 q10 0 10 -10 m-570 10 h10 m66 0 h10 m0 0 h10 m26 0 h10 m0 0 h10 m150 0 h10 m0 0 h258 m-570 -10 v20 m580 0 v-20 m-580 20 v24 m580 0 v-24 m-580 24 q0 10 10 10 m560 0 q10 0 10 -10 m-570 10 h10 m110 0 h10 m0 0 h10 m26 0 h10 m0 0 h10 m46 0 h10 m20 0 h10 m24 0 h10 m0 0 h10 m78 0 h10 m0 0 h62 m-224 0 h20 m204 0 h20 m-244 0 q10 0 10 10 m224 0 q0 -10 10 -10 m-234 10 v24 m224 0 v-24 m-224 24 q0 10 10 10 m204 0 q10 0 10 -10 m-214 10 h10 m58 0 h10 m0 0 h10 m106 0 h10 m20 -44 h74 m20 -384 h10 m26 0 h10 m0 0 h94 m-750 -10 v20 m760 0 v-20 m-760 20 v452 m760 0 v-452 m-760 452 q0 10 10 10 m740 0 q10 0 10 -10 m-750 10 h10 m28 0 h10 m0 0 h10 m48 0 h10 m0 0 h10 m46 0 h10 m0 0 h10 m28 0 h10 m0 0 h510 m-750 -10 v20 m760 0 v-20 m-760 20 v46 m760 0 v-46 m-760 46 q0 10 10 10 m740 0 q10 0 10 -10 m-750 10 h10 m86 0 h10 m0 0 h10 m74 0 h10 m20 0 h10 m90 0 h10 m0 0 h10 m46 0 h10 m0 0 h10 m84 0 h10 m0 0 h10 m46 0 h10 m-366 0 l20 0 m-1 0 q-9 0 -9 -10 l0 -12 q0 -10 10 -10 m346 32 l20 0 m-20 0 q10 0 10 -10 l0 -12 q0 -10 -10 -10 m-346 0 h10 m0 0 h336 m20 32 h10 m70 0 h10 m0 0 h10 m44 0 h10 m-750 -10 v20 m760 0 v-20 m-760 20 v24 m760 0 v-24 m-760 24 q0 10 10 10 m740 0 q10 0 10 -10 m-750 10 h10 m110 0 h10 m0 0 h10 m46 0 h10 m0 0 h10 m62 0 h10 m0 0 h10 m30 0 h10 m0 0 h10 m46 0 h10 m0 0 h346 m23 -1362 h-3"
+     id="path1470" />
+  <polygon
+     points="809 17 817 13 817 21"
+     id="polygon1472" />
+  <polygon
+     points="809 17 801 13 801 21"
+     id="polygon1474" />
+</svg>

@@ -40,10 +40,10 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   # How to properly write a self-referential rule, properly?
   rule bit_expr {
     <simple_expr> [
-      $<h>=[ <bit_ops> <bit_expr> ]
+      $<h>=[ <op=bit_ops> <bit_expr> ]
       ||
       $<l>=[
-        <plus_minus> [
+        <op=plus_minus> [
           <bit_expr>
           ||
           <INTERNAL> <expr> <interval>
@@ -557,7 +557,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
       ]
     ] ')'
     ||
-    '(' <_ident> <expr> ')'
+    '{' <_ident> <expr> '}'
     ||
     <INTERVAL> <expr> <interval> '+' <expr>
     ||
@@ -603,7 +603,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
        <_gorder_clause>?
        [ <SEPARATOR> <text> ]?
      ||
-     <COUNT> '(' [ <ALL>? | <_in_sum_expr> | <DISTINCT> <expr_list> ]
+     <COUNT> '(' [ <ALL>? <MULT> | <_in_sum_expr> | <DISTINCT> <expr_list> ]
    ] ')'
  }
 
@@ -1025,13 +1025,13 @@ grammar Parser::SQL::Grammar::DDLGrammar {
 
   rule select_init {
     <SELECT> <select_part2> <union_list>?
-    |
+    ||
     '(' <select_paren> ')' <union_opt>?
   }
 
   rule select_paren {
     <SELECT> <select_part2>
-    |
+    ||
     '(' <select_paren> ')'
   }
 
@@ -1117,7 +1117,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule create3 {
-    [ <REPLACE> || <IGNORE> ]? <AS>? [
+    [ <REPLACE> | <IGNORE> ]? <AS>? [
       <create_select> <union_list>?
       |
       '(' <create_select> ')' <union_opt>?
