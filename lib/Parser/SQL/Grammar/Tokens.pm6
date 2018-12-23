@@ -16,7 +16,7 @@ our token BIT_OR is export		  { '|' }
 our token BIT_XOR is export		  { «'XOR'» }
 our token MINUS is export       { '-' }
 our token NOT_OP is export      { '!' }
-our token NOT2                  { '<>' }
+our token NOT2 is export        { '<>' }
 our token OR2 is export         { '||' }
 our token PLUS is export        { '+' }
 our token MULT is export        { '*' }
