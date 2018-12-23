@@ -527,6 +527,8 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     ||
     <variable>
     ||
+    <field_ident>
+    ||
     <sum_expr>
     ||
     [
