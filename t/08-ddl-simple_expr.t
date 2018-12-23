@@ -16,7 +16,6 @@ for @o.reverse -> $oo {
   for @o -> $o is copy {
     for @i -> $i {
       my $ts = "{ $o } {$i} { $oo }";
-      diag "Testing '$ts'";
       basic($ts, $rule, :text("'$ts' passes <{ $rule }>") );
     }
   }

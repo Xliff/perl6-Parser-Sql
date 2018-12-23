@@ -569,11 +569,9 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     [ <PLUS> | <MINUS> | <BIT_NOT> | <NOT2> | <NOT_OP> | <BINARY> ]
     <simple_expr>
     ||
-    <simple_expr> [
-      <COLLATE> [ <text> || <_ident> ]
-      ||
-      <OR2> <simple_expr>
-    ]
+    <COLLATE> [ <text> || <_ident> ]
+    ||
+    <OR2> <simple_expr>
   }
 
   my rule _gorder_clause {
