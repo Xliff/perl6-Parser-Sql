@@ -431,7 +431,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
 
   rule _key_function_call {
     [
-      <CHAR> '(' <expr_list> [ USING <charset_name=ident> ]? ')'
+      <CHAR> '(' <expr_list> [ <USING> <charset_name=ident> ]? ')'
       ||
       [
         [ <DATE> | <DAY> | <HOUR> | <MINUTE> | <MONTH> | <SECOND> |

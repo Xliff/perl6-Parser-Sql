@@ -35,14 +35,14 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:window-width="1428"
-     inkscape:window-height="859"
+     inkscape:window-height="673"
      id="namedview1478"
      showgrid="false"
-     inkscape:zoom="1.431423"
-     inkscape:cx="377.47876"
-     inkscape:cy="630.43105"
-     inkscape:window-x="222"
-     inkscape:window-y="170"
+     inkscape:zoom="2.0243378"
+     inkscape:cx="325.38408"
+     inkscape:cy="1214.9299"
+     inkscape:window-x="-22"
+     inkscape:window-y="0"
      inkscape:window-maximized="0"
      inkscape:current-layer="svg1476" />
   <defs
@@ -292,12 +292,7 @@
        height="32"
        class="nonterminal"
        id="rect948"
-       style="fill:#ffff00" />
-    <text
-       class="nonterminal"
-       x="59"
-       y="317"
-       id="text950">simple_expr</text>
+       style="fill:#00ff00" />
   </a>
   <a
      xlink:href="#COLLATE_SYM"
@@ -388,7 +383,7 @@
        height="32"
        class="nonterminal"
        id="rect980"
-       style="fill:#ffff00" />
+       style="fill:#00ff00" />
     <text
        class="nonterminal"
        x="307"
@@ -619,7 +614,7 @@
        height="32"
        class="nonterminal"
        id="rect1054"
-       style="fill:#ffff00" />
+       style="fill:#00ff00" />
     <text
        class="nonterminal"
        x="183"
