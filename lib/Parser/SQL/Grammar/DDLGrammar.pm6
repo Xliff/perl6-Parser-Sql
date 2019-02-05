@@ -3,6 +3,12 @@ use v6.c;
 use Parser::SQL::Grammar::Tokens;
 
 grammar Parser::SQL::Grammar::DDLGrammar {
+  method error($msg) {
+    my $line = self.target(0, self.pos).lines.elems;
+    my $pos = $line > 1 ?? "line { $line }" !! " position { self.pos }";
+    die "{ $msg } at { $pos }";
+  }
+
   token TOP { <CREATE_ST> }
 
   rule alter_algo_option {
@@ -431,7 +437,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
 
   rule _key_function_call {
     [
-      <CHAR> '(' <expr_list> [ <USING> <charset_name=ident> ]? ')'
+      <CHAR> '(' <expr_list> [ <USING> <charset_name=ident> ]?
       ||
       [
         [ <DATE> | <DAY> | <HOUR> | <MINUTE> | <MONTH> | <SECOND> |
@@ -523,11 +529,11 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     ||
     <_con_function_call>
     ||
-    <literal>
+    <field_ident>
     ||
     <variable>
     ||
-    <field_ident>
+    <literal>
     ||
     <sum_expr>
     ||

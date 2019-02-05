@@ -794,18 +794,19 @@ our token ident_sys is export {
 # That doesn't make much sense.
 our token _ident is export   { <ident_sys> }
 
+our sub check-dots($s) {
+  die("Illegal prefix!") if $s.starts-with('..');
+  die("Illegal suffix!") if $s.  ends-with('.');
+}
+
+# Use dynamic variables to pass custom error handling to check-dots?
 our regex table_ident is export {
-  '.'? <_ident> ** 1..2 % '.' <!before '.'>
+  '.'? <_ident> ** 1..2 % '.' { check-dots( $/.Str ) }
 }
 
 # Needs positive look beind.
 our regex field_ident is export   {
-  [
-    [ <table_ident>? '.' ]? <?after '.'> <_ident>
-    ||
-    '.'? <_ident>
-  ]
-  #&& <!after '.'> $
+  '.'? <_ident> ** 1..3 % '.' { check-dots( $/.Str ) }
 }
 
 our token limit_options is export { <_ident> || <PARAM_MARK> || <num> }

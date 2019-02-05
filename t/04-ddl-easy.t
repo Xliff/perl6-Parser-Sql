@@ -1066,7 +1066,7 @@ for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {
   }
 
   when 'table_list' {
-    test-table_list();
+    test-table-list();
   }
 
   when 'table_wild' {

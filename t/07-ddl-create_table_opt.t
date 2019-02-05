@@ -149,8 +149,8 @@ for <
 test-row_types("ROW_FORMAT EQ ", :$rule, :eq);
 
 # <UNION> <EQ>? '(' <table_list>? ')'
-test-table_list('UNION EQ (%s)', :$rule);
-test-table_list('UNION (%s)', :$rule);
+test-table-list('UNION EQ (%s)', :$rule);
+test-table-list('UNION (%s)', :$rule);
 basic-and-mutate('UNION()', $rule, :rx(/ ('UNION') /) );
 # INSURE there is a test in @opts by this point. otherwise add this with 25% chance.
 @opts.push: "UNION()" if !@opts || (^4).pick == 0;
