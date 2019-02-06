@@ -34,16 +34,16 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1428"
-     inkscape:window-height="673"
+     inkscape:window-width="1576"
+     inkscape:window-height="746"
      id="namedview1478"
      showgrid="false"
      inkscape:zoom="2.0243378"
      inkscape:cx="325.38408"
-     inkscape:cy="1214.9299"
-     inkscape:window-x="-22"
+     inkscape:cy="1353.2467"
+     inkscape:window-x="0"
      inkscape:window-y="0"
-     inkscape:window-maximized="0"
+     inkscape:window-maximized="1"
      inkscape:current-layer="svg1476" />
   <defs
      id="defs876">
@@ -124,7 +124,7 @@
        height="32"
        class="nonterminal"
        id="rect892"
-       style="fill:#ffff00" />
+       style="fill:#00ff00" />
     <text
        class="nonterminal"
        x="213"
@@ -148,7 +148,7 @@
        height="32"
        class="nonterminal"
        id="rect900"
-       style="fill:#ffff00" />
+       style="fill:#00ff00" />
     <text
        class="nonterminal"
        x="213"
@@ -196,7 +196,7 @@
        height="32"
        class="nonterminal"
        id="rect916"
-       style="fill:#ff0000" />
+       style="fill:#00ff00" />
     <text
        class="nonterminal"
        x="59"

@@ -1,5 +1,7 @@
 use v6.c;
 
+use Grammar::Gatherer;
+
 use Parser::SQL::Grammar::Tokens;
 
 grammar Parser::SQL::Grammar::DDLGrammar {
@@ -486,7 +488,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
         <EXTRACT> '(' <interval> <FROM>
         ||
         [
-          <GET_FORMAT> '(' [ <DATE> | <TIME> | <TIMESTAMP> | <DATETIME> ]
+          <GET_FORMAT> [ <DATE> | <TIME> | <TIMESTAMP> | <DATETIME> ]
           ||
           [ <TIMESTAMP_ADD> | <TIMESTAMP_DIFF> ] '(' <interval_time_stamp> ','
           <expr>
@@ -517,8 +519,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     :my rule _ident_list { <simple_ident>+ % ',' };
     <PARAM_MARK>
     ||
-    # No spaces
-    <simple_ident> [ <JSON_SEPARATOR> || <JSON_UNQ_SEPEARATOR> ] <text>
+    <simple_ident> [ <JSON_SEPARATOR> | <JSON_UNQ_SEPEARATOR> ] <text>
     ||
     <_key_function_call>
     ||
@@ -1188,19 +1189,9 @@ grammar Parser::SQL::Grammar::DDLGrammar {
 
 };
 
-constant \P_MYSQL is export := Parser::SQL::Grammar::DDLGrammar;
+Parser::SQL::Grammar::DDLGrammar.subparse(
+  "TRIM ( 'aa' )",
+  rule => '_key_function_call'
+);
 
-# our sub MAIN is export {
-#   my $test = qq:to/SQL/;
-#   CREATE TABLE Persons (
-#       PersonID int,
-#       LastName varchar(255),
-#       FirstName varchar(255),
-#       Address varchar(255),
-#       City varchar(255)
-#   );
-#   SQL
-#
-#   my $a = Parser::SQL::Grammar::DDLGrammar.parse($test);
-#   $a.gist.say;
-# }
+Parser::SQL::Grammar::DDLGrammar.HOW.results.gist.say;
