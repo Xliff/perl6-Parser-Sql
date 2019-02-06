@@ -436,33 +436,31 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule _key_function_call {
+    <CHAR> '(' <expr_list> [ <USING> <charset_name=ident> ]? ')'
+    ||
     [
-      <CHAR> '(' <expr_list> [ <USING> <charset_name=ident> ]?
+      [ <DATE> | <DAY> | <HOUR> | <MINUTE> | <MONTH> | <SECOND> |
+        <TIME> | <YEAR>
+      ] '('
       ||
-      [
-        [ <DATE> | <DAY> | <HOUR> | <MINUTE> | <MONTH> | <SECOND> |
-          <TIME> | <YEAR>
-        ]
-        ||
+      <INSERT> '(' <expr> ',' <expr> ',' <expr> ','
+      ||
+      [ <LEFT> | <RIGHT> ] '(' <expr> ','
+      ||
+      <TIMESTAMP> '(' [ <expr> ',' ]?
+      ||
+      <TRIM> '(' [
         [
-          <INSERT> '(' <expr> ',' <expr> ','
+          [ <LEADING> || <TRAILING> || <BOTH> ] <expr>?
           ||
-          [ <LEFT> | <RIGHT> ] '('
-        ] <expr> ','
-        ||
-        <TIMESTAMP> '(' [ <expr> ',' ]?
-        ||
-        <TRIM> '(' [
           <expr>
-          ||
-          [ <LEADING> | <TRAILING> | <BOTH> ] <expr>?
         ] <FROM>
-      ] <expr>
-      ||
-      <USER> '('
+      ]?
       ||
       <INTERVAL> '(' <expr> ',' <expr> [ ',' <expr_list> ]?
-    ] ')'
+    ] <expr> ')'
+    ||
+    <USER> '(' ')'
     ||
     <CURRENT_USER> [ '(' ')' ]?
   }
@@ -519,7 +517,8 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     :my rule _ident_list { <simple_ident>+ % ',' };
     <PARAM_MARK>
     ||
-    <simple_ident> [ <JSON_SEPARATOR> | <JSON_UNQ_SEPEARATOR> ] <text>
+    # No spaces
+    <simple_ident> [ <JSON_SEPARATOR> || <JSON_UNQ_SEPEARATOR> ] <text>
     ||
     <_key_function_call>
     ||
@@ -529,11 +528,11 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     ||
     <_con_function_call>
     ||
+    <literal>
+    ||
     <field_ident>
     ||
     <variable>
-    ||
-    <literal>
     ||
     <sum_expr>
     ||

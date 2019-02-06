@@ -30,4 +30,11 @@ for @lit_ident.reverse -> $oo {
 basic_test("$_ || 2 + 2") for @lit_ident;
 
 # <simple_ident> <JSON_SEP> <TEXT>
-basic_test('"ns.field.name": "VALUE"');
+for '->', '->>' {
+  for "'", '"' -> $q {
+    my $t = sprintf('%1$sns.field.name%1$s -> %1$sVALUE%1$s', $q);
+    basic_test($t);
+    $t ~~ s:g/\s//;
+    basic_test($t);
+  }
+}
