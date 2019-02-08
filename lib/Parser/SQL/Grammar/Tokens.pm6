@@ -623,8 +623,8 @@ our token or is export          {   <OR> | <OR2>     }
 our token plus_minus is export  { <PLUS> | <MINUS>   }
 
 our token bit_ops is export {
-  '|' || '&' || '*' || '/' || '%' || '^' ||
-   <SHIFT_L> || <SHIFT_R> || <DIV> || <MOD>
+  '|' || '&' || '*' || '/' ||  '%'  || '^' ||
+   <SHIFT_L> || <SHIFT_R>  || <DIV> || <MOD>
 }
 
 our token comp_ops is export {
@@ -633,14 +633,16 @@ our token comp_ops is export {
 
 our token bin_num is export {
   'B'  [ <[01]>+ || "'" <[01]>+ "'" ]
-  ||
+  |
   '0b' [ <[01]>+ || "'" <[01]>+ "'" ]
 }
 
 our token hex_num is export {
-  '0'? [ 'x' || 'X' ] [
-    <[0123456789ABCDEFabcdef]>+ || "'" <[0123456789ABCDEFabcdef]>+ "'"
-  ] »
+  # '0'? <[ xX ]> [
+  #   <[0..9A..Fa..f]>+ ||
+  #   "'" ~ "'" <[0..9A..Fa..f]>+
+  # ] »
+  '0'? <[ xX ]> [ <[0..9A..Fa..f]>+ || "'" ~ "'" <[0..9A..Fa..f]>+ ] »
 }
 
 our token number is export        { \d+ }
@@ -651,11 +653,11 @@ our token num is export           {
   $<s>=<[+-]>? <whole=number> [ '.' <dec=number> ]? <!before '.'>
 }
 our token signed_number is export { $<s>=<[+-]>? <number> }
-our token ulong_num is export     { <number> | <hex_num> }
+our token ulong_num is export     { <num> | <bin_num> | <hex_num> }
 
-our token order_dir is export     { <ASC> | <DESC> }
-our token union_opt is export     { <DISTINCT> | <ALL> }
-our token key_or_index is export  { <KEY> | <INDEX> }
+our token order_dir is export     { <ASC>      | <DESC>  }
+our token union_opt is export     { <DISTINCT> | <ALL>   }
+our token key_or_index is export  { <KEY>      | <INDEX> }
 
 our token keyword_sp is export {
   <ACTION>      | <ADDDATE>   | <AFTER>   | <AGAINST>   | <AGGREGATE>  |
@@ -775,18 +777,26 @@ our token keyword is export {
 # Must have a condition where a variable cannot contain all digits.
 our token ident_sys is export {
   <keyword>
-  ||
-  <:Letter> <:Letter + :Number>+
-  ||
-  $<i>=[ '@' <:Letter + :Number +[ @ _ ]> <:Letter + :Number +[ _ $ ]>* ]
-  ||
-  $<i>=[ "@'" <:Letter + :Number +[ @ _ ]> <:Letter + :Number +[ _ $ ]>* \' ]
-  ||
-  $<i>=[ '@"' <:Letter + :Number +[ @ _ ]> <:Letter + :Number +[ _ $ ]>* \" ]
-  ||
+  |
+  <:Letter> [ <:Letter + :Number +[ _ ]>+ ]?
+  |
+  ##$<i>=[ '@' <:Letter + :Number +[ @ _ ]> <:Letter + :Number +[ _ $ ]>* ]
+  #|
+  #$<i>=[ "@'" <:Letter + :Number +[ @ _ ]> <:Letter + :Number +[ _ $ ]>* \' ]
+  #|
+  #$<i>=[ '@"' <:Letter + :Number +[ @ _ ]> <:Letter + :Number +[ _ $ ]>* \" ]
+  #|
+  # VARIABLE NAMES -- NEED CLARIFICATION! -- START
+  $<i>=[ '@' '@'? <:Letter + :Number +[ _ $ ]>+ ]
+  |
+  $<i>=[ '@' '@'? "'" <:Letter + :Number +[ _ $ ]>+ "'" ]
+  |
+  $<i>=[ '@' '@'? '"' <:Letter + :Number +[ _ $ ]>+ '"' ]
+  # VARIABLE NAMES -- NEED CLARIFICATION! -- END
+  |
   # YYY: Verify that this is IDENT_QUOTED
   '"' <-[\"]>+ '"'
-  ||
+  |
   "'" <-[\']>+ "'"
 }
 
@@ -839,5 +849,6 @@ our token underscore_charset is export {
 }
 
 our rule select_alias is export {
-  <AS>?\s*$<o>=[ <_ident> || <text> ]
+  <AS>?
+  $<o>=[ <_ident> | <text> ]
 }

@@ -34,16 +34,16 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="783"
-     inkscape:window-height="905"
+     inkscape:window-width="1576"
+     inkscape:window-height="746"
      id="namedview318"
      showgrid="false"
      inkscape:zoom="1.0522023"
-     inkscape:cx="307"
-     inkscape:cy="282"
-     inkscape:window-x="532"
-     inkscape:window-y="63"
-     inkscape:window-maximized="0"
+     inkscape:cx="205.63674"
+     inkscape:cy="176.60062"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
      inkscape:current-layer="svg316">
     <inkscape:grid
        type="xygrid"
@@ -90,25 +90,23 @@
   <a
      xlink:href="#bit_expr"
      xlink:title="bit_expr"
-     id="a180">
+     id="a180"
+     style="fill:#00ff00">
     <rect
        x="51"
        y="3"
        width="68"
        height="32"
-       id="rect174" />
+       id="rect174"
+       style="fill:#00ff00" />
     <rect
        x="49"
        y="1"
        width="68"
        height="32"
        class="nonterminal"
-       id="rect176" />
-    <text
-       class="nonterminal"
-       x="59"
-       y="21"
-       id="text178">bit_expr</text>
+       id="rect176"
+       style="fill:#00ff00" />
   </a>
   <rect
      x="179"
@@ -124,7 +122,8 @@
      height="32"
      class="terminal"
      rx="10"
-     id="rect184" />
+     id="rect184"
+     style="fill:#00ff00" />
   <text
      class="terminal"
      x="187"
@@ -144,7 +143,8 @@
      height="32"
      class="terminal"
      rx="10"
-     id="rect190" />
+     id="rect190"
+     style="fill:#00ff00" />
   <text
      class="terminal"
      x="187"
@@ -166,7 +166,8 @@
        width="90"
        height="32"
        class="nonterminal"
-       id="rect196" />
+       id="rect196"
+       style="fill:#00ff00" />
     <text
        class="nonterminal"
        x="187"
@@ -189,7 +190,8 @@
        width="98"
        height="32"
        class="nonterminal"
-       id="rect204" />
+       id="rect204"
+       style="fill:#00ff00" />
     <text
        class="nonterminal"
        x="187"
@@ -210,7 +212,8 @@
      height="32"
      class="terminal"
      rx="10"
-     id="rect212" />
+     id="rect212"
+     style="fill:#00ff00" />
   <text
      class="terminal"
      x="187"
@@ -230,7 +233,8 @@
      height="32"
      class="terminal"
      rx="10"
-     id="rect218" />
+     id="rect218"
+     style="fill:#00ff00" />
   <text
      class="terminal"
      x="187"
@@ -250,7 +254,8 @@
      height="32"
      class="terminal"
      rx="10"
-     id="rect224" />
+     id="rect224"
+     style="fill:#00ff00" />
   <text
      class="terminal"
      x="187"
@@ -272,7 +277,8 @@
        width="74"
        height="32"
        class="nonterminal"
-       id="rect230" />
+       id="rect230"
+       style="fill:#00ff00" />
     <text
        class="nonterminal"
        x="187"
@@ -295,7 +301,8 @@
        width="82"
        height="32"
        class="nonterminal"
-       id="rect238" />
+       id="rect238"
+       style="fill:#00ff00" />
     <text
        class="nonterminal"
        x="187"
@@ -316,7 +323,8 @@
      height="32"
      class="terminal"
      rx="10"
-     id="rect246" />
+     id="rect246"
+     style="fill:#00ff00" />
   <text
      class="terminal"
      x="187"
@@ -338,7 +346,8 @@
        width="68"
        height="32"
        class="nonterminal"
-       id="rect252" />
+       id="rect252"
+       style="fill:#00ff00" />
     <text
        class="nonterminal"
        x="325"
@@ -359,7 +368,8 @@
      height="32"
      class="terminal"
      rx="10"
-     id="rect260" />
+     id="rect260"
+     style="fill:#00ff00" />
   <text
      class="terminal"
      x="187"
@@ -379,7 +389,8 @@
      height="32"
      class="terminal"
      rx="10"
-     id="rect266" />
+     id="rect266"
+     style="fill:#00ff00" />
   <text
      class="terminal"
      x="187"
@@ -401,7 +412,8 @@
        width="68"
        height="32"
        class="nonterminal"
-       id="rect272" />
+       id="rect272"
+       style="fill:#00ff00" />
     <text
        class="nonterminal"
        x="277"
@@ -424,7 +436,8 @@
        width="110"
        height="32"
        class="nonterminal"
-       id="rect280" />
+       id="rect280"
+       style="fill:#00ff00" />
     <text
        class="nonterminal"
        x="277"
@@ -447,7 +460,8 @@
        width="46"
        height="32"
        class="nonterminal"
-       id="rect288" />
+       id="rect288"
+       style="fill:#ffff00" />
     <text
        class="nonterminal"
        x="407"
@@ -470,7 +484,8 @@
        width="62"
        height="32"
        class="nonterminal"
-       id="rect296" />
+       id="rect296"
+       style="fill:#00ff00" />
     <text
        class="nonterminal"
        x="473"
@@ -493,7 +508,8 @@
        width="92"
        height="32"
        class="nonterminal"
-       id="rect304" />
+       id="rect304"
+       style="fill:#00ff00" />
     <text
        class="nonterminal"
        x="59"

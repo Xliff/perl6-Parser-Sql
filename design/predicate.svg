@@ -35,16 +35,16 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:window-width="1340"
-     inkscape:window-height="872"
+     inkscape:window-height="742"
      id="namedview262"
      showgrid="false"
      inkscape:zoom="1.1745514"
      inkscape:cx="315.25"
-     inkscape:cy="204.83334"
+     inkscape:cy="170.77778"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="0"
-     inkscape:current-layer="svg260" />
+     inkscape:current-layer="a180" />
   <defs
      id="defs4">
     <style
@@ -289,7 +289,7 @@
        height="32"
        class="nonterminal"
        id="rect74"
-       style="fill:#ff0000" />
+       style="fill:#ffff00" />
     <text
        class="nonterminal"
        x="205"
@@ -334,7 +334,7 @@
        height="32"
        class="nonterminal"
        id="rect88"
-       style="fill:#ff0000" />
+       style="fill:#ffff00" />
     <text
        class="nonterminal"
        x="335"
@@ -472,7 +472,7 @@
        height="32"
        class="nonterminal"
        id="rect132"
-       style="fill:#ff0000" />
+       style="fill:#ffff00" />
     <text
        class="nonterminal"
        x="285"
@@ -517,7 +517,7 @@
        height="32"
        class="nonterminal"
        id="rect146"
-       style="fill:#ff0000" />
+       style="fill:#ffff00" />
     <text
        class="nonterminal"
        x="415"
@@ -586,7 +586,7 @@
        height="32"
        class="nonterminal"
        id="rect168"
-       style="fill:#ff0000" />
+       style="fill:#00ff00" />
     <text
        class="nonterminal"
        x="199"
@@ -610,7 +610,7 @@
        height="32"
        class="nonterminal"
        id="rect176"
-       style="fill:#ff0000" />
+       style="fill:#00ff00" />
     <text
        class="nonterminal"
        x="311"
@@ -658,7 +658,7 @@
        height="32"
        class="nonterminal"
        id="rect192"
-       style="fill:#ffff00" />
+       style="fill:#00ff00" />
     <text
        class="nonterminal"
        x="219"
@@ -754,7 +754,7 @@
        height="32"
        class="nonterminal"
        id="rect224"
-       style="fill:#ffff00" />
+       style="fill:#00ff00" />
     <text
        class="nonterminal"
        x="285"
@@ -802,7 +802,7 @@
        height="32"
        class="nonterminal"
        id="rect240"
-       style="fill:#ff0000" />
+       style="fill:#00ff00" />
     <text
        class="nonterminal"
        x="119"
@@ -826,7 +826,7 @@
        height="32"
        class="nonterminal"
        id="rect248"
-       style="fill:#ff0000" />
+       style="fill:#00ff00" />
     <text
        class="nonterminal"
        x="231"

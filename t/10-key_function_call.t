@@ -13,6 +13,8 @@ sub basic-test($t, $r = $rule) {
   basic($t, $r, :text("'$t' passes <{ $r }>") );
 }
 
+plan 685;
+
 # <CHAR> '(' <expr_list> [ <USING> <charset_name=ident> ]? ')'
 basic-test( "CHAR ( 1, 2, 3, 4 USING latin1)" );
 basic-test( "CHAR (1, 2, 3, 4) " );

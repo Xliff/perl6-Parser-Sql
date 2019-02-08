@@ -6,6 +6,8 @@ use Parser::SQL::Grammar::Tokens;
 
 use keywords;
 
+plan 206;
+
 for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
   next unless $s ~~ ! /^\&_?<[A..Z0..9]>+/;
 
@@ -125,26 +127,41 @@ for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
     }
 
     when 'ident_sys' {
+      # As of 2019/02/09 - Indentifier rules need SERIOUS clarification.
+      # See list of allowed vs non-allowed, below. Is this correct?
       my $m;
       sub test(Str $s) {
         $m = $s ~~ /^<ident_sys>/;
       }
 
+      # Allowed
       ok
-        test("\@identifier"),
-        "\@identifier matches <ident_sys>";
+        test('@identifier'),
+        '@identifier matches <ident_sys>';
+
+      # Allowed
+      ok
+        test('@@why_would_you_use_this_name'),
+        '@@why_would_you_use_this_name matches <ident_sys>';
+
+      # Allowed
+      ok
+        test('@$please__no'),
+        '@$please__no matches <ident_sys>';
 
       ok
-        test("\@\@why_would_you_use_this_name"),
-        "\@\@why_would_you_use_this_name matches <ident_sys>";
+        test('@"quoted_whhyyy"'),
+        '@"quoted_whhyyy" matches <ident_sys>';
 
       ok
-        test("\@\$please__no"),
-        "\@\$please__no matches <ident_sys>";
+        test("\@'quoted_really_why'"),
+        "\@'quoted_really_why' matches <ident_sys>";
 
-      ok
-        test("#\@now_you_are_hurting_me"),
-        "#\@now_you_are_hurting_me matches <ident_sys>";
+
+      # Not Allowed
+      nok
+        test('#\@now_you_are_hurting_me'),
+        '#@now_you_are_hurting_me DOES NOT matche <ident_sys>';
 
       test("REMOVE");
       ok
@@ -159,9 +176,9 @@ for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
         test("'quoted_identifier'"),
         "'quoted_identifier' MATCHES <ident_sys>";
 
-      ok
-        test("__ident"), "__ident matches <ident_sys>";
-
+      # Not allowed, as per test on MySQL Server 5.7
+      nok test("__ident"), "__ident DOES NOT matches <ident_sys>";
+      # Not allwed.
       nok test("\!not"), "!not FAILS <ident_sys>";
       nok test("\$dolla"), "\$dolla FAILS <ident_sys>";
       nok test("0\@notavar"), "0\@notavar FAILS <ident_sys>";
@@ -277,9 +294,11 @@ for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
       }
     }
 
+    # Currently failing as of 2019/02/09
     when 'select_alias' {
-      my $m =  'AS table_alias' ~~ /^<select_alias>/;
+      my $m = 'AS table_alias' ~~ /^<select_alias>/;
 
+      # Ident not picking up "table" but not "table_alias"
       ok
         'AS' eq $m<select_alias><AS>.Str,
         'AS token discovered by <select_alias>';

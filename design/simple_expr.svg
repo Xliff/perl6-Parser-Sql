@@ -38,13 +38,13 @@
      inkscape:window-height="746"
      id="namedview1478"
      showgrid="false"
-     inkscape:zoom="2.0243378"
-     inkscape:cx="325.38408"
-     inkscape:cy="1353.2467"
+     inkscape:zoom="1.0121689"
+     inkscape:cx="375.74914"
+     inkscape:cy="879.08406"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg1476" />
+     inkscape:current-layer="a1094" />
   <defs
      id="defs876">
     <style
@@ -220,7 +220,7 @@
        height="32"
        class="nonterminal"
        id="rect924"
-       style="fill:#ff0000" />
+       style="fill:#00ff00" />
     <text
        class="nonterminal"
        x="59"
@@ -244,7 +244,7 @@
        height="32"
        class="nonterminal"
        id="rect932"
-       style="fill:#ff0000" />
+       style="fill:#ffff00" />
     <text
        class="nonterminal"
        x="59"
@@ -268,7 +268,7 @@
        height="32"
        class="nonterminal"
        id="rect940"
-       style="fill:#ff0000" />
+       style="fill:#ffff00" />
     <text
        class="nonterminal"
        x="59"
@@ -683,7 +683,7 @@
        height="32"
        class="nonterminal"
        id="rect1076"
-       style="fill:#ff0000" />
+       style="fill:#ffff00" />
     <text
        class="nonterminal"
        x="145"
@@ -728,7 +728,7 @@
        height="32"
        class="nonterminal"
        id="rect1090"
-       style="fill:#ff0000" />
+       style="fill:#ffff00" />
     <text
        class="nonterminal"
        x="275"
@@ -797,7 +797,7 @@
        height="32"
        class="nonterminal"
        id="rect1112"
-       style="fill:#ff0000" />
+       style="fill:#ffff00" />
     <text
        class="nonterminal"
        x="227"
@@ -842,7 +842,7 @@
        height="32"
        class="nonterminal"
        id="rect1126"
-       style="fill:#ff0000" />
+       style="fill:#ffff00" />
     <text
        class="nonterminal"
        x="337"
@@ -1121,7 +1121,7 @@
        height="32"
        class="nonterminal"
        id="rect1216"
-       style="fill:#ff0000" />
+       style="fill:#ffff00" />
     <text
        class="nonterminal"
        x="229"
@@ -1376,7 +1376,7 @@
        height="32"
        class="nonterminal"
        id="rect1298"
-       style="fill:#ff0000" />
+       style="fill:#ffff00" />
     <text
        class="nonterminal"
        x="255"
@@ -1559,7 +1559,7 @@
        height="32"
        class="nonterminal"
        id="rect1356"
-       style="fill:#ff0000" />
+       style="fill:#ffff00" />
     <text
        class="nonterminal"
        x="175"
@@ -1628,7 +1628,7 @@
        height="32"
        class="nonterminal"
        id="rect1378"
-       style="fill:#ff0000" />
+       style="fill:#ffff00" />
     <text
        class="nonterminal"
        x="165"
@@ -1676,7 +1676,7 @@
        height="32"
        class="nonterminal"
        id="rect1394"
-       style="fill:#ff0000" />
+       style="fill:#ffff00" />
     <text
        class="nonterminal"
        x="389"
@@ -1724,7 +1724,7 @@
        height="32"
        class="nonterminal"
        id="rect1410"
-       style="fill:#ff0000" />
+       style="fill:#ffff00" />
     <text
        class="nonterminal"
        x="559"
@@ -1820,7 +1820,7 @@
        height="32"
        class="nonterminal"
        id="rect1442"
-       style="fill:#ff0000" />
+       style="fill:#ffff00" />
     <text
        class="nonterminal"
        x="189"
@@ -1889,7 +1889,7 @@
        height="32"
        class="nonterminal"
        id="rect1464"
-       style="fill:#ff0000" />
+       style="fill:#ffff00" />
     <text
        class="nonterminal"
        x="387"

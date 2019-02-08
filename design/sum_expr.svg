@@ -38,11 +38,11 @@
      inkscape:window-height="670"
      id="namedview1958"
      showgrid="false"
-     inkscape:zoom="1.3744292"
-     inkscape:cx="546.83227"
-     inkscape:cy="529.81292"
-     inkscape:window-x="90"
-     inkscape:window-y="205"
+     inkscape:zoom="0.97186821"
+     inkscape:cx="638.91256"
+     inkscape:cy="707.98962"
+     inkscape:window-x="9"
+     inkscape:window-y="72"
      inkscape:window-maximized="0"
      inkscape:current-layer="svg1956" />
   <defs
@@ -523,7 +523,7 @@
        height="32"
        class="nonterminal"
        id="rect1870"
-       style="fill:#ff0000" />
+       style="fill:#ffff00" />
     <text
        class="nonterminal"
        x="389"
@@ -733,7 +733,7 @@
        height="32"
        class="nonterminal"
        id="rect1938"
-       style="fill:#ff0000" />
+       style="fill:#ffff00" />
     <text
        class="nonterminal"
        x="335"

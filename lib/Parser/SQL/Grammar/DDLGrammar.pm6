@@ -222,7 +222,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule select_item {
-    <table_wild> || <expr> <select_alias>
+    <table_wild> | <expr> <select_alias>
   }
 
   rule select_item_list {
@@ -402,7 +402,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
         [ <FORMAT>  '(' <expr> ','
           ||
           <WEEK> '('
-        ] <expr> ','?
+        ] [ <expr> ',' ]?
       ] <expr>
       ||
       <COALESCE> '(' <expr_list>

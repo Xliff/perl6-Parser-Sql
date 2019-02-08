@@ -13,6 +13,8 @@ sub basic-test($t, $r = $rule) {
   basic($t, $r, :text("'$t' passes <{ $r }>") );
 }
 
+plan 4205;
+
 # :my token _precision { '(' <number> ')'  };
 
 my @expr = <4 'bb' "bb" ns.field field @var>;
@@ -120,6 +122,8 @@ for <CURDATE UTC_DATE> -> $i {
   basic-test($t);
   $t ~~ s:g/\s//;
   basic-test($t);
+  $t ~~ s:g/'()'//;
+  basic-test($t);
 }
 
 # [ <CURTIME> | <SYSDATE> | <UTC_TIME> | <UTC_TIMESTAMP> ] <_precision>?
@@ -131,5 +135,6 @@ for <CURTIME SYSDATE UTC_TIME UTC_TIMESTAMP> -> $i {
 }
 
 # <NOW> <_precision>?
-basic-test("NOW ( 4 )");
-basic-test("NOW(4)");
+basic-test('NOW ( 4 )');
+basic-test('NOW(4)');
+basic-test('NOW');

@@ -11,6 +11,11 @@ our @ord is export = <
   First Second Third Fourth Fifth Sixth Seventh Eighth Ninth Tenth
 >;
 
+my @valid_numbers = <
+  12345 6789101112 1314151617181920 0xdeadbeef 0b10010101
+  3.14151617181920
+>;
+
 sub basic($t, $rule, :$text, :$fail = False) is export {
   my $txt = $text // ($fail ?? "'$t' fails <$rule>" !! "'$t' passes <$rule>");
   my $s;

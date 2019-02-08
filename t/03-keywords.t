@@ -7,6 +7,8 @@ use Parser::SQL::Grammar::Tokens;
 
 use keywords;
 
+plan 810;
+
 for @keywords -> $k {
   (my $kw = $k) ~~ s/^_//;
   my $bw = ('a'..'z').pick ~ $kw;

@@ -1190,8 +1190,9 @@ grammar Parser::SQL::Grammar::DDLGrammar {
 };
 
 Parser::SQL::Grammar::DDLGrammar.subparse(
-  "TRIM ( 'aa' )",
-  rule => '_key_function_call'
+  #'AS table_ident',
+  'b AS a',
+  rule => 'udf_expr'
 );
 
 Parser::SQL::Grammar::DDLGrammar.HOW.results.gist.say;

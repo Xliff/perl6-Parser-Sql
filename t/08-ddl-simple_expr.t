@@ -7,6 +7,8 @@ use Parser::SQL::Grammar::DDLGrammar;
 use lib 't';
 use TestRoutines;
 
+plan 163;
+
 my $rule = 'simple_expr';
 
 sub basic_test($t) {
@@ -30,9 +32,9 @@ for @lit_ident.reverse -> $oo {
 basic_test("$_ || 2 + 2") for @lit_ident;
 
 # <simple_ident> <JSON_SEP> <TEXT>
-for '->', '->>' {
+for '->', '->>' -> $s {
   for "'", '"' -> $q {
-    my $t = sprintf('%1$sns.field.name%1$s -> %1$sVALUE%1$s', $q);
+    my $t = sprintf('%1$sns.field.name%1$s %2$s %1$sVALUE%1$s', $q, $s);
     basic_test($t);
     $t ~~ s:g/\s//;
     basic_test($t);
