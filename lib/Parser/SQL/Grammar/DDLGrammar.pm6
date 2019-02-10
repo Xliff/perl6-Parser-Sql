@@ -412,7 +412,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
       <WEIGHT_STRING> '(' <expr> [
         <__ws_levels>?
         ||
-        ',' <number> ',' <number> ',' <number>
+        ',' <ulong_num> ',' <ulong_num> ',' <ulong_num>
         ||
         <AS> [
           <CHAR> <__ws_nweights> <__ws_levels>?

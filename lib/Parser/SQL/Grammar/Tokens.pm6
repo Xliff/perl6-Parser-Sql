@@ -653,7 +653,7 @@ our token num is export           {
   $<s>=<[+-]>? <whole=number> [ '.' <dec=number> ]? <!before '.'>
 }
 our token signed_number is export { $<s>=<[+-]>? <number> }
-our token ulong_num is export     { <num> | <bin_num> | <hex_num> }
+our token ulong_num is export     { <num> | <hex_num> }
 
 our token order_dir is export     { <ASC>      | <DESC>  }
 our token union_opt is export     { <DISTINCT> | <ALL>   }

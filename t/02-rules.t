@@ -5,8 +5,9 @@ use Test;
 use Parser::SQL::Grammar::Tokens;
 
 use keywords;
+use TestRoutines;
 
-plan 206;
+plan 212;
 
 for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
   next unless $s ~~ ! /^\&_?<[A..Z0..9]>+/;
@@ -489,6 +490,8 @@ for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
         '0x1234z67890' ~~ /^<ulong_num>$/,
         '0x1234z67890 fails <ulong_num>';
 
+      # Added 2019/02/10;
+      ok /^<ulong_num>$/, "$_ passes <ulong_num>" for @valid_ulong_numbers;
     }
 
     when 'underscore_charset' {

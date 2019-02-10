@@ -11,8 +11,8 @@ our @ord is export = <
   First Second Third Fourth Fifth Sixth Seventh Eighth Ninth Tenth
 >;
 
-my @valid_numbers = <
-  12345 6789101112 1314151617181920 0xdeadbeef 0b10010101
+our @valid_ulong_numbers is export = <
+  12345 6789101112 1314151617181920 0xdeadbeef
   3.14151617181920
 >;
 
