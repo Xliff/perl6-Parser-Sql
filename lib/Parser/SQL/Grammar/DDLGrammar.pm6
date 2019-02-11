@@ -618,6 +618,8 @@ grammar Parser::SQL::Grammar::DDLGrammar {
 
   rule udf_expr {
     <expr> <select_alias>
+    |
+    <expr>
   }
 
   rule use_partition {

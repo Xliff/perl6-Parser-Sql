@@ -7,7 +7,7 @@ use Parser::SQL::Grammar::Tokens;
 use keywords;
 use TestRoutines;
 
-plan 212;
+plan 211;
 
 for Parser::SQL::Grammar::Tokens::EXPORT::DEFAULT::.keys.sort -> $s {
   next unless $s ~~ ! /^\&_?<[A..Z0..9]>+/;
