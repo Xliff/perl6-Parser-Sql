@@ -40,9 +40,9 @@
      showgrid="false"
      inkscape:zoom="1.5883518"
      inkscape:cx="357.88135"
-     inkscape:cy="174.10377"
+     inkscape:cy="224.47045"
      inkscape:window-x="89"
-     inkscape:window-y="55"
+     inkscape:window-y="7"
      inkscape:window-maximized="0"
      inkscape:current-layer="svg6689" />
   <defs
@@ -100,7 +100,7 @@
        height="32"
        class="nonterminal"
        id="rect6589"
-       style="fill:#ff0000" />
+       style="fill:#ffff00" />
     <text
        class="nonterminal"
        x="79"
@@ -220,7 +220,7 @@
        height="32"
        class="nonterminal"
        id="rect6629"
-       style="fill:#ff0000" />
+       style="fill:#ffff00" />
     <text
        class="nonterminal"
        x="271"
@@ -243,7 +243,8 @@
        width="68"
        height="32"
        class="nonterminal"
-       id="rect6637" />
+       id="rect6637"
+       style="fill:#ffff00" />
     <text
        class="nonterminal"
        x="59"

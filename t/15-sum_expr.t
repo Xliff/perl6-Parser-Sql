@@ -21,7 +21,7 @@ sub basic-test($t, $r = $rule) {
   basic($t, $r, :text("'$t' passes <{ $r }>") );
 }
 
-plan 606;
+plan 782;
 
 # Prerequisite - Test <_gorder_clause>!
 for RZ( @expr.pick(5), ('', 'ASC', 'DESC').pick(3) ) -> $p {
@@ -87,9 +87,38 @@ for <AVG MIN MAX SUM> -> $f {
 #   <STDDEV_SAMP> |
 #   <VAR_SAMP>
 # ] '(' <ALL>? <expr> ')'
+for <BIT_AND BIT_OR BIT_XOR STD VARIANCE STDDEV_SAMP VAR_SAMP> -> $f {
+  for 0, 1 {
+    my $all = '';
+    $all = 'ALL ' unless $_;
+    for @expr -> $e {
+      my $t = "{ $f } ( { $all }{ $e } )";
+      basic-test($t);
+      $t = $t.subst(' ( ', '(' );
+      $t = $t.subst( ' )', ')' );
+      basic-test($t);
+    }
+  }
+}
 
 # <COUNT> '(' [
 #  <ALL>? '*'     |
-#  <_in_sum_expr> |
+#  <ALL>? <expr>  |
 #  <DISTINCT> <expr_list>
 # ] ')'
+for (
+  'ALL *',
+  'ALL ' ~ @expr.pick,
+  'DISTINCT ' ~ @expr.pick(3).join(', ')
+) -> $a {
+  my $t = "COUNT ( { $a } )";
+  basic-test($t);
+  if $t ~~ /'ALL'/ {
+    $t ~~ s/'ALL '//;
+    basic-test($t);
+  }
+  $t = $t.subst(' ( ', '(' );
+  $t = $t.subst( ' )', ')' );
+  $t ~~ s:g/ ', ' /,/;
+  basic-test($t);
+}

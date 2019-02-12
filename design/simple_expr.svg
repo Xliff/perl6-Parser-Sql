@@ -34,16 +34,16 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1576"
-     inkscape:window-height="746"
+     inkscape:window-width="827"
+     inkscape:window-height="675"
      id="namedview1478"
      showgrid="false"
      inkscape:zoom="1.0121689"
-     inkscape:cx="375.74914"
-     inkscape:cy="1037.1604"
-     inkscape:window-x="0"
+     inkscape:cx="321.50177"
+     inkscape:cy="404.85491"
+     inkscape:window-x="741"
      inkscape:window-y="0"
-     inkscape:window-maximized="1"
+     inkscape:window-maximized="0"
      inkscape:current-layer="svg1476" />
   <defs
      id="defs876">
@@ -230,15 +230,13 @@
   <a
      xlink:href="#function_call_generic"
      xlink:title="function_call_generic"
-     id="a936"
-     style="fill:#00ff00">
+     id="a936">
     <rect
        x="51"
        y="211"
        width="144"
        height="32"
-       id="rect930"
-       style="fill:#00ff00" />
+       id="rect930" />
     <rect
        x="49"
        y="209"
@@ -251,8 +249,7 @@
        class="nonterminal"
        x="59"
        y="229"
-       id="text934"
-       style="fill:#00ff00">function_call_generic</text>
+       id="text934">function_call_generic</text>
   </a>
   <a
      xlink:href="#function_call_conflict"
@@ -482,7 +479,7 @@
        height="32"
        class="nonterminal"
        id="rect1012"
-       style="fill:#ff0000" />
+       style="fill:#00ff00" />
     <text
        class="nonterminal"
        x="59"
