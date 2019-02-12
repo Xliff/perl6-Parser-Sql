@@ -9,11 +9,13 @@ our token GT is export          { «'GT'» || '>' }
 our token LT is export          { «'LT'» || '<' }
 our token NE is export          { «'NE'» || '<>' }
 
+our token XOR is export		      { «'XOR'» }
+
 our token AND2 is export        { '&&' }
-our token BIT_AND is export		  { '&' }
-our token BIT_NOT is export     { '~' }
-our token BIT_OR is export		  { '|' }
-our token BIT_XOR is export		  { «'XOR'» }
+our token B_AND is export		    { '&' }
+our token B_NOT is export       { '~' }
+our token B_OR is export		    { '|' }
+our token B_XOR is export       { '^' }
 our token MINUS is export       { '-' }
 our token NOT_OP is export      { '!' }
 our token NOT2 is export        { '<>' }
@@ -101,6 +103,9 @@ our token BIGINT is export             { 'BIGINT' }
 our token BINARY is export             { 'BINARY' }
 our token BINLOG is export             { 'BINLOG' }
 our token BIT is export                { 'BIT' }
+our token BIT_AND is export            { 'BIT_AND' }
+our token BIT_OR is export             { 'BIT_OR' }
+our token BIT_XOR is export            { 'BIT_XOR' }
 our token BLOB is export               { 'BLOB' }
 our token BLOCK is export              { 'BLOCK' }
 our token BOOL is export               { 'BOOL' }
@@ -496,7 +501,6 @@ our token X509 is export 		           { 'X509' }
 our token XA is export                 { 'XA' }
 our token XID is export                { 'XID' }
 our token XML is export                { 'XML' }
-our token XOR is export                { 'XOR' }
 our token ZEROFILL is export           { 'ZEROFILL' }
 
 
@@ -623,12 +627,12 @@ our token or is export          {   <OR> | <OR2>     }
 our token plus_minus is export  { <PLUS> | <MINUS>   }
 
 our token bit_ops is export {
-  '|' || '&' || '*' || '/' ||  '%'  || '^' ||
+  '|' || '&' || '*' || '/' ||  '%'  || '^'   ||
    <SHIFT_L> || <SHIFT_R>  || <DIV> || <MOD>
 }
 
 our token comp_ops is export {
-  <EQ> | <GE> | <GT> | <LE> | <LT> | <NE>
+  <EQ> || <GE> || <GT> || <LE> || <LT> || <NE>
 }
 
 our token bin_num is export {
@@ -837,7 +841,7 @@ our token simple_ident is export {
 
 our token text is export {
     # Are double quotes allowed as text strings?
-    "'" ( <-[']>+ ) "'" || '"' ( <-["]>+ ) '"'
+    "'" ( <-[']>+ ) "'" | '"' ( <-["]>+ ) '"'
 }
 
 our token text_string is export {

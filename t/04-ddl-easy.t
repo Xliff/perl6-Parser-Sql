@@ -10,7 +10,7 @@ use TestRoutines;
 # WHEN REFACTORING, ALL TESTS THAT INCLUDE THE <EQ> TOKEN MUST ADD A test
 # REPLACING EQ WITH = FOR COMPLETENESS!!!
 
-plan 772;
+plan 773;
 
 my $count;
 for Parser::SQL::Grammar::DDLGrammar.^methods(:local).map( *.name ).sort {

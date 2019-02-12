@@ -103,7 +103,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule expr_list {
-    <expr>+ % ','
+    <expr>+ %% ','
   }
 
   rule field_term {
@@ -176,7 +176,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule order_expr    {
-    <expr> <order_dir>
+    <expr> <order_dir>?
   }
 
   rule order_clause {
@@ -224,7 +224,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule select_item {
-    <table_wild> || <expr> <select_alias>
+    <table_wild> | <expr> <select_alias>
   }
 
   rule select_item_list {
@@ -404,7 +404,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
         [ <FORMAT>  '(' <expr> ','
           ||
           <WEEK> '('
-        ] <expr> ','?
+        ] [ <expr> ',' ]?
       ] <expr>
       ||
       <COALESCE> '(' <expr_list>
@@ -414,7 +414,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
       <WEIGHT_STRING> '(' <expr> [
         <__ws_levels>?
         ||
-        ',' <number> ',' <number> ',' <number>
+        ',' <ulong_num> ',' <ulong_num> ',' <ulong_num>
         ||
         <AS> [
           <CHAR> <__ws_nweights> <__ws_levels>?
@@ -488,7 +488,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
         <EXTRACT> '(' <interval> <FROM>
         ||
         [
-          <GET_FORMAT> [ <DATE> | <TIME> | <TIMESTAMP> | <DATETIME> ]
+          <GET_FORMAT> '(' [ <DATE> | <TIME> | <TIMESTAMP> | <DATETIME> ]
           ||
           [ <TIMESTAMP_ADD> | <TIMESTAMP_DIFF> ] '(' <interval_time_stamp> ','
           <expr>
@@ -519,7 +519,8 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     :my rule _ident_list { <simple_ident>+ % ',' };
     <PARAM_MARK>
     ||
-    <simple_ident> [ <JSON_SEPARATOR> | <JSON_UNQ_SEPEARATOR> ] <text>
+    # No spaces
+    <simple_ident> [ <JSON_SEPARATOR> || <JSON_UNQ_SEPEARATOR> ] <text>
     ||
     <_key_function_call>
     ||
@@ -582,13 +583,22 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     <OR2> <simple_expr>
   }
 
-  my rule _gorder_clause {
-    <ORDER> <BY> <order_expr>+ % ','
+  rule _gorder_clause {
+    <ORDER> <BY> <order_expr>+ %% ','
   }
 
+  my token _SEPARATOR   { 'SEPARATOR' }
+  rule __separator_text { <_SEPARATOR> <text> }
   rule sum_expr {
-    :my rule _in_sum_expr { <ALL>? <expr> }
+    :my rule    _in_sum_expr { <ALL>? <expr> }
+
     [
+      <GROUP_CONCAT> '('
+        <DISTINCT>?
+        <expr_list>
+        <_gorder_clause>?
+        <__separator_text>?
+      |
       [
         $<op>=[ <AVG> | <MIN> | <MAX> | <SUM> ] '(' <DISTINCT>?
         |
@@ -602,14 +612,12 @@ grammar Parser::SQL::Grammar::DDLGrammar {
           <VAR_SAMP>
         ] '('
      ] <_in_sum_expr>
-     ||
-     <GROUP_CONCAT> '('
-       <DISTINCT>?
-       <expr_list>
-       <_gorder_clause>?
-       [ <SEPARATOR> <text> ]?
-     ||
-     <COUNT> '(' [ <ALL>? <MULT> | <_in_sum_expr> | <DISTINCT> <expr_list> ]
+     |
+     <COUNT> '(' [
+      <ALL>? '*'     |
+      <_in_sum_expr> |
+      <DISTINCT> <expr_list>
+    ]
    ] ')'
  }
 
@@ -619,6 +627,8 @@ grammar Parser::SQL::Grammar::DDLGrammar {
 
   rule udf_expr {
     <expr> <select_alias>
+    |
+    <expr>
   }
 
   rule use_partition {
@@ -1183,16 +1193,20 @@ grammar Parser::SQL::Grammar::DDLGrammar {
 
   rule subselect {
     <union_opt>? <UNION>
-    ||
+    |
     <query_spec>
   }
 
 };
 
-Parser::SQL::Grammar::DDLGrammar.subparse(
+my $m = Parser::SQL::Grammar::DDLGrammar.subparse(
   #'AS table_ident',
-  'b AS a',
-  rule => 'udf_expr'
+  #'GROUP_CONCAT ( DISTINCT  @var5 ORDER BY "bb" DESC, @var4 ASC, ns.field2 SEPARATOR "text" )',
+  "GROUP_CONCAT (  field5, 'aa' ORDER BY \"gg\" DESC, field5 ASC, 7 DESC, \@var4 SEPARATOR 'text' )",
+  #"GROUP_CONCAT (DISTINCT  'gg' ORDER BY 'gg' ASC, ns.field6 DESC, \@var4 , 7 ASC, \"gg\" DESC SEPARATOR \"text\" )",
+  rule => 'sum_expr'
 );
+
+say "\n\n»»»»»»»»»» Passed!\n\n" if $m;
 
 Parser::SQL::Grammar::DDLGrammar.HOW.results.gist.say;

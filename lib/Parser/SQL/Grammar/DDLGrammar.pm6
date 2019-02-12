@@ -101,7 +101,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule expr_list {
-    <expr>+ % ','
+    <expr>+ %% ','
   }
 
   rule field_term {
@@ -174,7 +174,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
   }
 
   rule order_expr    {
-    <expr> <order_dir>
+    <expr> <order_dir>?
   }
 
   rule order_clause {
@@ -581,15 +581,21 @@ grammar Parser::SQL::Grammar::DDLGrammar {
     <OR2> <simple_expr>
   }
 
-  my rule _gorder_clause {
-    <ORDER> <BY> <order_expr>+ % ','
+  rule _gorder_clause {
+    <ORDER> <BY> <order_expr>+ %% ','
   }
 
   rule sum_expr {
-    :my rule _in_sum_expr { <ALL>? <expr> }
+    :my rule    _in_sum_expr { <ALL>? <expr> }
     [
+      <GROUP_CONCAT> '('
+        <DISTINCT>?
+        <expr_list>
+        <_gorder_clause>?
+        [ <SEPARATOR> <text> ]?
+      |
       [
-        $<op>=[ <AVG> | <MIN> | <MAX> | <SUM> ] '(' <DISTINCT>?
+        $<op>=[ <AVG> || <MIN> || <MAX> || <SUM> ] '(' <DISTINCT>?
         |
         $<op>=[
           <BIT_AND>     |
@@ -601,14 +607,12 @@ grammar Parser::SQL::Grammar::DDLGrammar {
           <VAR_SAMP>
         ] '('
      ] <_in_sum_expr>
-     ||
-     <GROUP_CONCAT> '('
-       <DISTINCT>?
-       <expr_list>
-       <_gorder_clause>?
-       [ <SEPARATOR> <text> ]?
-     ||
-     <COUNT> '(' [ <ALL>? <MULT> | <_in_sum_expr> | <DISTINCT> <expr_list> ]
+     |
+     <COUNT> '(' [
+      <ALL>? '*'     |
+      <_in_sum_expr> |
+      <DISTINCT> <expr_list>
+    ]
    ] ')'
  }
 
@@ -1184,7 +1188,7 @@ grammar Parser::SQL::Grammar::DDLGrammar {
 
   rule subselect {
     <union_opt>? <UNION>
-    ||
+    |
     <query_spec>
   }
 

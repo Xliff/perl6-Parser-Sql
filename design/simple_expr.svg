@@ -40,7 +40,7 @@
      showgrid="false"
      inkscape:zoom="1.0121689"
      inkscape:cx="375.74914"
-     inkscape:cy="800.04587"
+     inkscape:cy="1037.1604"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
@@ -230,13 +230,15 @@
   <a
      xlink:href="#function_call_generic"
      xlink:title="function_call_generic"
-     id="a936">
+     id="a936"
+     style="fill:#00ff00">
     <rect
        x="51"
        y="211"
        width="144"
        height="32"
-       id="rect930" />
+       id="rect930"
+       style="fill:#00ff00" />
     <rect
        x="49"
        y="209"
@@ -244,12 +246,13 @@
        height="32"
        class="nonterminal"
        id="rect932"
-       style="fill:#ffff00" />
+       style="fill:#00ff00" />
     <text
        class="nonterminal"
        x="59"
        y="229"
-       id="text934">function_call_generic</text>
+       id="text934"
+       style="fill:#00ff00">function_call_generic</text>
   </a>
   <a
      xlink:href="#function_call_conflict"

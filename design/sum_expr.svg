@@ -34,15 +34,15 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1559"
+     inkscape:window-width="897"
      inkscape:window-height="670"
      id="namedview1958"
      showgrid="false"
      inkscape:zoom="0.97186821"
-     inkscape:cx="638.91256"
-     inkscape:cy="214.09549"
-     inkscape:window-x="9"
-     inkscape:window-y="72"
+     inkscape:cx="413.0752"
+     inkscape:cy="131.77981"
+     inkscape:window-x="648"
+     inkscape:window-y="40"
      inkscape:window-maximized="0"
      inkscape:current-layer="svg1956"
      showguides="false" />
@@ -417,13 +417,15 @@
   <a
      xlink:href="#in_sum_expr"
      xlink:title="in_sum_expr"
-     id="a1844">
+     id="a1844"
+     transform="translate(0,3.0868383)">
     <rect
        x="411"
        y="3"
        width="98"
        height="32"
-       id="rect1838" />
+       id="rect1838"
+       style="fill:#0d2026;stroke:#0d2026" />
     <rect
        x="409"
        y="1"
@@ -431,12 +433,13 @@
        height="32"
        class="nonterminal"
        id="rect1840"
-       style="fill:#ffff00" />
+       style="fill:#00ff00;stroke:#0d2026" />
     <text
        class="nonterminal"
        x="419"
        y="21"
-       id="text1842">in_sum_expr</text>
+       id="text1842"
+       style="font-size:12px;font-family:Verdana, Sans-serif;fill:#061013">in_sum_expr</text>
   </a>
   <a
      xlink:href="#GROUP_CONCAT_SYM"
@@ -548,7 +551,7 @@
        height="32"
        class="nonterminal"
        id="rect1878"
-       style="fill:#ff0000" />
+       style="fill:#00ff00" />
     <text
        class="nonterminal"
        x="479"
@@ -572,7 +575,7 @@
        height="32"
        class="nonterminal"
        id="rect1886"
-       style="fill:#ff0000" />
+       style="fill:#00ff00" />
     <text
        class="nonterminal"
        x="631"
@@ -686,7 +689,7 @@
        height="32"
        class="nonterminal"
        id="rect1922"
-       style="fill:#ffff00" />
+       style="fill:#00ff00" />
     <text
        class="nonterminal"
        x="241"
