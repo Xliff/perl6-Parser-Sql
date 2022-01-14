@@ -11,22 +11,50 @@ our token NE is export          { «'NE'» || '<>' }
 
 our token XOR is export		      { «'XOR'» }
 
-our token AND2 is export        { '&&' }
-our token B_AND is export		    { '&' }
-our token B_NOT is export       { '~' }
-our token B_OR is export		    { '|' }
-our token B_XOR is export       { '^' }
-our token MINUS is export       { '-' }
-our token NOT_OP is export      { '!' }
-our token NOT2 is export        { '<>' }
-our token OR2 is export         { '||' }
-our token PLUS is export        { '+' }
-our token MULT is export        { '*' }
-our token DIVIDE is export      { '/' }
-our token SHIFT_L is export     { '<<' }
-our token SHIFT_R is export     { '>>' }
+#| '&&'
+our token AND2 is export        { <{ &?ROUTINE.WHY.leading.chomp }> }
 
-our token PARAM_MARK is export  { '?' }
+#| '&'
+our token B_AND is export		    { <{ &?ROUTINE.WHY.leading.chomp }> }
+
+#| '~'
+our token B_NOT is export       { <{ &?ROUTINE.WHY.leading.chomp }> }
+
+#| '/'
+our token B_OR is export		    { <{ &?ROUTINE.WHY.leading.chomp }> }
+
+#| '^'
+our token B_XOR is export       { <{ &?ROUTINE.WHY.leading.chomp }> }
+
+#| '-'
+our token MINUS is export       { <{ &?ROUTINE.WHY.leading.chomp }> }
+
+#| '!'
+our token NOT_OP is export      { <{ &?ROUTINE.WHY.leading.chomp }> }
+
+#| '<>'
+our token NOT2 is export        { <{ &?ROUTINE.WHY.leading.chomp }> }
+
+#| '||'
+our token OR2 is export         { <{ &?ROUTINE.WHY.leading.chomp }> }
+
+#| '+'
+our token PLUS is export        { <{ &?ROUTINE.WHY.leading.chomp }> }
+
+#| '*'
+our token MULT is export        { <{ &?ROUTINE.WHY.leading.chomp }> }
+
+#| '/'
+our token DIVIDE is export      { <{ &?ROUTINE.WHY.leading.chomp }> }
+
+#| '<<'
+our token SHIFT_L is export     { <{ &?ROUTINE.WHY.leading.chomp }> }
+
+#| '>>'
+our token SHIFT_R is export     { <{ &?ROUTINE.WHY.leading.chomp }> }
+
+#| '?'
+our token PARAM_MARK is export  { <{ &?ROUTINE.WHY.leading.chomp }> }
 
 # Interval symbols
 our token DAY is export		      { 'DAY' }
@@ -246,7 +274,7 @@ our token IMPORT is export             { 'IMPORT' }
 our token IN is export                 { 'IN' }
 our token INDEX is export              { 'INDEX' }
 our token INDEXES is export            { 'INDEXES' }
-our token INNER is export              { 'INNER' }
+our token INER is export              { 'INER' }
 our token INSERT is export             { 'INSERT' }
 our token INSTALL is export            { 'INSTALL' }
 our token INSTANCE is export           { 'INSTANCE' }
@@ -532,8 +560,11 @@ our token IGNORE_SERVER_IDS is export           { 'IGNORE_SERVER_IDS' }
 our token INITIAL_SIZE is export                { 'INITIAL_SIZE' }
 our token INSERT_METHOD is export               { 'INSERT_METHOD' }
 
-our token JSON_SEPARATOR is export              { '->'  }
-our token JSON_UNQ_SEPEARATOR is export         { '->>' }
+#| '->'
+our token JSON_SEPARATOR is export              { <{ &?ROUTINE.WHY.leading }> }
+
+#| '->>'
+our token JSON_UNQ_SEPEARATOR is export         { <{ &?ROUTINE.WHY.leading }> }
 
 our token KEY_BLOCK_SIZE is export              { 'KEY_BLOCK_SIZE' }
 our token MASTER_AUTO_POSITION is export        { 'MASTER_AUTO_POSITION' }
