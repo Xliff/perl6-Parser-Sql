@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="310" height="80">
+         <defs>
+            <style type="text/css">
+               @namespace "http://www.w3.org/2000/svg";
+               .line                 {fill: none; stroke: #0D2026;}
+               .bold-line            {stroke: #050D0F; shape-rendering: crispEdges; stroke-width:
+               2; }
+               .thin-line            {stroke: #081317; shape-rendering: crispEdges}
+               .filled               {fill: #0D2026; stroke: none;}
+               text.terminal         {font-family: Verdana, Sans-serif;
+               font-size: 12px;
+               fill: #050D0F;
+               font-weight: bold;
+               }
+               text.nonterminal      {font-family: Verdana, Sans-serif;
+               font-size: 12px;
+               fill: #061013;
+               }
+               text.regexp           {font-family: Verdana, Sans-serif;
+               font-size: 12px;
+               fill: #081317;
+               }
+               rect, circle, polygon {fill: #0D2026; stroke: #0D2026;}
+               rect.terminal         {fill: #66B3CC; stroke: #0D2026;}
+               rect.nonterminal      {fill: #9ECFDF; stroke: #0D2026;}
+               rect.text             {fill: none; stroke: none;}
+               polygon.regexp        {fill: #BBDDE8; stroke: #0D2026;}
+
+            </style>
+         </defs>
+         <polygon points="9 61 1 57 1 65"/>
+         <polygon points="17 61 9 57 9 65"/>
+         <a xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#query_specification" xlink:title="query_specification">
+            <rect x="51" y="47" width="134" height="32"/>
+            <rect x="49" y="45" width="134" height="32" class="nonterminal"/>
+            <text class="nonterminal" x="59" y="65">query_specification</text>
+         </a>
+         <a xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#union_option" xlink:title="union_option">
+            <rect x="51" y="3" width="98" height="32"/>
+            <rect x="49" y="1" width="98" height="32" class="nonterminal"/>
+            <text class="nonterminal" x="59" y="21">union_option</text>
+         </a>
+         <a xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#UNION_SYM" xlink:title="UNION_SYM">
+            <rect x="169" y="3" width="94" height="32"/>
+            <rect x="167" y="1" width="94" height="32" class="nonterminal"/>
+            <text class="nonterminal" x="177" y="21">UNION_SYM</text>
+         </a>
+         <path xmlns:svg="http://www.w3.org/2000/svg" class="line" d="m17 61 h2 m20 0 h10 m134 0 h10 m0 0 h78 m-252 0 l20 0 m-1 0 q-9 0 -9 -10 l0 -24 q0 -10 10 -10 m232 44 l20 0 m-20 0 q10 0 10 -10 l0 -24 q0 -10 -10 -10 m-232 0 h10 m98 0 h10 m0 0 h10 m94 0 h10 m23 44 h-3"/>
+         <polygon points="301 61 309 57 309 65"/>
+         <polygon points="301 61 293 57 293 65"/>
+      </svg>
